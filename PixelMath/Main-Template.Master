@@ -1,0 +1,105 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Main-Template.master.cs" Inherits="PixelMath.Main_Template" %>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>PixelMath</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <link rel="stylesheet" href="Main-CSS.css" />
+    
+    <%-- Slot for individual pages to inject page-specific header tags if needed --%>
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="dashboard" id="dashboard-app">
+            <div class="dashboard-layout">
+                
+                <%-- Sidebar --%>
+                <aside class="sidebar">
+                    <div class="sidebar-head">
+                        <div class="sidebar-logo">
+                            <img src="PixelMath_Logo.png" alt="PixelMath Logo"/>
+                            <span class="website-name">PixelMath</span>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-user">
+                        <div class="student-avatar">
+                            <img src="Student-Avatar.png" width="200" height="200" />
+                        </div>
+                        <div>
+                            <div class="username" id="sidebar-name">Name: Ali</div>
+                            <div class="user-role">Student · Form 4</div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-category"> Main </div>
+                    <a class="sidebar-selection"><i class="fa-solid fa-house-chimney-window"></i>Dashboard</a>
+                    <a class="sidebar-selection"><i class="fa-solid fa-bell"></i>Announcements</a>
+
+                    <div class="sidebar-category"> Learning </div>
+                    <a class="sidebar-selection"><i class="fa-solid fa-file-pen"></i>Take a Quiz</a>
+                    <a class="sidebar-selection"><i class="fa-solid fa-hourglass"></i>Previous Quizzes</a>
+                    <a class="sidebar-selection"><i class="fa-solid fa-square-poll-horizontal"></i>My Results</a>
+                    <a class="sidebar-selection"><i class="fa-solid fa-book"></i>Learning Resources</a>
+
+                    <div class="sidebar-category"> Account </div>
+                    <a class="sidebar-selection"><i class="fa-solid fa-circle-user"></i>My Profile</a>
+                   
+                    <div class="sidebar-footer">
+                        <button type="button" class="logout-btn" onclick="openModal()">
+                            <i class="fa-solid fa-right-from-bracket"></i>Log out
+                        </button>
+                    </div>
+                </aside>
+
+                <%-- Logout popout --%>
+                <div id="logoutConfirmation" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+                        <h2>Logging Out?</h2>
+                        <p>Are you sure you want to log out of PixelMath?</p>
+                        <div class="modal-buttons">
+                            <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                            <button type="button" class="btn-confirm" onclick="">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+
+                <%-- Content Area --%>
+                <main class="main" id="main-content">
+                    <div class="topbar">
+                        <div class="topbar-title">Dashboard 🏠</div>
+                    </div>
+                    <div class="content">
+                        
+                        <%-- THE OPEN WINDOW SLOT --%>
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                        </asp:ContentPlaceHolder>
+                        
+                    </div>
+                </main>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        function openModal() {
+            document.getElementById("logoutConfirmation").style.display = "flex";
+            document.body.style.overflow = "hidden";
+        }
+        function closeModal() {
+            document.getElementById("logoutConfirmation").style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+        window.onclick = function (event) {
+            var modal = document.getElementById("logoutConfirmation");
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
