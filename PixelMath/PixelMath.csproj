@@ -70,6 +70,7 @@
     <Content Include="index.aspx" />
     <Content Include="PixelMath_Logo.png" />
     <Content Include="Student-Avatar.png" />
+    <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
     <Content Include="Main-CSS.css" />
     <Content Include="Web.config" />

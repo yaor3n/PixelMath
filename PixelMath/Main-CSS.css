@@ -162,7 +162,6 @@
     justify-content: center;
 }
 
-/* The card window container */
 .modal-content {
     background-color: #ffffff;
     padding: 32px;
@@ -175,7 +174,6 @@
     animation: modalPopUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Cute animated entry effect for the modal box */
 @keyframes modalPopUp {
     from {
         transform: scale(0.85);
@@ -188,7 +186,6 @@
     }
 }
 
-/* Large decorative warning icon header */
 .modal-icon {
     width: 60px;
     height: 60px;
@@ -216,7 +213,6 @@
     margin: 0 0 24px 0;
 }
 
-/* Button Layout Framework */
 .modal-buttons {
     display: flex;
     gap: 12px;
@@ -238,7 +234,6 @@
     transform: scale(0.98);
 }
 
-/* Cancel Button Settings */
 .btn-cancel {
     background: #F3F4F6;
     color: #4B5563;
@@ -248,7 +243,6 @@
     background: #E5E7EB;
 }
 
-/* Log out Button Settings */
 .btn-confirm {
     background: #EF4444;
     color: #ffffff;
@@ -284,34 +278,4 @@
     box-sizing: border-box;
 }
 
-.welcome-banner {
-    background: #22C55E;
-    border-radius: 24px;
-    padding: 12px 28px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    overflow: hidden;
-    position: relative;
-}
-
-.greeting {
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(255,255,255,.8);
-    margin-bottom: 3px;
-}
-
-.name {
-    font-family: 'Fredoka One', cursive;
-    font-size: 26px;
-    color: #fff;
-}
-
-.reminder {
-    font-size: 13px;
-    color: rgba(255,255,255,.85);
-    margin-top: 6px;
-}
 

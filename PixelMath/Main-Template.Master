@@ -71,14 +71,14 @@
                 <%-- Content Area --%>
                 <main class="main" id="main-content">
                     <div class="topbar">
-                        <div class="topbar-title">Dashboard 🏠</div>
+                        <div class="topbar-title">
+                            <asp:ContentPlaceHolder ID="TopbarTitleContent" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </div>
                     </div>
                     <div class="content">
-                        
-                        <%-- THE OPEN WINDOW SLOT --%>
                         <asp:ContentPlaceHolder ID="MainContent" runat="server">
                         </asp:ContentPlaceHolder>
-                        
                     </div>
                 </main>
             </div>

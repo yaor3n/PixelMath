@@ -1,10 +1,14 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Dashboard.aspx.cs" Inherits="PixelMath.Student_Dashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    </asp:Content>
+    <link rel="stylesheet" href="Student-Dashboard-CSS.css" />
+</asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <%-- ONLY put the unique contents of the dashboard page here! --%>
+<asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
+    Dashboard 🏠
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="welcome-banner">
         <div>
             <div class="greeting">Good morning,</div>
@@ -13,5 +17,4 @@
         </div>
     </div>
 
-    <%-- Your team can continue adding dashboard items right here --%>
 </asp:Content>
