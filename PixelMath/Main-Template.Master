@@ -36,17 +36,17 @@
                     </div>
 
                     <div class="sidebar-category"> Main </div>
-                    <a class="sidebar-selection"><i class="fa-solid fa-house-chimney-window"></i>Dashboard</a>
-                    <a class="sidebar-selection"><i class="fa-solid fa-bell"></i>Announcements</a>
+                    <a href="Student-Dashboard.aspx" class="sidebar-selection"><i class="fa-solid fa-house-chimney-window"></i>Dashboard</a>
+                    <a href="Student-Announcements.aspx"class="sidebar-selection"><i class="fa-solid fa-bell"></i>Announcements</a>
 
                     <div class="sidebar-category"> Learning </div>
-                    <a class="sidebar-selection"><i class="fa-solid fa-file-pen"></i>Take a Quiz</a>
-                    <a class="sidebar-selection"><i class="fa-solid fa-hourglass"></i>Previous Quizzes</a>
-                    <a class="sidebar-selection"><i class="fa-solid fa-square-poll-horizontal"></i>My Results</a>
-                    <a class="sidebar-selection"><i class="fa-solid fa-book"></i>Learning Resources</a>
+                    <a href="Student-Quiz.aspx" class="sidebar-selection"><i class="fa-solid fa-file-pen"></i>Take a Quiz</a>
+                    <a href="Student-Previous-Quiz.aspx" class="sidebar-selection"><i class="fa-solid fa-hourglass"></i>Previous Quizzes</a>
+                    <a href="Student-Result.aspx" class="sidebar-selection"><i class="fa-solid fa-square-poll-horizontal"></i>My Results</a>
+                    <a href="Student-Resources.aspx" class="sidebar-selection"><i class="fa-solid fa-book"></i>Learning Resources</a>
 
                     <div class="sidebar-category"> Account </div>
-                    <a class="sidebar-selection"><i class="fa-solid fa-circle-user"></i>My Profile</a>
+                    <a href="Student-Profile.aspx" class="sidebar-selection"><i class="fa-solid fa-circle-user"></i>My Profile</a>
                    
                     <div class="sidebar-footer">
                         <button type="button" class="logout-btn" onclick="openModal()">
@@ -90,16 +90,35 @@
             document.getElementById("logoutConfirmation").style.display = "flex";
             document.body.style.overflow = "hidden";
         }
+
         function closeModal() {
             document.getElementById("logoutConfirmation").style.display = "none";
             document.body.style.overflow = "auto";
         }
+
         window.onclick = function (event) {
             var modal = document.getElementById("logoutConfirmation");
             if (event.target === modal) {
                 closeModal();
             }
         }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            var currentPage = window.location.pathname.split("/").pop();
+
+            if (currentPage === "") {
+                currentPage = "Student-Dashboard.aspx";
+            }
+
+            var sidebarLinks = document.querySelectorAll(".sidebar-selection");
+
+            sidebarLinks.forEach(function (link) {
+                var linkTarget = link.getAttribute("href");
+                if (linkTarget === currentPage) {
+                    link.classList.add("active");
+                }
+            });
+        });
     </script>
 </body>
 </html>
