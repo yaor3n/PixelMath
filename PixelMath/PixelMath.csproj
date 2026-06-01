@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="index.aspx" />
     <Content Include="PixelMath_Logo.png" />
+    <Content Include="Student-Announcements.aspx" />
     <Content Include="Student-Avatar.png" />
     <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
@@ -91,6 +92,13 @@
       <DependentUpon>Main-Template.Master</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Student-Announcements.aspx.cs">
+      <DependentUpon>Student-Announcements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Announcements.aspx.designer.cs">
+      <DependentUpon>Student-Announcements.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Student-Dashboard.aspx.cs">
       <DependentUpon>Student-Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
