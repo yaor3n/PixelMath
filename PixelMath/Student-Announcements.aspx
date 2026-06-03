@@ -27,7 +27,27 @@
 
         </div>
         <div class="right-panel">
-            <p>hi</p>
+            <div class="detail-header">
+                <div class="detail-title">
+                    <asp:Label ID="AnnouncementLabel" runat="server"></asp:Label>
+                </div>
+            </div>
+            <div class="detail-meta">
+                <div class="detail-meta-item">
+                    <strong>
+                        <i class="fa-solid fa-user meta-icon"></i>
+                        <asp:Label ID="AnnouncementTeacherName" runat="server"></asp:Label>
+                    </strong>
+                </div>
+                <div class="detail-meta-item">
+                    
+                        <i class="fa-solid fa-clock meta-icon"></i>
+                        <asp:Label ID="AnnouncementCreatedDate" runat="server"></asp:Label>
+                    
+                </div>
+            </div>
+            
+            <p><asp:Label ID="AnnouncementMessage" runat="server"></asp:Label></p>
         </div>
     </div>
 </asp:Content>

@@ -67,13 +67,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\PixelMathSQL.sql" />
     <Content Include="index.aspx" />
     <Content Include="PixelMath_Logo.png" />
+    <Content Include="Student-Announcements-CSS.css" />
     <Content Include="Student-Announcements.aspx" />
     <Content Include="Student-Avatar.png" />
     <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
     <Content Include="Main-CSS.css" />
+    <Content Include="Student-Quiz.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +108,13 @@
     </Compile>
     <Compile Include="Student-Dashboard.aspx.designer.cs">
       <DependentUpon>Student-Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student-Quiz.aspx.cs">
+      <DependentUpon>Student-Quiz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Quiz.aspx.designer.cs">
+      <DependentUpon>Student-Quiz.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
