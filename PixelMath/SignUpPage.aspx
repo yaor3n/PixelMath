@@ -14,6 +14,7 @@
             const confirm = document.getElementById("<%= txtConfirmPassword.ClientID %>").value;
 
             if (!name || !email || !password || !confirm) {
+                <a href="SignUpPage.aspx">SignUpPage.aspx</a>
                 alert("Please fill in all fields");
                 return false; // Blocks postback to C#
             }
