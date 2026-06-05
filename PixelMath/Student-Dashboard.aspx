@@ -5,7 +5,7 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
-    Dashboard 🏠
+    Dashboard 
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
@@ -16,5 +16,6 @@
             <div class="reminder">can wait database</div>
         </div>
     </div>
+    <h1>test</h1>
 
 </asp:Content>

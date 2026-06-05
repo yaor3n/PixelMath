@@ -4,11 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>PixelMath</title>
+    <link rel="icon" type="image/png" href="PixelMath_Logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <link rel="stylesheet" href="Main-CSS.css" />
     
-    <%-- Slot for individual pages to inject page-specific header tags if needed --%>
+    <%--Slot for individual pages to inject page-specific header tags if needed--%>
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
@@ -16,7 +17,7 @@
         <div class="dashboard" id="dashboard-app">
             <div class="dashboard-layout">
                 
-                <%-- Sidebar --%>
+                <%--Sidebar--%>
                 <aside class="sidebar">
                     <div class="sidebar-head">
                         <div class="sidebar-logo">
@@ -55,7 +56,7 @@
                     </div>
                 </aside>
 
-                <%-- Logout popout --%>
+                <%--Logout popout--%>
                 <div id="logoutConfirmation" class="modal">
                     <div class="modal-content">
                         <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
