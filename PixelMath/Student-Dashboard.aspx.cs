@@ -11,7 +11,11 @@ namespace PixelMath
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["UserId"] == null || Session["RoleId"].ToString() != "1")
+            {
+                Session.Clear(); Session.Abandon();
+                Response.Redirect("LoginPage.aspx");
+            }
         }
     }
 }

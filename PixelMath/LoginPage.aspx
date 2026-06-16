@@ -35,8 +35,8 @@
                 </h2>
 
                 <!-- username -->
-                <label class="text-green-700 text-sm font-semibold">Username</label>
-                <asp:TextBox ID="txtUsername" runat="server"
+                <label class="text-green-700 text-sm font-semibold">Email</label>
+                <asp:TextBox ID="email" runat="server"
                     CssClass="w-full mt-1 mb-4 px-4 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
 
                 <!-- password -->
