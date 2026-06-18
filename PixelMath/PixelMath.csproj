@@ -70,6 +70,7 @@
     <Content Include="App_Data\PixelMathDB.sql" />
     <Content Include="index.aspx" />
     <Content Include="PixelMath_Logo.png" />
+    <Content Include="result-no-found.png" />
     <Content Include="Select-Announcement.png" />
     <Content Include="Student-Announcements-CSS.css" />
     <Content Include="SignUpPage.aspx" />
@@ -78,6 +79,8 @@
     <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
     <Content Include="Main-CSS.css" />
+    <Content Include="Student-Profile-CSS.css" />
+    <Content Include="Student-Profile.aspx" />
     <Content Include="Student-Quiz.aspx" />
     <Content Include="Web.config" />
     <Content Include="LoginPage.aspx" />
@@ -118,6 +121,13 @@
     </Compile>
     <Compile Include="Student-Dashboard.aspx.designer.cs">
       <DependentUpon>Student-Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student-Profile.aspx.cs">
+      <DependentUpon>Student-Profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Profile.aspx.designer.cs">
+      <DependentUpon>Student-Profile.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student-Quiz.aspx.cs">
       <DependentUpon>Student-Quiz.aspx</DependentUpon>

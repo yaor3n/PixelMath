@@ -1,16 +1,19 @@
 ﻿body {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
 .announcement-wrapper {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: minmax(300px, 360px) 1fr;
     gap: 0;
     flex: 1;
     background-color: white;
     border-radius: 16px;
-    overflow: hidden;
     padding: 10px;
-    height: 100%;
+    height: calc(100vh - 40px);
+    box-sizing:border-box;
 }
 
 .left-panel {
@@ -84,17 +87,35 @@
     color:black;
 }
 
+.announcements:has(.unread-status-dot) {
+    background-color: #F7FDF9;
+}
+
 .announcements-card-button:hover .announcements {
     background-color: #F0FDF4; 
+}
+
+.announcements-card-button:hover .announcements:has(.unread-status-dot) {
+    background-color: #DCFCE7; 
 }
 
 .announcements {
     padding: 14px 16px;
     cursor: pointer;
+    border-radius: 16px;
     display: flex;
-    gap: 10px;
-    flex-direction:column;
-    border-radius:16px;
+    flex-direction: row;
+    align-items: center; 
+    gap: 14px; 
+    transition: background-color 0.18s ease;
+}
+
+.announcement-text-content {
+    display: flex;
+    flex-direction: column; 
+    gap: 2px;
+    flex: 1; 
+    min-width:0;
 }
 
 .left-separator-line {
@@ -106,8 +127,10 @@
 .left-title {
     font-size:16px;
     font-weight:700;
-    margin-bottom:3px;
     line-height:1.4;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
 }
 
 .left-meta {
@@ -174,6 +197,12 @@
     box-sizing: border-box;
 }
 
+.announcement-body-text {
+    word-break:break-word;
+    overflow-wrap:break-word;
+    white-space:normal;
+}
+
 .placeholder-content {
     display: flex;
     flex-direction: column; 
@@ -190,5 +219,43 @@
 
 .placeholder-content h2 {
     margin: 0 0 8px 0;
+}
+
+.unread-status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #22C55E; 
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0; 
+}
+
+@media screen and (max-width: 992px) {
+    .announcement-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+        gap: 16px;
+        padding:0px;
+    }
+
+    .left-panel {
+        background-color: white; 
+        border-radius: 12px;
+        height: 340px;
+        padding: 12px;
+    }
+
+    .right-panel {
+        background-color: white;
+        border-radius: 12px;
+        padding: 20px 16px;
+        border-top: 2px solid #eaebeb;
+    }
+
+    .no-selection-placeholder {
+        min-height: 260px;
+    }
 }
 

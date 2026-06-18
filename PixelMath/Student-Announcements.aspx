@@ -13,7 +13,7 @@
             <div class="panel-search">
                 <div class="search-wrap">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input class="search-input" type="text" placeholder="Search announcements..." id="search-input" oninput="filterAnnouncements()"/>
+                    <input class="search-input" type="text" placeholder="Search announcements..." id="search-input" oninput="filterAnnouncements()" onkeydown="if(event.key === 'Enter') {return false;}"/>
                 </div>
             </div>
 
@@ -26,14 +26,19 @@
                             CssClass="announcements-card-button">  
             
                             <div class="announcements">
-                                <div class="left-title">
-                                    <asp:Label ID="LabelLeftTitle" runat="server" /></h3>
-                                </div>
-                                <div class="left-meta">
-                                    <asp:Label ID="LabelLeftTeacher" runat="server" />
-                                    <span class="meta-dot">&middot;</span>
-                                    <asp:Label ID="labelLeftDate" runat="server" />
-                                </div>
+                                <asp:Panel ID="PanelStatusDot" runat="server" CssClass="unread-status-dot"></asp:Panel>
+
+                                <div class="announcement-text-content">
+                                    <div class="left-title">
+                                        <asp:Label ID="LabelLeftTitle" runat="server" />
+                                    </div>
+
+                                    <div class="left-meta">
+                                        <asp:Label ID="LabelLeftTeacher" runat="server" />
+                                        <span class="meta-dot">&middot;</span>
+                                        <asp:Label ID="labelLeftDate" runat="server" />
+                                    </div>
+                               </div>
                             </div>
 
                             <div class="left-separator-line"></div>
@@ -70,7 +75,10 @@
                     </div>
                 </div>
             
-                <p><asp:Label ID="AnnouncementMessage" runat="server"></asp:Label></p>
+                <p class="announcement-body-text">
+                    <asp:Label ID="AnnouncementMessage" runat="server"></asp:Label>
+                </p>
+
             </asp:Panel>
 
             <asp:Panel ID="rightPanelPlaceHolder" runat="server" CssClass="no-selection-placeholder">
@@ -124,13 +132,19 @@
             if (!hasResults && filter.length > 0) {
                 var newFallback = document.createElement("div");
                 newFallback.id = "no-announcements-row";
+                newFallback.style.display = "flex";
+                newFallback.style.flexDirection = "column";
+                newFallback.style.alignItems = "center";
+                newFallback.style.justifyContent = "center";
+                newFallback.style.gap = "12px";
+
                 newFallback.style.textAlign = "center";
-                newFallback.style.padding = "30px 16px";
+                newFallback.style.padding = "40px 16px";
                 newFallback.style.color = "#6B7280";
                 newFallback.style.fontFamily = "'Nunito', sans-serif";
                 newFallback.style.fontSize = "13px";
 
-                newFallback.innerHTML = '<i class="fa-solid fa-bullhorn" style="display:block; font-size:24px; color:#CBD5E1; margin-bottom:8px;"></i>No announcement found matching your search.';
+                newFallback.innerHTML = '<img src="result-no-found.png" width="65" height="55" alt="Empty Search View" />No announcement found matching your search.';
 
                 container.appendChild(newFallback);
             }
