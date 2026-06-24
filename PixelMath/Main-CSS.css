@@ -4,15 +4,15 @@
     color: #1a1a1a;
     min-height: 100vh;
     overflow-x: hidden;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
 }
 
 .dashboard-layout {
     display: grid;
     grid-template-columns: 240px 1fr;
     min-height: 100vh;
-    width:100%;
+    width: 100%;
 }
 
 .sidebar {
@@ -24,8 +24,11 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     box-sizing: border-box;
+    overflow: hidden;
+    flex-shrink: 0;
+    min-width: 240px;
+    max-width: 240px;
 }
 
 .sidebar-head {
@@ -41,9 +44,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding-left:20px;
-    padding-bottom:10px;
-    width:100%;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    width: 100%;
 }
 
 .sidebar-logo img {
@@ -98,25 +101,25 @@
 .sidebar-category {
     padding: 8px 12px 4px;
     font-size: 10px;
-    font-weight:1000;
-    color:#15803D;
+    font-weight: 1000;
+    color: #15803D;
     letter-spacing: .08em;
     text-transform: uppercase;
 }
 
 .sidebar-selection {
-    display:flex;
+    display: flex;
     align-items: center;
     gap: 10px;
     padding: 9px 14px;
     margin: 4px 0px;
     border-radius: 10px;
-    font-size:13px;
-    font-weight:600;
-    color:#374151;
-    cursor:pointer;
-    position:relative;
-    text-decoration:none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
 }
 
 .sidebar-selection:hover {
@@ -130,7 +133,7 @@
 }
 
 .sidebar-footer {
-    margin-top:auto;
+    margin-top: auto;
     padding-top: 12px;
 }
 
@@ -223,21 +226,29 @@
 .modal-buttons {
     display: flex;
     gap: 12px;
+    width:100%;
 }
 
-.modal-buttons button {
-    flex: 1;
-    padding: 12px;
+.modal-buttons button,
+.modal-buttons .btn-confirm {
+    flex: 1; 
+    height: 45px; 
+    padding: 0 16px;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     border: none;
-    font-family: 'Nunito', sans-serif;
     transition: background 0.15s ease-in-out, transform 0.1s;
+    text-decoration: none; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
-.modal-buttons button:active {
+.modal-buttons button:active,
+.modal-buttons .btn-confirm:active {
     transform: scale(0.98);
 }
 
@@ -252,7 +263,7 @@
 
 .btn-confirm {
     background: #EF4444;
-    color: #ffffff;
+    color: #ffffff 
 }
 
 .btn-confirm:hover {
@@ -263,7 +274,7 @@
     background: #F0FDF4;
     min-height: 100vh;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     box-sizing: border-box;
 }
 
@@ -271,6 +282,17 @@
     background: #fff;
     padding: 10px 40px 18px 40px;
     border-bottom: 1.5px solid #D1FAE5;
+    position:sticky;
+    top:0;
+    z-index:10;
+}
+
+.topbar-block {
+    background-color: #F0FDF4;
+    height: 30px;
+    position: sticky;
+    top: 60.25px;
+    z-index: 10;
 }
 
 .topbar-title {
@@ -283,11 +305,9 @@
 }
 
 .content {
-    padding: 30px 40px 30px 40px;
+    padding: 0px 40px 30px 40px;
     box-sizing: border-box;
-    flex: 1; 
-    display: flex; 
+    flex: 1;
+    display: flex;
     flex-direction: column;
 }
-
-

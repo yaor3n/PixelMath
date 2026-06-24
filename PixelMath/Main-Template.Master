@@ -28,11 +28,13 @@
 
                     <div class="sidebar-user">
                         <div class="student-avatar">
-                            <img src="Student-Avatar.png" width="200" height="200" />
+                            <img src="Student-Avatar.png" width="200" height="200" alt="Avatar"/>
                         </div>
                         <div>
-                            <div class="username" id="sidebar-name">Name: Ali</div>
-                            <div class="user-role">Student · Form 4</div>
+                            <div class="username" id="sidebar-name">
+                                <asp:Label ID="FullName" runat="server"></asp:Label>
+                            </div>
+                            <div class="user-role">Student · <asp:Label ID="Form" runat="server"></asp:Label></div>
                         </div>
                     </div>
 
@@ -64,7 +66,9 @@
                         <p>Are you sure you want to log out of PixelMath?</p>
                         <div class="modal-buttons">
                             <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                            <button type="button" class="btn-confirm" onclick="">Log Out</button>
+                            <asp:LinkButton ID="btnConfirmLogOut" runat="server" OnClick="btnConfirmLogOut_Click" CssClass="btn-confirm">
+                                Log Out
+                            </asp:LinkButton>
                         </div>
                     </div>
                 </div>
@@ -77,6 +81,7 @@
                             </asp:ContentPlaceHolder>
                         </div>
                     </div>
+                    <div class="topbar-block"></div>
                     <div class="content">
                         <asp:ContentPlaceHolder ID="MainContent" runat="server">
                         </asp:ContentPlaceHolder>
@@ -120,6 +125,7 @@
                 }
             });
         });
+        
     </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ namespace PixelMath
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string connString = ConfigurationManager.ConnectionStrings["PixelMathDB"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
             string hashedPassword = ComputeSha256Hash(txtPassword.Text);
 

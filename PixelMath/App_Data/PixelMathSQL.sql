@@ -31,8 +31,7 @@ CREATE TABLE [Users] (
   [PasswordHash] VARCHAR(255),
   [RoleId] INT,
   [IsApproved] BIT DEFAULT 0,
-  [CreatedAt] DATETIME DEFAULT GETDATE(),
-  [EducationLevel] INT NULL
+  [CreatedAt] DATETIME DEFAULT GETDATE()
 );
 GO
 
@@ -58,7 +57,7 @@ CREATE TABLE [Announcements] (
   [Title] VARCHAR(200),
   [Message] NVARCHAR(MAX),
   [ClassId] INT,
-  [CreatedBy] UNIQUEIDENTIFIER, -- Matched to UUID
+  [CreatedBy] UNIQUEIDENTIFIER, 
   [CreatedAt] DATETIME DEFAULT GETDATE()
 );
 GO

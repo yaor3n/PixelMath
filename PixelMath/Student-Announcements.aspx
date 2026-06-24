@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Announcements.aspx.cs" Inherits="PixelMath.Student_Announcements" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="Student-Announcements-CSS.css" />
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
@@ -83,7 +84,12 @@
 
             <asp:Panel ID="rightPanelPlaceHolder" runat="server" CssClass="no-selection-placeholder">
                 <div class="placeholder-content">
-                    <img src="Select-Announcement.png" width="75" height="75" />
+                    <dotlottie-wc
+                        src="https://lottie.host/67d4aa18-e36f-44c7-91b0-0df0508482b7/8MlMoAKLqG.lottie"
+                        style="width: 75px;height: 75px"
+                        autoplay
+                        loop
+                    ></dotlottie-wc>
                     <h2>No Announcement Selected</h2>
                     <p>Click on any announcement from the left-side list view to read its detailed description info message contents.</p>
                 </div>

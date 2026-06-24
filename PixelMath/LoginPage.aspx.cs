@@ -17,7 +17,7 @@ namespace PixelMath
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string connString = ConfigurationManager.ConnectionStrings["PixelMathDB"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
             string plainEmail = email.Text.Trim();
             string plainPassword = txtPassword.Text;

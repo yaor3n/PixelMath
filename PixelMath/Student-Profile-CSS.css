@@ -1,23 +1,39 @@
 ﻿body {
 }
 
+/* Base Layout Override */
 .profile-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    flex: 1;
     background-color: white;
     border-radius: 16px;
-    overflow: hidden;
-    padding: 10px;
-    height: 100%;
+    padding: 15px;
+}
+
+/* --- personal info and quiz progress --- */
+.profile-top-section {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    width: 100%;
+}
+
+/* Force both boxes to be exactly equal width */
+.left-box, .right-box {
+    flex: 1;
 }
 
 .personal-info {
     border: 2px solid #D1FAE5;
-    margin: 8px;
     border-radius: 16px;
-    padding:10px;
+    padding: 15px;
+}
+
+.image-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 }
 
 .title {
@@ -25,33 +41,202 @@
     font-size: 22px;
     color: #14532D;
     line-height: 1.25;
-    gap:10px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
+.profile-picture {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #ecfdf5;
+}
 
-/* Centers the badge row horizontally inside the profile card */
+.image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .profile-badge {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 16px 0 24px 0; /* Creates clean spacing below the avatar image */
+    margin: 16px 0 24px 0;
+}
+
+.profile-badge span, #MainContent_ProfileBadge {
+    background-color: #E6FBF0;
+    border: 1.5px solid #BBF7D0;
+    color: #15803D;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 6px 20px;
+    border-radius: 50px;
+    letter-spacing: 0.2px;
+}
+
+.personal-info-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin: 4px 0 15px 0;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    text-align:center;
+}
+
+/* --- Clean Table Elements --- */
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.profile-table tr {
+    border-bottom: 1px dashed #e2e8f0;
+}
+
+.profile-table tr:last-child {
+    border-bottom: none;
+}
+
+.profile-table td {
+    padding: 12px 0;
+    vertical-align: middle;
+}
+
+.form-field-label {
+    width: 150px; 
+    font-size: 12px;
+    font-weight: 800;
+    color: #15803D;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.colon-column {
+    width: 25px;
+    font-weight: 700;
+    color: #15803D;
+    font-size: 14px;
+}
+
+.profile-disabled-input {
+    background-color: transparent;
+    color: #334155;
+    border: none;
+    outline: none;
+    cursor: default;
+    box-shadow: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0;
     width: 100%;
 }
 
-    /* Styles the actual text label to render inside a round minty capsule pill */
-    .profile-badge span,
-    #MainContent_ProfileBadge {
-        background-color: #E6FBF0; /* Soft green pastel background */
-        border: 1.5px solid #BBF7D0; /* Light green accent border line */
-        color: #15803D; /* Deep forest green text color */
+.profile-active-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #BBF7D0;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
 
-        font-family: 'Nunito', sans-serif;
-        font-size: 14px;
-        font-weight: 800; /* Bold text weighting */
+.profile-active-input:focus {
+    outline: none;
+    border-color: #15803D;
+}
 
-        padding: 6px 20px; /* Expands width to resemble a rounded pill button */
-        border-radius: 50px; /* Forces round edges on both sides */
-        display: inline-block;
-        text-align: center;
-        letter-spacing: 0.2px;
+.personal-detail {
+    margin-top: 10px;
+}
+
+.profile-btn-edit, .profile-btn-save, .profile-btn-cancel {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.profile-btn-edit {
+    background-color: #28a745;
+    color: white;
+}
+
+.profile-btn-save {
+    background-color: #007acc;
+    color: white;
+}
+
+.profile-btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.57);
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1.5px solid #D1FAE5;
+    animation: modalPopUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.modal-buttons button,
+.modal-buttons .button-confirm {
+    flex: 1;
+    height: 45px;
+    padding: 0 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s ease-in-out, transform 0.1s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.modal-buttons button:active,
+.modal-buttons .button-confirm:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Wrap Mode if screen is minimized */
+@media (max-width: 800px) {
+    .profile-top-section {
+        flex-direction: column;
+        gap: 0;
     }
+}

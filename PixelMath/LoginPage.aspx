@@ -70,5 +70,9 @@
         </footer>
 
     </form>
+
+    <script>
+        sessionStorage.setItem("isLoggedIn", "true");
+    </script>
 </body>
 </html>

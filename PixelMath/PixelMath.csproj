@@ -82,6 +82,7 @@
     <Content Include="Main-CSS.css" />
     <Content Include="Student-Profile-CSS.css" />
     <Content Include="Student-Profile.aspx" />
+    <Content Include="Student-Quiz-CSS.css" />
     <Content Include="Student-Quiz.aspx" />
     <Content Include="Web.config" />
     <Content Include="LoginPage.aspx" />
