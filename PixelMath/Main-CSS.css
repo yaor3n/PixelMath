@@ -1,43 +1,53 @@
-﻿body {
+﻿/* ==========================================================================
+   🌱 GLOBAL STRUCTURAL RESETS
+   ========================================================================== */
+body {
     font-family: 'Nunito', sans-serif;
     background: #F0FDF4;
     color: #1a1a1a;
-    min-height: 100vh;
     overflow-x: hidden;
     margin: 0;
     padding: 0;
 }
 
 .dashboard-layout {
-    display: grid;
-    grid-template-columns: 240px 1fr;
-    min-height: 100vh;
+    display: flex;
+    position: relative;
     width: 100%;
+    min-height: 100vh;
 }
 
-.sidebar {
-    background: #ffffff;
-    border-right: 1.5px solid #D1FAE5;
-    padding: 10px 16px 20px 16px;
-    position: sticky;
-    top: 0;
-    height: 100vh;
+.main {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    overflow: hidden;
-    flex-shrink: 0;
-    min-width: 240px;
-    max-width: 240px;
+    background: #F0FDF4;
+}
+
+/* ==========================================================================
+   🔄 SIDEBAR CORE GRAPHICS (Shared Visual Tokens)
+   ========================================================================== */
+.sidebar {
+    background: #ffffff;
+    border-right: 1.5px solid #D1FAE5;
+    padding: 0px 16px 20px 16px; /* Removed top padding to align head precisely */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 270px;
+    min-width: 270px;
+    max-width: 270px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-head {
-    height: 50px;
+    height: 70px; /* 🎯 MATCHING HEIGHT STEP 1 */
     display: flex;
     align-items: center;
-    margin-bottom: 25px;
     border-bottom: 1.5px solid #D1FAE5;
     box-sizing: border-box;
+    margin-bottom: 25px;
 }
 
 .sidebar-logo {
@@ -45,14 +55,13 @@
     align-items: center;
     gap: 10px;
     padding-left: 20px;
-    padding-bottom: 10px;
     width: 100%;
 }
 
-.sidebar-logo img {
-    width: 40px;
-    height: 40px;
-}
+    .sidebar-logo img {
+        width: 40px;
+        height: 40px;
+    }
 
 .website-name {
     font-size: 20px;
@@ -79,11 +88,11 @@
     flex-shrink: 0;
 }
 
-.student-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    .student-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
 .username {
     font-size: 13px;
@@ -122,15 +131,15 @@
     text-decoration: none;
 }
 
-.sidebar-selection:hover {
-    background: #F0FDF4;
-}
+    .sidebar-selection:hover {
+        background: #F0FDF4;
+    }
 
-.sidebar-selection.active {
-    background: #22C55E;
-    color: #fff;
-    box-shadow: 0 4px 24px rgba(34, 197, 94, 0.10);
-}
+    .sidebar-selection.active {
+        background: #22C55E;
+        color: #fff;
+        box-shadow: 0 4px 24px rgba(34, 197, 94, 0.10);
+    }
 
 .sidebar-footer {
     margin-top: auto;
@@ -154,10 +163,141 @@
     transition: background .18s;
 }
 
-.logout-btn:hover {
-    background: #FEF2F2;
+    .logout-btn:hover {
+        background: #FEF2F2;
+    }
+
+/* ==========================================================================
+   🖥️ DESKTOP BREAKPOINT FLOWS (Screens wider than 1024px)
+   ========================================================================== */
+@media (min-width: 1025px) {
+    .sidebar-toggle-btn {
+        display: none !important;
+    }
+
+    .sidebar {
+        position: sticky !important;
+        top: 0;
+        height: 100vh;
+        z-index: 10;
+        transform: translateX(0) !important;
+    }
+
+    .main {
+        flex: 1;
+        min-width: 0;
+        width: calc(100% - 270px);
+    }
 }
 
+/* ==========================================================================
+   📱 MOBILE BREAKPOINT FLOWS (Screens 1024px and narrower - iPhone 14 Pro Max)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .sidebar-toggle-btn {
+        display: flex !important;
+    }
+
+    .dashboard-layout {
+        display: block !important;
+    }
+
+    .main {
+        width: 100% !important;
+        min-height: 100vh;
+        margin-left: 0 !important;
+    }
+
+    .sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0 !important;
+        z-index: 2000 !important;
+        height: 100dvh;
+        transform: translateX(-290px);
+        box-shadow: 4px 0 24px rgba(20, 83, 45, 0.15);
+        padding-top: 0px;
+    }
+
+        .sidebar.open {
+            transform: translateX(0) !important;
+        }
+}
+
+/* ==========================================================================
+   🌐 TOPBAR LAYOUT FRAME & GLOBAL NAVIGATION ELEMENTS
+   ========================================================================== */
+.sidebar-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #14532D;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+    .sidebar-toggle-btn:hover {
+        background: #E6FBF0;
+    }
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(2px);
+    z-index: 1999;
+}
+
+    .sidebar-overlay.visible {
+        display: block;
+    }
+
+.topbar {
+    background: #fff;
+    height: 69px; 
+    padding: 0px 40px; 
+    border-bottom: 1.5px solid #D1FAE5;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center; 
+}
+
+.topbar-block {
+    height: 30px;
+    background-color: #F0FDF4;
+    position: sticky;
+    top: 70px; 
+    z-index: 10;
+}
+
+.topbar-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #14532D;
+    display: flex;
+    align-items: center;
+}
+
+.content {
+    padding: 0px 40px 30px 40px;
+    box-sizing: border-box;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- Modals Setup --- */
 .modal {
     display: none;
     position: fixed;
@@ -226,88 +366,119 @@
 .modal-buttons {
     display: flex;
     gap: 12px;
-    width:100%;
+    width: 100%;
 }
 
-.modal-buttons button,
-.modal-buttons .btn-confirm {
-    flex: 1; 
-    height: 45px; 
-    padding: 0 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: background 0.15s ease-in-out, transform 0.1s;
-    text-decoration: none; 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-}
+    .modal-buttons button, .modal-buttons .btn-confirm {
+        flex: 1;
+        height: 45px;
+        padding: 0 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        border: none;
+        transition: background 0.15s ease-in-out, transform 0.1s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
 
-.modal-buttons button:active,
-.modal-buttons .btn-confirm:active {
-    transform: scale(0.98);
-}
+        .modal-buttons button:active, .modal-buttons .btn-confirm:active {
+            transform: scale(0.98);
+        }
 
 .btn-cancel {
     background: #F3F4F6;
     color: #4B5563;
 }
 
-.btn-cancel:hover {
-    background: #E5E7EB;
-}
+    .btn-cancel:hover {
+        background: #E5E7EB;
+    }
 
 .btn-confirm {
     background: #EF4444;
-    color: #ffffff 
+    color: #ffffff;
 }
 
-.btn-confirm:hover {
-    background: #DC2626;
+    .btn-confirm:hover {
+        background: #DC2626;
+    }
+
+/* ==========================================================================
+   📊 PAGE ELEMENT RESPONSIVE OVERRIDES (Preserved Custom Rulesets)
+   ========================================================================== */
+@media (max-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .content-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .resource-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .quiz-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-.main {
-    background: #F0FDF4;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
+@media (max-width: 1024px) {
+    .topbar {
+        padding: 0px 16px !important;
+        /* Dynamic mobile overrides to keep content structure tidy */
+    }
+
+    .content {
+        padding: 0px 16px 30px 16px !important;
+    }
 }
 
-.topbar {
-    background: #fff;
-    padding: 10px 40px 18px 40px;
-    border-bottom: 1.5px solid #D1FAE5;
-    position:sticky;
-    top:0;
-    z-index:10;
-}
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
 
-.topbar-block {
-    background-color: #F0FDF4;
-    height: 30px;
-    position: sticky;
-    top: 60.25px;
-    z-index: 10;
-}
+    .stat-card {
+        padding: 12px;
+        gap: 8px;
+    }
 
-.topbar-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: #14532D;
-    display: flex;
-    align-items: center;
-    padding-top: 4px;
-}
+    .stat-value {
+        font-size: 16px;
+    }
 
-.content {
-    padding: 0px 40px 30px 40px;
-    box-sizing: border-box;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    .resource-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .card {
+        padding: 15px;
+        border-radius: 14px;
+    }
+
+    .quiz-q-card {
+        padding: 16px;
+    }
+
+    .quiz-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .quiz-nav-buttons .btn {
+        flex: 1;
+    }
 }

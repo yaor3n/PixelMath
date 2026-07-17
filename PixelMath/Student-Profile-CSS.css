@@ -233,10 +233,9 @@
     transform: scale(0.98);
 }
 
-/* Responsive Wrap Mode if screen is minimized */
 @media (max-width: 800px) {
     .profile-top-section {
         flex-direction: column;
-        gap: 0;
+        gap: 15px;
     }
 }

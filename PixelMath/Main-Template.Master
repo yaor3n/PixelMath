@@ -4,6 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>PixelMath</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="PixelMath_Logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
@@ -17,7 +18,10 @@
         <div class="dashboard" id="dashboard-app">
             <div class="dashboard-layout">
                 
-                <%--Sidebar--%>
+                <!-- Dark Overlay Mask for Mobile Viewports -->
+                <div id="sidebarOverlayMask" class="sidebar-overlay" onclick="toggleSidebar(event)"></div>
+                
+                <%--Sidebar Layout--%>
                 <aside class="sidebar">
                     <div class="sidebar-head">
                         <div class="sidebar-logo">
@@ -40,7 +44,7 @@
 
                     <div class="sidebar-category"> Main </div>
                     <a href="Student-Dashboard.aspx" class="sidebar-selection"><i class="fa-solid fa-house-chimney-window"></i>Dashboard</a>
-                    <a href="Student-Announcements.aspx"class="sidebar-selection"><i class="fa-solid fa-bell"></i>Announcements</a>
+                    <a href="Student-Announcements.aspx" class="sidebar-selection"><i class="fa-solid fa-bell"></i>Announcements</a>
 
                     <div class="sidebar-category"> Learning </div>
                     <a href="Student-Quiz.aspx" class="sidebar-selection"><i class="fa-solid fa-file-pen"></i>Take a Quiz</a>
@@ -58,7 +62,7 @@
                     </div>
                 </aside>
 
-                <%--Logout popout--%>
+                <%--Logout Confirmation Modal Box--%>
                 <div id="logoutConfirmation" class="modal">
                     <div class="modal-content">
                         <div class="modal-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
@@ -73,12 +77,18 @@
                     </div>
                 </div>
 
-                <%-- Content Area --%>
+                <%-- Content Area Window Framework --%>
                 <main class="main" id="main-content">
                     <div class="topbar">
-                        <div class="topbar-title">
-                            <asp:ContentPlaceHolder ID="TopbarTitleContent" runat="server">
-                            </asp:ContentPlaceHolder>
+                        <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+                            <!-- 🎯 THE FULL RESPONSIVE TOGGLE ENGINE BUTTON -->
+                            <button type="button" id="sidebarToggle" class="sidebar-toggle-btn" onclick="toggleSidebar(event)">
+                                <i class="fa-solid fa-bars"></i>
+                            </button>
+                            <div class="topbar-title">
+                                <asp:ContentPlaceHolder ID="TopbarTitleContent" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </div>
                         </div>
                     </div>
                     <div class="topbar-block"></div>
@@ -92,6 +102,7 @@
     </form>
 
     <script>
+        // --- Modal Display Rules ---
         function openModal() {
             document.getElementById("logoutConfirmation").style.display = "flex";
             document.body.style.overflow = "hidden";
@@ -109,6 +120,20 @@
             }
         }
 
+        // --- Sidebar Menu Interactivity Engine ---
+        function toggleSidebar(event) {
+            if (event) event.stopPropagation();
+
+            var sidebar = document.querySelector(".sidebar");
+            var overlay = document.getElementById("sidebarOverlayMask");
+
+            sidebar.classList.toggle("open");
+            if (overlay) {
+                overlay.classList.toggle("visible");
+            }
+        }
+
+        // --- DOM Active Selection Mapping ---
         window.addEventListener("DOMContentLoaded", function () {
             var currentPage = window.location.pathname.split("/").pop();
 
@@ -117,15 +142,23 @@
             }
 
             var sidebarLinks = document.querySelectorAll(".sidebar-selection");
-
             sidebarLinks.forEach(function (link) {
                 var linkTarget = link.getAttribute("href");
                 if (linkTarget === currentPage) {
                     link.classList.add("active");
                 }
+
+                // Clicking a menu item auto-closes the drawer panel panel smoothly on mobile viewports
+                link.addEventListener("click", function () {
+                    var sidebar = document.querySelector(".sidebar");
+                    var overlay = document.getElementById("sidebarOverlayMask");
+                    if (sidebar.classList.contains("open")) {
+                        sidebar.classList.remove("open");
+                        if (overlay) overlay.classList.remove("visible");
+                    }
+                });
             });
         });
-        
     </script>
 </body>
 </html>

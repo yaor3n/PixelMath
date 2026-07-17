@@ -84,6 +84,7 @@
     <Content Include="Student-Profile.aspx" />
     <Content Include="Student-Quiz-CSS.css" />
     <Content Include="Student-Quiz.aspx" />
+    <Content Include="Student-Resources.aspx" />
     <Content Include="Web.config" />
     <Content Include="LoginPage.aspx" />
   </ItemGroup>
@@ -159,9 +160,17 @@
     <Compile Include="LoginPage.aspx.designer.cs">
       <DependentUpon>LoginPage.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Student-Resources.aspx.cs">
+      <DependentUpon>Student-Resources.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Resources.aspx.designer.cs">
+      <DependentUpon>Student-Resources.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main-Template.Master" />
+    <Content Include="Learning-Resources\Tutorial 3-NFA.pdf" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
