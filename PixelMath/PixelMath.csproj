@@ -80,6 +80,7 @@
     <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
     <Content Include="Main-CSS.css" />
+    <Content Include="Student-Previous-Quiz.aspx" />
     <Content Include="Student-Profile-CSS.css" />
     <Content Include="Student-Profile.aspx" />
     <Content Include="Student-Quiz-CSS.css" />
@@ -138,6 +139,13 @@
     </Compile>
     <Compile Include="Student-Dashboard.aspx.designer.cs">
       <DependentUpon>Student-Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student-Previous-Quiz.aspx.cs">
+      <DependentUpon>Student-Previous-Quiz.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Previous-Quiz.aspx.designer.cs">
+      <DependentUpon>Student-Previous-Quiz.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student-Profile.aspx.cs">
       <DependentUpon>Student-Profile.aspx</DependentUpon>

@@ -24,6 +24,24 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Panel QuizListPanel;
 
         /// <summary>
+        /// SearchQuiz control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox SearchQuiz;
+
+        /// <summary>
+        /// FilterQuestionType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList FilterQuestionType;
+
+        /// <summary>
         /// RepeatQuizzes control.
         /// </summary>
         /// <remarks>
@@ -96,15 +114,6 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Panel ActiveQuizPanel;
 
         /// <summary>
-        /// btnBack control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBack;
-
-        /// <summary>
         /// ActiveQuizTitleLabel control.
         /// </summary>
         /// <remarks>
@@ -112,6 +121,24 @@ namespace PixelMath
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ActiveQuizTitleLabel;
+
+        /// <summary>
+        /// TotalDurationSecondsHidden control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField TotalDurationSecondsHidden;
+
+        /// <summary>
+        /// SecondsRemainingHidden control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField SecondsRemainingHidden;
 
         /// <summary>
         /// RepeatQuestions control.
@@ -130,5 +157,41 @@ namespace PixelMath
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button ButtonSubmitQuiz;
+
+        /// <summary>
+        /// QuizResultPanel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel QuizResultPanel;
+
+        /// <summary>
+        /// FinalScore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label FinalScore;
+
+        /// <summary>
+        /// TimeUsed control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label TimeUsed;
+
+        /// <summary>
+        /// FinishQuiz control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button FinishQuiz;
     }
 }

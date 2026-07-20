@@ -1,4 +1,6 @@
-﻿body {
+﻿
+body {
+    
 }
 
 .quiz-page {
@@ -7,21 +9,14 @@
     background-color: white;
     border-radius: 16px;
     padding: 15px;
-    height:100%;
-}
-
-.quiz-filter {
-    border: 2px solid #D1FAE5;
-    border-radius: 16px;
-    padding: 15px;
-    background-color: pink;
+    height: 100%;
 }
 
 .quiz-content {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
-    margin-top:20px;
+    margin-top: 20px;
     width: 100%;
     box-sizing: border-box;
 }
@@ -39,8 +34,8 @@
 
 .card-top-info {
     display: flex;
-    gap: 16px;
     align-items: center;
+    width: 100%;
 }
 
 .quiz-icon {
@@ -56,20 +51,45 @@
     flex-shrink: 0;
 }
 
-.quiz-meta-text h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: #14532D; 
-    letter-spacing: -0.1px;
-    line-height: 1.3;
+.quiz-meta-text {
+    margin-left: 12px; /* Creates elegant spacing after the icon block */
 }
 
-.quiz-meta-text p {
-    margin: 4px 0 0 0;
-    font-size: 12px;
-    color: #6B7280; 
-    font-weight: 600;
+    .quiz-meta-text h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 800;
+        color: #14532D;
+        letter-spacing: -0.1px;
+        line-height: 1.3;
+    }
+
+    .quiz-meta-text p {
+        margin: 4px 0 0 0;
+        font-size: 12px;
+        color: #6B7280;
+        font-weight: 600;
+    }
+
+/* 🎯 THE MAGIC WRAPPER FIX: Anchors your new outer container div directly to the right side edge */
+.quiz-tag-wrapper {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+/* Beautiful custom pill badge style metrics */
+.quiz-type-tag {
+    display: inline-block;
+    background: #E6FBF0;
+    color: #15803D;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #BBF7D0;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .card-divider {
@@ -86,17 +106,6 @@
     width: 100%;
 }
 
-.quiz-type {
-    background: #DCFCE7; 
-    color: #15803D;
-    padding: 6px 14px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-}
-
 .quiz-pass-mark {
     font-size: 13px;
     color: #374151;
@@ -104,7 +113,7 @@
 }
 
 /* ==========================================================================
-   🎯 QUIZ LANDING PAGE PANEL MODULE STYLES
+   🎯 QUIZ LANDING STAGING AREA STYLES
    ========================================================================== */
 .quiz-landing-container {
     display: flex;
@@ -166,10 +175,10 @@
     gap: 15px;
     justify-content: center;
     align-items: center;
-    flex-wrap: wrap; /* Ensures fluid dropping stack orders on phone viewports */
+    flex-wrap: wrap;
 }
 
-/* Button Refinements */
+/* Button UI Components */
 .landing-btn {
     height: 45px;
     padding: 0 25px;
@@ -196,14 +205,249 @@
         background: #16A34A !important;
     }
 
-/* Mobile Responsive Optimization rules */
+.active-quiz-top {
+    display: flex;
+    flex-direction:column;
+    gap: 14px;
+    width: 100%;
+}
+
+.card-quiz-q-card {
+    background:#fff;
+    border:1.5px solid #BBF7D0;
+    padding:20px;
+    border-radius:14px;
+    margin-bottom:20px;
+}
+
+.quiz-header-bar {
+    margin-bottom: 15px;
+    font-size: 20px;
+    font-weight: 700;
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    box-sizing:border-box;
+}
+
+.timer-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+    /* 🎨 Light-Yellow Pastel Tag Color Palette */
+    background-color: #FEFCE8;
+    color: #854D0E;
+    border: 1px solid #FEF08A;
+    /* Tag Borders & Internal Spacing Box */
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-family: 'Nunito', sans-serif;
+    white-space: nowrap;
+    letter-spacing: -0.1px;
+    box-shadow: 0 2px 4px rgba(133, 77, 14, 0.02);
+    box-sizing: border-box;
+}
+
+.question-number {
+    background: #DCFCE7;
+    color: #15803D;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #BBF7D0;
+    white-space: nowrap; /* Prevents "Question 1:" from breaking into two lines */
+    flex-shrink: 0;
+}
+
+.question {
+    font-size: 16px;
+    font-weight: 700;
+    color: #14532D;
+    line-height: 1.5;
+    margin-left:12px;
+    padding-top: 3px;
+}
+
+.options-block{
+    margin:5px 8px 15px 8px;
+    width:100%;
+}
+
+.quiz-options-list{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 10px;
+}
+
+    .quiz-options-list td {
+        padding: 0;
+    }
+
+.quiz-nav-buttons {
+    display: flex;
+    justify-content: flex-end; 
+    width: 100%;
+    margin-top: 24px;
+    box-sizing: border-box;
+}
+
+.btn-confirm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #EF4444; /* Brand Deep Forest Green */
+    color: #ffffff;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(20, 83, 45, 0.15);
+    transition: background-color 0.18s ease, transform 0.1s ease;
+}
+
+/* ==========================================================================
+   🔍 QUIZ FILTER ENGINE BAR (Announcement Matched Style)
+   ========================================================================== */
+.quiz-filter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 0px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Container spacing for the search layout */
+.filter-left {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 350px; /* Limits the search bar width on wide screens */
+}
+
+/* Absolute Positioning Anchor */
+.search-wrap {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Polished input mirroring your announcement metrics */
+.search-input {
+    width: 100%;
+    padding: 10px 14px 10px 38px; /* 38px padding pushes text right to make room for the icon */
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: #1a1a1a;
+    background: #fff;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color .18s, box-shadow .18s;
+}
+
+/* Brand green theme glow on focus */
+.search-wrap:focus-within .search-input {
+    border-color: #14532D;
+}
+
+/* Placed absolutely on the left inside the input element boundary */
+.search-wrap i {
+    position: absolute;
+    left: 14px;
+    color: #9CA3AF;
+    font-size: 14px;
+    pointer-events: none;
+    transition: color .18s ease;
+}
+
+/* Color transition shifts to highlight green on focus */
+.search-wrap:focus-within i {
+    color: #14532D;
+}
+
+/* Right layout dropdown alignment elements */
+.filter-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #14532D;
+    font-family: 'Nunito', sans-serif;
+}
+
+.filter-dropdown {
+    height: 38px;
+    padding: 0 12px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    color: #1a1a1a;
+    background-color: #ffffff;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.18s;
+}
+
+    .filter-dropdown:focus {
+        border-color: #14532D;
+    }
+
+.no-quiz-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 450px; 
+    width: 100%;
+    background: #ffffff;
+    border: 1.5px solid #E6FBF0;
+    border-radius: 20px;
+    text-align: center;
+    padding: 60px 20px;
+    color: #6B7280;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+
 @media (max-width: 480px) {
+    .quiz-page {
+        background: transparent !important; /* Blends the white card background into the main body */
+        border: none !important; /* Removes strict outer card border boundaries */
+        box-shadow: none !important; /* Removes harsh floating shadow edge cutoffs */
+        padding: 8px 4px !important; /* Tightens padding so quiz items maximize screen space */
+        margin: 0 !important;
+    }
+
     .quiz-landing-card {
         padding: 20px;
     }
 
     .quiz-landing-actions {
-        flex-direction: column-reverse; /* Puts Back button below primary start button on small devices */
+        flex-direction: column-reverse;
         width: 100%;
         gap: 10px;
     }
@@ -211,5 +455,41 @@
     .landing-btn,
     .landing-btn-start {
         width: 100%;
+    }
+
+    .quiz-filter {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 14px;
+        padding: 16px;
+    }
+
+    /* 2. Force the left side wrapper to take full content bounds */
+    .filter-left,
+    .search-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* 🎯 THE CRITICAL FIX: Force the actual text input box to fill out 100% of the row */
+    .search-input {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* 3. Stack the right side dropdown components */
+    .filter-right {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 6px;
+    }
+
+    /* 4. Dropdown fills out edge-to-edge seamlessly */
+    .filter-dropdown {
+        width: 100%;
+        max-width: 100% !important;
+        box-sizing: border-box;
     }
 }
