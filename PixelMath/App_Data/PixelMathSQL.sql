@@ -60,7 +60,8 @@ CREATE TABLE [Announcements] (
   [Message] NVARCHAR(MAX),
   [ClassId] INT,
   [CreatedBy] UNIQUEIDENTIFIER, 
-  [CreatedAt] DATETIME DEFAULT GETDATE()
+  [CreatedAt] DATETIME DEFAULT GETDATE(),
+  [Status] BIT NOT NULL DEFAULT 0 -- 🎯 0 = Unread (show dot), 1 = Read
 );
 GO
 
@@ -112,7 +113,7 @@ CREATE TABLE [QuizAttempts] (
   [TimeTakenSeconds] INT,
   [Score] INT DEFAULT 0,
   [IsCompleted] BIT DEFAULT 0,
-  [IsGraded] BIT DEFAULT 0 -- 🎯 0 = Pending Lecturer Review, 1 = Fully Graded
+  [IsGraded] BIT DEFAULT 0 -- 0 = Pending Lecturer Review, 1 = Fully Graded
 );
 GO
 
@@ -121,9 +122,9 @@ CREATE TABLE [StudentAnswers] (
   [AttemptId] INT,
   [QuestionId] INT,
   [SelectedOptionId] INT NULL, -- NULL for subjective answers
-  [AnswerText] NVARCHAR(MAX) NULL, -- 🎯 Typed response for subjective questions
-  [IsMarked] BIT DEFAULT 0, -- 🎯 0 = Pending lecturer mark, 1 = Graded
-  [LecturerFeedback] NVARCHAR(MAX) NULL -- 🎯 Remarks left by lecturer
+  [AnswerText] NVARCHAR(MAX) NULL, -- Typed response for subjective questions
+  [IsMarked] BIT DEFAULT 0, -- 0 = Pending lecturer mark, 1 = Graded
+  [LecturerFeedback] NVARCHAR(MAX) NULL -- Remarks left by lecturer
 );
 GO
 
@@ -160,10 +161,9 @@ ALTER TABLE [StudentAnswers] ADD FOREIGN KEY ([SelectedOptionId]) REFERENCES [Op
 GO
 
 -- ═════════════════════════════════════════════════════════════
--- 4. MASTER DATA SEEDING (ROLES & SAMPLE QUIZ)
+-- 4. MASTER DATA SEEDING (ROLES & SAMPLE ANNOUNCEMENT)
 -- ═════════════════════════════════════════════════════════════
 
--- Insert System Roles
 SET IDENTITY_INSERT [Roles] ON;
 INSERT INTO [Roles] ([RoleId], [RoleName]) VALUES 
 (1, 'Student'),
