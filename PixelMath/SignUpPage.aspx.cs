@@ -12,7 +12,17 @@ namespace PixelMath
 
         protected void btnSubmit_Click(object sender, EventArgs e)
         {
-            string connString = ConfigurationManager.ConnectionStrings["PixelMathDB"].ConnectionString;
+            // Safe lookup: checks PixelMathConnStr first, then falls back to PixelMathDB
+            var connSetting = ConfigurationManager.ConnectionStrings["PixelMathConnStr"]
+                           ?? ConfigurationManager.ConnectionStrings["PixelMathDB"];
+
+            if (connSetting == null)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Connection string not found in Web.config.');", true);
+                return;
+            }
+
+            string connString = connSetting.ConnectionString;
 
             string hashedPassword = ComputeSha256Hash(txtPassword.Text);
 

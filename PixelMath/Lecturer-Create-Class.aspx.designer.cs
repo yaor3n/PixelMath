@@ -11,7 +11,7 @@ namespace PixelMath
 {
 
 
-    public partial class Lecturer_Dashboard
+    public partial class Lecturer_Create_Class
     {
 
         /// <summary>
@@ -42,49 +42,49 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// litTimeGreeting control.
+        /// pnlAlert control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTimeGreeting;
+        protected global::System.Web.UI.WebControls.Panel pnlAlert;
 
         /// <summary>
-        /// litLecturerName control.
+        /// litAlertMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litLecturerName;
+        protected global::System.Web.UI.WebControls.Literal litAlertMessage;
 
         /// <summary>
-        /// litBannerPendingCount control.
+        /// txtClassName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litBannerPendingCount;
+        protected global::System.Web.UI.WebControls.TextBox txtClassName;
 
         /// <summary>
-        /// litPendingCount control.
+        /// txtDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litPendingCount;
+        protected global::System.Web.UI.WebControls.TextBox txtDescription;
 
         /// <summary>
-        /// litUnreadAnnouncements control.
+        /// btnCreateClass control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litUnreadAnnouncements;
+        protected global::System.Web.UI.WebControls.Button btnCreateClass;
 
         /// <summary>
         /// litClassCount control.
@@ -96,39 +96,21 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Literal litClassCount;
 
         /// <summary>
-        /// rptPendingAttempts control.
+        /// rptClasses control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPendingAttempts;
+        protected global::System.Web.UI.WebControls.Repeater rptClasses;
 
         /// <summary>
-        /// pnlNoPending control.
+        /// pnlNoClasses control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoPending;
-
-        /// <summary>
-        /// rptRecentQuizzes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptRecentQuizzes;
-
-        /// <summary>
-        /// pnlNoQuizzes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoQuizzes;
+        protected global::System.Web.UI.WebControls.Panel pnlNoClasses;
     }
 }
