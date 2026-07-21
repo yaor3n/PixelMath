@@ -10,38 +10,48 @@
         <asp:Label ID="LblMessage" runat="server" />
     </asp:Panel>
 
-    <%-- Add / Edit Class form --%>
-    <asp:Panel ID="PanelClassForm" runat="server" CssClass="admin-panel" Visible="false">
-        <div class="admin-panel-header">
-            <div class="admin-panel-title">
-                <asp:Label ID="LblFormTitle" runat="server" Text="Add New Class" />
+<%-- Add / Edit Class popup --%>
+<asp:Panel ID="PanelClassForm" runat="server" CssClass="admin-modal-overlay" Visible="false">
+    <div class="admin-modal-card admin-class-modal">
+        <div class="admin-modal-header">
+            <div>
+                <asp:Label ID="LblFormTitle" runat="server" Text="Add New Class" CssClass="admin-modal-title" />
+                <div class="admin-modal-subtitle">
+                    Enter the class information below.
+                </div>
             </div>
+
+            <asp:LinkButton ID="BtnCloseClassForm" runat="server" CssClass="admin-modal-close" OnClick="BtnCancelForm_Click" CausesValidation="false">
+                &times;
+            </asp:LinkButton>
         </div>
 
         <asp:HiddenField ID="HiddenClassId" runat="server" />
+        <asp:ValidationSummary ID="ClassValidationSummary" runat="server" ValidationGroup="ClassForm" CssClass="admin-inline-message error" HeaderText="Please correct the following:" DisplayMode="BulletList" />
 
         <div class="admin-form-grid">
             <div class="admin-form-field">
                 <label>Class Name</label>
-                <asp:TextBox ID="TxtClassName" runat="server" TextMode="SingleLine" />
-                <asp:RequiredFieldValidator ID="ReqClassName" runat="server" ControlToValidate="TxtClassName"
-                    ErrorMessage="Class name is required." Display="Dynamic" CssClass="admin-inline-message error"
-                    ValidationGroup="ClassForm" />
+                <asp:TextBox ID="TxtClassName"
+                    runat="server"
+                    TextMode="SingleLine"
+                    placeholder="Enter class name" />
+
+                <asp:RequiredFieldValidator ID="ReqClassName" runat="server" ControlToValidate="TxtClassName" ErrorMessage="Class name is required." Display="Dynamic" CssClass="admin-field-error" ValidationGroup="ClassForm" />
             </div>
 
             <div class="admin-form-field">
                 <label>Description</label>
-                <asp:TextBox ID="TxtDescription" runat="server" TextMode="SingleLine" />
+                <asp:TextBox ID="TxtDescription" runat="server" TextMode="MultiLine" Rows="4" placeholder="Enter a short class description" />
             </div>
         </div>
 
-        <div class="admin-form-actions">
-            <asp:Button ID="BtnSaveClass" runat="server" Text="Save Class" CssClass="btn-admin-primary"
-                OnClick="BtnSaveClass_Click" ValidationGroup="ClassForm" CausesValidation="true" />
-            <asp:Button ID="BtnCancelForm" runat="server" Text="Cancel" CssClass="btn-admin-secondary"
-                OnClick="BtnCancelForm_Click" CausesValidation="false" />
+        <div class="admin-modal-actions">
+            <asp:Button ID="BtnCancelForm" runat="server" Text="Cancel" CssClass="btn-admin-secondary" OnClick="BtnCancelForm_Click" CausesValidation="false" />
+            <asp:Button ID="BtnSaveClass" runat="server" Text="Create Class" CssClass="btn-admin-primary" OnClick="BtnSaveClass_Click" ValidationGroup="ClassForm" CausesValidation="true" />
         </div>
-    </asp:Panel>
+    </div>
+</asp:Panel>
 
     <%-- Enrolment panel, shown when "Manage Students" is clicked on a class --%>
     <asp:Panel ID="PanelEnrolment" runat="server" CssClass="admin-panel" Visible="false">

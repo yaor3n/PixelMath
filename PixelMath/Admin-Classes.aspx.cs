@@ -5,12 +5,9 @@ using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace PixelMath
-{
-    public partial class Admin_Classes : System.Web.UI.Page
-    {
+namespace PixelMath {
+    public partial class Admin_Classes : System.Web.UI.Page {
         private string connStr = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["UserId"] == null || Session["RoleId"] == null || Session["RoleId"].ToString() != "3")
@@ -74,9 +71,10 @@ namespace PixelMath
 
         protected void BtnAddClass_Click(object sender, EventArgs e)
         {
-            PanelEnrolment.Visible = false;
             ResetClassForm();
+            PanelMessage.Visible = false;
             LblFormTitle.Text = "Add New Class";
+            BtnSaveClass.Text = "Create Class";
             PanelClassForm.Visible = true;
         }
 
@@ -88,9 +86,9 @@ namespace PixelMath
 
         private void ResetClassForm()
         {
-            HiddenClassId.Value = "";
-            TxtClassName.Text = "";
-            TxtDescription.Text = "";
+            HiddenClassId.Value = string.Empty;
+            TxtClassName.Text = string.Empty;
+            TxtDescription.Text = string.Empty;
         }
 
         protected void RepeatClasses_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -148,7 +146,11 @@ namespace PixelMath
 
         protected void BtnSaveClass_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid) return;
+            if (!Page.IsValid)
+            {
+                PanelClassForm.Visible = true;
+                return;
+            }
 
             string className = TxtClassName.Text.Trim();
             string description = TxtDescription.Text.Trim();

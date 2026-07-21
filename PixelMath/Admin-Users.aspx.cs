@@ -113,10 +113,17 @@ namespace PixelMath
         protected void BtnAddUser_Click(object sender, EventArgs e)
         {
             ResetForm();
+            PanelMessage.Visible = false;
+
             LblFormTitle.Text = "Add New User";
             LblPasswordHint.Text = "Password";
             LblPasswordEditHint.Visible = false;
-            TxtPassword.Attributes["required"] = "required";
+
+            BtnSaveUser.Text = "Create User";
+
+            ReqPassword.Enabled = true;
+            ReqConfirmPassword.Enabled = true;
+
             PanelUserForm.Visible = true;
         }
 
@@ -128,11 +135,13 @@ namespace PixelMath
 
         private void ResetForm()
         {
-            HiddenUserId.Value = "";
-            TxtFullName.Text = "";
-            TxtEmail.Text = "";
-            TxtForm.Text = "";
-            TxtPassword.Text = "";
+            HiddenUserId.Value = string.Empty;
+
+            TxtFullName.Text = string.Empty;
+            TxtEmail.Text = string.Empty;
+            TxtForm.Text = string.Empty;
+            TxtPassword.Text = string.Empty;
+            TxtConfirmPassword.Text = string.Empty;
             DdlRole.SelectedValue = "1";
         }
 
@@ -174,10 +183,13 @@ namespace PixelMath
                                 TxtForm.Text = reader["Form"] != DBNull.Value ? reader["Form"].ToString() : "";
                                 TxtPassword.Text = "";
 
+                                TxtConfirmPassword.Text = "";
                                 LblFormTitle.Text = "Edit User";
-                                LblPasswordHint.Text = "New Password (optional)";
+                                LblPasswordHint.Text = "New Password";
                                 LblPasswordEditHint.Visible = true;
-                                TxtPassword.Attributes.Remove("required");
+                                BtnSaveUser.Text = "Save Changes";
+                                ReqPassword.Enabled = false;
+                                ReqConfirmPassword.Enabled = false;
                                 PanelUserForm.Visible = true;
                             }
                         }
@@ -192,22 +204,63 @@ namespace PixelMath
 
         protected void BtnSaveUser_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid) return;
-
-            string fullName = TxtFullName.Text.Trim();
-            string email = TxtEmail.Text.Trim();
-            int roleId = Convert.ToInt32(DdlRole.SelectedValue);
-            object formValue = (roleId == 1 && !string.IsNullOrWhiteSpace(TxtForm.Text))
-                ? (object)Convert.ToInt32(TxtForm.Text.Trim())
-                : DBNull.Value;
+            if (!Page.IsValid)
+            {
+                PanelUserForm.Visible = true;
+                return;
+            }
 
             bool isEditMode = !string.IsNullOrEmpty(HiddenUserId.Value);
+            string fullName = TxtFullName.Text.Trim();
+            string email = TxtEmail.Text.Trim();
+            string password = TxtPassword.Text;
+            string confirmPassword = TxtConfirmPassword.Text;
+            int roleId = Convert.ToInt32(DdlRole.SelectedValue);
 
-            // On add, password is mandatory
-            if (!isEditMode && string.IsNullOrWhiteSpace(TxtPassword.Text))
+            // Password is compulsory when creating a new user.
+            if (!isEditMode && string.IsNullOrWhiteSpace(password))
             {
                 ShowMessage("Password is required for new users.", false);
+                PanelUserForm.Visible = true;
+
                 return;
+            }
+
+            // Validate password confirmation when either field contains a value.
+            if (!string.IsNullOrWhiteSpace(password) ||
+                !string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                if (password != confirmPassword)
+                {
+                    ShowMessage(
+
+                        "Password and confirm password do not match.",
+
+                        false
+
+                    );
+                    PanelUserForm.Visible = true;
+
+                    return;
+                }
+            }
+
+            // Form level is only stored for students.
+            object formValue = DBNull.Value;
+
+            if (roleId == 1 && !string.IsNullOrWhiteSpace(TxtForm.Text))
+            {
+                int form;
+
+                if (!int.TryParse(TxtForm.Text.Trim(), out form))
+
+                {
+                    ShowMessage("Form level must be a valid number.", false);
+                    PanelUserForm.Visible = true;
+
+                    return;
+                }
+                formValue = form;
             }
 
             using (SqlConnection conn = new SqlConnection(connStr))
@@ -267,16 +320,27 @@ namespace PixelMath
                     ResetForm();
                     LoadUsers();
                 }
-                catch (Exception ex)
+                catch (SqlException ex)
                 {
-                    if (ex.Message.Contains("UNIQUE KEY") || ex.Message.Contains("duplicate"))
+                    if (ex.Number == 2601 || ex.Number == 2627)
                     {
-                        ShowMessage("This email is already registered to another account.", false);
+                        ShowMessage(
+                            "This email is already registered to another account.",
+                            false
+                        );
+
+                        PanelUserForm.Visible = true;
                     }
                     else
                     {
                         ShowMessage("Error saving user: " + ex.Message, false);
+                        PanelUserForm.Visible = true;
                     }
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage("Error saving user: " + ex.Message, false);
+                    PanelUserForm.Visible = true;
                 }
             }
         }
