@@ -80,10 +80,13 @@
     <Content Include="Student-Dashboard-CSS.css" />
     <Content Include="Student-Dashboard.aspx" />
     <Content Include="Main-CSS.css" />
+    <Content Include="Student-Previous-Quiz-CSS.css" />
     <Content Include="Student-Previous-Quiz.aspx" />
     <Content Include="Student-Profile-CSS.css" />
     <Content Include="Student-Profile.aspx" />
     <Content Include="Student-Quiz-CSS.css" />
+    <Content Include="Student-Quiz-Review-CSS.css" />
+    <Content Include="Student-Quiz-Review.aspx" />
     <Content Include="Student-Quiz.aspx" />
     <Content Include="Student-Resources.aspx" />
     <Content Include="Web.config" />
@@ -153,6 +156,13 @@
     </Compile>
     <Compile Include="Student-Profile.aspx.designer.cs">
       <DependentUpon>Student-Profile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student-Quiz-Review.aspx.cs">
+      <DependentUpon>Student-Quiz-Review.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Quiz-Review.aspx.designer.cs">
+      <DependentUpon>Student-Quiz-Review.aspx</DependentUpon>
     </Compile>
     <Compile Include="Student-Quiz.aspx.cs">
       <DependentUpon>Student-Quiz.aspx</DependentUpon>

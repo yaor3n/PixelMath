@@ -1,0 +1,132 @@
+﻿body {
+}
+
+.previous-quiz-container {
+    padding: 24px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.table-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.quiz-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+    .quiz-history-table th {
+        background-color: #e5e7eb;
+        color: #4B5563;
+        font-weight: 700;
+        padding: 14px 20px;
+        border-bottom: 1px solid #E5E7EB;
+    }
+
+    .quiz-history-table td {
+        padding: 16px 20px;
+        border-bottom: 1px solid #F3F4F6;
+        color: #1F2937;
+    }
+
+    .quiz-history-table tr:hover {
+        background-color: #f7fbff;
+    }
+
+    
+
+    /* 🎯 Expandable Review Row Container */
+    .quiz-history-table tr.review-row td {
+        background-color: white;
+        padding: 0;
+        border-bottom: 2px solid #E2E8F0;
+    }
+
+.review-row-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 12px 20px;
+    background-color: white;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+    .review-row-content span {
+        font-size: 13px;
+        color: #64748B;
+    }
+
+/* 🎯 Inline View Review Button */
+.btn-review-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 16px;
+    background-color: #10B981;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    transition: background-color 0.2s ease;
+}
+
+    .btn-review-inline:hover {
+        background-color: #059669;
+    }
+
+/* Status Badges */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge-passed {
+    background-color: #DCFCE7;
+    color: #166534;
+    border: 1px solid #BBF7D0;
+}
+
+.badge-failed {
+    background-color: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+.badge-pending {
+    background-color: #FEFCE8;
+    color: #854D0E;
+    border: 1px solid #FEF08A;
+}
+
+/* Action Button */
+.btn-review {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #10B981;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+    .btn-review:hover {
+        background-color: #059669;
+    }
+
+.empty-history-state {
+    text-align: center;
+    padding: 40px;
+    color: #6B7280;
+}
