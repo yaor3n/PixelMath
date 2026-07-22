@@ -11,7 +11,7 @@ namespace PixelMath
 {
 
 
-    public partial class Lecturer_Dashboard
+    public partial class Lecturer_Manage_Quizzes
     {
 
         /// <summary>
@@ -42,85 +42,58 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// litTimeGreeting control.
+        /// pnlAlert control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTimeGreeting;
+        protected global::System.Web.UI.WebControls.Panel pnlAlert;
 
         /// <summary>
-        /// litLecturerName control.
+        /// litAlertMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litLecturerName;
+        protected global::System.Web.UI.WebControls.Literal litAlertMessage;
 
         /// <summary>
-        /// litBannerPendingCount control.
+        /// txtSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litBannerPendingCount;
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
 
         /// <summary>
-        /// litPendingCount control.
+        /// ddlFilterClass control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litPendingCount;
+        protected global::System.Web.UI.WebControls.DropDownList ddlFilterClass;
 
         /// <summary>
-        /// litUnreadAnnouncements control.
+        /// btnSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litUnreadAnnouncements;
+        protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
-        /// litClassCount control.
+        /// rptQuizzes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litClassCount;
-
-        /// <summary>
-        /// rptPendingAttempts control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptPendingAttempts;
-
-        /// <summary>
-        /// pnlNoPending control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoPending;
-
-        /// <summary>
-        /// rptRecentQuizzes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptRecentQuizzes;
+        protected global::System.Web.UI.WebControls.Repeater rptQuizzes;
 
         /// <summary>
         /// pnlNoQuizzes control.

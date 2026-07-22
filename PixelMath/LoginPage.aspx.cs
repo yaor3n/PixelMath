@@ -19,6 +19,7 @@ namespace PixelMath
         {
             string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
+
             string plainEmail = email.Text.Trim();
             string plainPassword = txtPassword.Text;
 
@@ -48,10 +49,13 @@ namespace PixelMath
                                 // Store raw string data from DB directly into Sessions
                                 Session["UserId"] = reader["UserId"].ToString();
                                 Session["FullName"] = reader["FullName"].ToString();
-                                Session["RoleId"] = reader["RoleId"].ToString(); // Saves "1" or "2"
 
-                                // Route directly using the string ID
-                                RedirectUserBasedOnRole(Session["RoleId"].ToString());
+                                // Store RoleId as int/string cleanly
+                                int roleId = Convert.ToInt32(reader["RoleId"]);
+                                Session["RoleId"] = roleId;
+
+                                // Route directly using the role ID
+                                RedirectUserBasedOnRole(roleId.ToString());
                             }
                             else
                             {

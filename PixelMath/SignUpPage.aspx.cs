@@ -14,6 +14,7 @@ namespace PixelMath
         {
             string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
+
             string hashedPassword = ComputeSha256Hash(txtPassword.Text);
 
             int selectedRoleId = Convert.ToInt32(ddlRole.SelectedValue);
