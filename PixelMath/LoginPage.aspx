@@ -23,7 +23,7 @@
                class="border border-green-700 text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100">
                 Home
             </a>
-        </header>
+        </header> 
 
         <!-- login box -->
         <div class="flex-1 flex items-center justify-center px-6">
@@ -70,9 +70,5 @@
         </footer>
 
     </form>
-
-    <script>
-        sessionStorage.setItem("isLoggedIn", "true");
-    </script>
 </body>
 </html>

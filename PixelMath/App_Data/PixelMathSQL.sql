@@ -1,24 +1,5 @@
-USE master;
-GO
-
 -- ═════════════════════════════════════════════════════════════
--- 1. DROP AND RECREATE THE DATABASE (FRESH START)
--- ═════════════════════════════════════════════════════════════
-IF EXISTS (SELECT * FROM sys.databases WHERE name = 'PixelMath')
-BEGIN
-    ALTER DATABASE [PixelMath] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-    DROP DATABASE [PixelMath];
-END
-GO
-
-CREATE DATABASE [PixelMath];
-GO
-
-USE [PixelMath];
-GO
-
--- ═════════════════════════════════════════════════════════════
--- 2. CREATE TABLES
+-- 1. CREATE TABLES
 -- ═════════════════════════════════════════════════════════════
 CREATE TABLE [Roles] (
   [RoleId] INT PRIMARY KEY IDENTITY(1, 1),
@@ -66,7 +47,6 @@ CREATE TABLE [Announcements] (
 );
 GO
 
--- 🎯 UPDATED RESOURCES TABLE WITH ALL REQUIRED COLUMNS
 CREATE TABLE [Resources] (
   [ResourceId] INT PRIMARY KEY IDENTITY(1, 1),
   [ClassId] INT NOT NULL,
@@ -136,7 +116,7 @@ CREATE TABLE [StudentAnswers] (
 GO
 
 -- ═════════════════════════════════════════════════════════════
--- 3. ADD RELATIONSHIPS (FOREIGN KEYS)
+-- 2. ADD RELATIONSHIPS (FOREIGN KEYS)
 -- ═════════════════════════════════════════════════════════════
 ALTER TABLE [Users] ADD FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([RoleId]);
 ALTER TABLE [Classes] ADD FOREIGN KEY ([CreatedBy]) REFERENCES [Users] ([UserId]);
@@ -158,7 +138,7 @@ ALTER TABLE [StudentAnswers] ADD FOREIGN KEY ([SelectedOptionId]) REFERENCES [Op
 GO
 
 -- ═════════════════════════════════════════════════════════════
--- 4. MASTER DATA SEEDING (ROLES)
+-- 3. MASTER DATA SEEDING (ROLES)
 -- ═════════════════════════════════════════════════════════════
 SET IDENTITY_INSERT [Roles] ON;
 INSERT INTO [Roles] ([RoleId], [RoleName]) VALUES 
