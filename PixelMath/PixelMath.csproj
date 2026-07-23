@@ -67,6 +67,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin-Classes.aspx" />
+    <Content Include="Admin-CSS.css" />
+    <Content Include="Admin-Dashboard.aspx" />
+    <Content Include="Admin-Users.aspx" />
     <Content Include="App_Data\PixelMath.mdf" />
     <Content Include="App_Data\PixelMathSQL.sql" />
     <Content Include="App_Data\PixelMath_log.ldf">
@@ -102,12 +106,33 @@
     <Content Include="LoginPage.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin-Classes.aspx.cs">
+      <DependentUpon>Admin-Classes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-Classes.aspx.designer.cs">
+      <DependentUpon>Admin-Classes.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin-Dashboard.aspx.cs">
       <DependentUpon>Admin-Dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin-Dashboard.aspx.designer.cs">
       <DependentUpon>Admin-Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin-Template.master.cs">
+      <DependentUpon>Admin-Template.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-Template.master.designer.cs">
+      <DependentUpon>Admin-Template.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Admin-Users.aspx.cs">
+      <DependentUpon>Admin-Users.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-Users.aspx.designer.cs">
+      <DependentUpon>Admin-Users.aspx</DependentUpon>
     </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -233,6 +258,7 @@
   <ItemGroup>
     <Content Include="Main-Template.Master" />
     <Content Include="Learning-Resources\Tutorial 3-NFA.pdf" />
+    <Content Include="Admin-Template.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
