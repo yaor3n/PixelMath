@@ -13,8 +13,10 @@ namespace PixelMath
     public partial class Student_Resources : System.Web.UI.Page
     {
         private string connStr = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 1. Ensure user is logged in
             if (Session["UserId"] == null)
             {
                 Response.Redirect("LoginPage.aspx");
@@ -23,30 +25,71 @@ namespace PixelMath
 
             if (!IsPostBack)
             {
-                BindResources();
+                string studentId = Session["UserId"].ToString();
+                LoadResources(studentId);
             }
         }
-        private void BindResources()
-        {
-            string activeUserId = Session["UserId"].ToString();
 
+        private void LoadResources(string studentId)
+        {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // Select columns matching your database diagram (Title, ResourceUrl)
-                string query = "SELECT Title, ResourceUrl FROM Resources";
+                // Query resources available for classes the student is enrolled in
+                string sql = @"
+                    SELECT 
+                        R.ResourceId,
+                        R.Title,
+                        R.ResourceUrl,
+                        R.CreatedAt
+                    FROM Resources R
+                    INNER JOIN StudentClasses SC ON R.ClassId = SC.ClassId
+                    WHERE SC.StudentId = @StudentId
+                    ORDER BY R.CreatedAt DESC;";
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@StudentId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(studentId);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                // If enrolled classes have resources, bind them
+                if (dt.Rows.Count > 0)
                 {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-
-                        // 🎯 Bind the data table to the Repeater element
-                        ResourceRepeater.DataSource = dt;
-                        ResourceRepeater.DataBind(); // <-- THIS EXECUTED THE <%# %> CODE!
-                    }
+                    ResourceRepeater.DataSource = dt;
+                    ResourceRepeater.DataBind();
+                    pnlNoResources.Visible = false;
                 }
+                else
+                {
+                    // Fallback: If no class-specific resources are found, load all resources
+                    LoadAllResources();
+                }
+            }
+        }
+
+        private void LoadAllResources()
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string sql = @"
+                    SELECT 
+                        ResourceId,
+                        Title,
+                        ResourceUrl,
+                        CreatedAt
+                    FROM Resources
+                    ORDER BY CreatedAt DESC;";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                ResourceRepeater.DataSource = dt;
+                ResourceRepeater.DataBind();
+
+                pnlNoResources.Visible = dt.Rows.Count == 0;
             }
         }
     }

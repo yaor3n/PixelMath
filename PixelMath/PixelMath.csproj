@@ -97,7 +97,10 @@
     <Content Include="Student-Quiz-Review-CSS.css" />
     <Content Include="Student-Quiz-Review.aspx" />
     <Content Include="Student-Quiz.aspx" />
+    <Content Include="Student-Resources-CSS.css" />
     <Content Include="Student-Resources.aspx" />
+    <Content Include="Student-Result-CSS.css" />
+    <Content Include="Student-Result.aspx" />
     <Content Include="Web.config" />
     <Content Include="LoginPage.aspx" />
   </ItemGroup>
@@ -228,6 +231,13 @@
     </Compile>
     <Compile Include="Student-Resources.aspx.designer.cs">
       <DependentUpon>Student-Resources.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Student-Result.aspx.cs">
+      <DependentUpon>Student-Result.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Student-Result.aspx.designer.cs">
+      <DependentUpon>Student-Result.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

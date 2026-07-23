@@ -433,6 +433,8 @@ body {
 }
 
 
+
+
 @media (max-width: 480px) {
     .quiz-page {
         background: transparent !important; /* Blends the white card background into the main body */

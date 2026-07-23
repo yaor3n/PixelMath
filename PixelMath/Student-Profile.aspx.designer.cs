@@ -60,6 +60,51 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.TextBox TextJoinedDate;
 
         /// <summary>
+        /// lblProfileAvgScore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProfileAvgScore;
+
+        /// <summary>
+        /// lblProfileCompleted control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProfileCompleted;
+
+        /// <summary>
+        /// lblProfileHighestScore control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProfileHighestScore;
+
+        /// <summary>
+        /// lblProfilePassRate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProfilePassRate;
+
+        /// <summary>
+        /// pnlPassProgressBar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlPassProgressBar;
+
+        /// <summary>
         /// PanelPasswordInput control.
         /// </summary>
         /// <remarks>

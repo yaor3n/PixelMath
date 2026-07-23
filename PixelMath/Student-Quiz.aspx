@@ -3,6 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="Student-Quiz-CSS.css" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.14/dist/dotlottie-wc.js" type="module"></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
@@ -149,6 +150,12 @@
         <asp:Panel ID="QuizResultPanel" runat="server" Visible="false">
             <div class="quiz-landing-container">
                 <div class="quiz-landing-card">
+                    <dotlottie-wc
+                      src="https://lottie.host/2075b9bb-32d3-4d2f-b285-afbe8670425a/MIyh4XFCCb.lottie"
+                      style="width: 120px;height: 120px; display:inline-block;"
+                      autoplay
+                      loop
+                    ></dotlottie-wc>
                     <p>Congratulations</p>
 
                     <div class="quiz-result">
