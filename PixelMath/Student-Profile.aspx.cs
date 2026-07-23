@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 
@@ -18,7 +19,10 @@ namespace PixelMath
 
             if (!IsPostBack)
             {
+                string userId = Session["UserId"].ToString();
+
                 LoadStudentProfile();
+                LoadProfileMetrics(userId);
             }
         }
 
@@ -65,6 +69,44 @@ namespace PixelMath
                     {
                         Response.Write("<script>alert('Error loading profile: " + ex.Message + "');</script>");
                     }
+                }
+            }
+        }
+
+        private void LoadProfileMetrics(string userId)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string sql = @"
+                            SELECT 
+                                COUNT(AttemptId) AS TotalCompleted,
+                                ISNULL(AVG(Score), 0) AS AvgScore,
+                                ISNULL(MAX(Score), 0) AS HighestScore,
+                                SUM(CASE WHEN QA.Score >= Q.PassingMarks THEN 1 ELSE 0 END) AS TotalPassed
+                            FROM QuizAttempts QA
+                            INNER JOIN Quizzes Q ON QA.QuizId = Q.QuizId
+                            WHERE QA.StudentId = @UserId AND QA.IsCompleted = 1;";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@UserId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(userId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    int total = Convert.ToInt32(reader["TotalCompleted"]);
+                    int avgScore = Convert.ToInt32(reader["AvgScore"]);
+                    int highestScore = Convert.ToInt32(reader["HighestScore"]);
+                    int totalPassed = reader["TotalPassed"] != DBNull.Value ? Convert.ToInt32(reader["TotalPassed"]) : 0;
+
+                    lblProfileAvgScore.Text = avgScore + "%";
+                    lblProfileCompleted.Text = total.ToString();
+                    lblProfileHighestScore.Text = highestScore + "%"; // Displays e.g. "100%" or "95%"
+
+                    // Calculate Pass Rate Percentage
+                    int passRate = total > 0 ? (int)Math.Round((double)totalPassed / total * 100) : 0;
+                    lblProfilePassRate.Text = passRate + "%";
+                    pnlPassProgressBar.Style["width"] = passRate + "%";
                 }
             }
         }

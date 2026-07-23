@@ -5,24 +5,45 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
+    Learning Resources
 </asp:Content>
+
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="resource-container">
-        <h2>Learning Materials</h2>
-        
-        <!-- 🎯 Wrap the link in a Repeater to loop through rows properly -->
-        <asp:Repeater ID="ResourceRepeater" runat="server">
+       <asp:Repeater ID="ResourceRepeater" runat="server">
             <ItemTemplate>
-                <div class="resource-card" style="margin-bottom: 15px;">
-                    <!-- Displaying the Title column from your DB -->
-                    <h3><%# Eval("Title") %></h3>
-                    
-                    <!-- The clickable link that opens the PDF path in a new tab -->
-                    <a href='<%# ResolveUrl(Eval("ResourceUrl").ToString()) %>' target="_blank" class="view-btn">
-                        View Learning Resource (PDF)
-                    </a>
+                <div class="resource-card">
+                    <!-- Top Section: Icon on Left | Title & Date Stacked on Right -->
+                    <div class="resource-header">
+                        <div class="resource-icon">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <div class="resource-details">
+                            <h3 class="resource-title"><%# Eval("Title") %></h3>
+                            <span class="resource-meta">
+                                <i class="fa-regular fa-calendar"></i> <%# Eval("CreatedAt", "{0:dd MMM yyyy}") %>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Row: View Button (Left) | Download Button (Right) -->
+                    <div class="resource-action-row">
+                        <!-- VIEW BUTTON (LEFT) -->
+                        <a href='<%# ResolveUrl(Eval("ResourceUrl").ToString().Replace("~Uploads", "~/Uploads").Replace("~~", "~")) %>' target="_blank" class="btn-action btn-view">
+                            <i class="fa-solid fa-eye"></i> View
+                        </a>
+
+                        <!-- DOWNLOAD BUTTON (RIGHT) -->
+                        <a href='<%# ResolveUrl(Eval("ResourceUrl").ToString().Replace("~Uploads", "~/Uploads").Replace("~~", "~")) %>' download class="btn-action btn-download">
+                            <i class="fa-solid fa-download"></i> Download
+                        </a>
+                    </div>
                 </div>
             </ItemTemplate>
         </asp:Repeater>
+
+        <asp:Panel ID="pnlNoResources" runat="server" Visible="false" CssClass="no-resource-msg">
+            No learning resources available yet.
+        </asp:Panel>
     </div>
 </asp:Content>

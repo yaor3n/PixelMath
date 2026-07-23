@@ -190,9 +190,6 @@ body {
     }
 }
 
-/* ==========================================================================
-   📱 MOBILE BREAKPOINT FLOWS (Screens 1024px and narrower - iPhone 14 Pro Max)
-   ========================================================================== */
 @media (max-width: 1024px) {
     .sidebar-toggle-btn {
         display: flex !important;
@@ -268,7 +265,7 @@ body {
     border-bottom: 1.5px solid #D1FAE5;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 100;
     display: flex;
     align-items: center; 
 }
@@ -277,8 +274,8 @@ body {
     height: 30px;
     background-color: #F0FDF4;
     position: sticky;
-    top: 70px; 
-    z-index: 10;
+    top: 69.5px; 
+    z-index: 100;
 }
 
 .topbar-title {

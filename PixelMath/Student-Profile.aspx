@@ -59,8 +59,51 @@
                 <div class="title">
                     <i class="fa-solid fa-chart-line"></i>Quiz Progress
                 </div>
-                <div class="personal-detail" style="text-align: center; color: #64748b; padding-top: 40px;">
-                    <p>Performance metrics coming soon</p>
+
+                <div class="metrics-container">
+                    <!-- Metric 1: Average Score -->
+                    <div class="metric-item">
+                        <div class="metric-icon green">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-value"><asp:Label ID="lblProfileAvgScore" runat="server" Text="0%"></asp:Label></span>
+                            <span class="metric-label">Average Score</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric 2: Completed Quizzes -->
+                    <div class="metric-item">
+                        <div class="metric-icon blue">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-value"><asp:Label ID="lblProfileCompleted" runat="server" Text="0"></asp:Label></span>
+                            <span class="metric-label">Quizzes Completed</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric 3: Highest Score -->
+                    <div class="metric-item">
+                        <div class="metric-icon yellow">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="metric-data">
+                            <span class="metric-value"><asp:Label ID="lblProfileHighestScore" runat="server" Text="0%"></asp:Label></span>
+                            <span class="metric-label">Highest Score</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric 4: Pass Rate Bar -->
+                    <div class="metric-progress-box">
+                        <div class="progress-info">
+                            <span class="progress-title">Pass Rate</span>
+                            <span class="progress-percent"><asp:Label ID="lblProfilePassRate" runat="server" Text="0%"></asp:Label></span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <asp:Panel ID="pnlPassProgressBar" runat="server" CssClass="progress-bar-fill" Style="width: 0%;"></asp:Panel>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -113,7 +156,6 @@
                     <asp:Label ID="LblMessage" runat="server"></asp:Label>
                 </div>
             </div>
-
         </div>
 
         <div id="successModal" class="modal" style="display: none;">
