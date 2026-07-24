@@ -34,6 +34,8 @@
                     Login to Pixel Math
                 </h2>
 
+                <asp:Label ID="labelStatus" runat="server" Visible="false" CssClass="block mb-4 px-4 py-3 rounded-lg bg-orange-50 text-orange-700 text-sm font-semibold border border-orange-200" />
+
                 <!-- username -->
                 <label class="text-green-700 text-sm font-semibold">Email</label>
                 <asp:TextBox ID="email" runat="server"

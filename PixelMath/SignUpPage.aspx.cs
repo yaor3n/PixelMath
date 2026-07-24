@@ -27,8 +27,8 @@ namespace PixelMath
                     SET IDENTITY_INSERT [Roles] OFF;
                 END
 
-                INSERT INTO [Users] (FullName, Email, PasswordHash, RoleId, IsApproved, Form) 
-                VALUES (@FullName, @Email, @Password, @RoleId, 1, NULL);";
+                INSERT INTO [Users] (FullName, Email, PasswordHash, RoleId, IsApproved, AccountStatus, Form) 
+                VALUES (@FullName, @Email, @Password, @RoleId, 0, 'Pending', NULL);";
 
             try
             {
@@ -44,7 +44,7 @@ namespace PixelMath
                         conn.Open();
                         cmd.ExecuteNonQuery();
 
-                        Response.Redirect("LoginPage.aspx");
+                        Response.Redirect("LoginPage.aspx?registered=pending");
                     }
                 }
             }
@@ -64,7 +64,7 @@ namespace PixelMath
 
         protected void btnLoginRedirect_Click(object sender, EventArgs e)
         {
-            Response.Redirect("LoginPage.aspx");
+            Response.Redirect("LoginPage.aspx?registered=pending");
         }
 
         private string ComputeSha256Hash(string rawData)
