@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div class="admin-panel">
+    <div class="admin-panel dashboard-recent-panel">
         <div class="admin-panel-header">
             <div class="admin-panel-title">Recently Registered Users</div>
         </div>
@@ -53,6 +53,7 @@
                                 <th>Full Name</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Status</th>
                                 <th>Joined</th>
                             </tr>
                         </thead>
@@ -63,6 +64,11 @@
                         <td><%# Eval("FullName") %></td>
                         <td><%# Eval("Email") %></td>
                         <td><asp:Label ID="LblRoleBadge" runat="server" /></td>
+                        <td>
+                            <span class='<%# GetStatusCss(Eval("AccountStatus")) %>'>
+                            <%# Eval("AccountStatus") %>
+                            </span>
+                        </td>
                         <td><%# Eval("CreatedAt", "{0:dd MMM yyyy}") %></td>
                     </tr>
                 </ItemTemplate>

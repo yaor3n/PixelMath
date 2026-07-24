@@ -67,9 +67,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin-ActivityLogs.aspx" />
+    <Content Include="Admin-Announcements.aspx" />
     <Content Include="Admin-Classes.aspx" />
     <Content Include="Admin-CSS.css" />
     <Content Include="Admin-Dashboard.aspx" />
+    <Content Include="Admin-Quizzes.aspx" />
     <Content Include="Admin-Users.aspx" />
     <Content Include="App_Data\PixelMathSQL.sql" />
     <Content Include="index.aspx" />
@@ -94,6 +97,21 @@
     <Content Include="LoginPage.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityLogger.cs" />
+    <Compile Include="Admin-ActivityLogs.aspx.cs">
+      <DependentUpon>Admin-ActivityLogs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-ActivityLogs.aspx.designer.cs">
+      <DependentUpon>Admin-ActivityLogs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin-Announcements.aspx.cs">
+      <DependentUpon>Admin-Announcements.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-Announcements.aspx.designer.cs">
+      <DependentUpon>Admin-Announcements.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin-Classes.aspx.cs">
       <DependentUpon>Admin-Classes.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -107,6 +125,13 @@
     </Compile>
     <Compile Include="Admin-Dashboard.aspx.designer.cs">
       <DependentUpon>Admin-Dashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin-Quizzes.aspx.cs">
+      <DependentUpon>Admin-Quizzes.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin-Quizzes.aspx.designer.cs">
+      <DependentUpon>Admin-Quizzes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin-Template.master.cs">
       <DependentUpon>Admin-Template.Master</DependentUpon>

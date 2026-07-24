@@ -31,7 +31,8 @@ CREATE TABLE [Users] (
   [Email] VARCHAR(100) UNIQUE NOT NULL,
   [PasswordHash] VARCHAR(255),
   [RoleId] INT,
-  [IsApproved] BIT DEFAULT 1,
+  [IsApproved] BIT DEFAULT 0,
+  [AccountStatus] VARCHAR(100) NOT NULL DEFAULT 'Pending',
   [CreatedAt] DATETIME DEFAULT GETDATE(),
   [Form] INT NULL
 );
@@ -128,6 +129,17 @@ CREATE TABLE [StudentAnswers] (
 );
 GO
 
+CREATE TABLE [ActivityLogs] (
+  [LogId] INT PRIMARY KEY IDENTITY(1, 1),
+  [UserId] UNIQUEIDENTIFIER NULL,
+  [ActionType] VARCHAR(50) NOT NULL,
+  [Description] NVARCHAR(500) NOT NULL,
+  [EntityType] VARCHAR(50) NULL,
+  [EntityId] VARCHAR(100) NULL,
+  [CreatedAt] DATETIME NOT NULL DEFAULT GETDATE()
+);
+GO
+
 -- ═════════════════════════════════════════════════════════════
 -- 3. ADD RELATIONSHIPS (FOREIGN KEYS)
 -- ═════════════════════════════════════════════════════════════
@@ -160,6 +172,9 @@ ALTER TABLE [StudentAnswers] ADD FOREIGN KEY ([QuestionId]) REFERENCES [Question
 ALTER TABLE [StudentAnswers] ADD FOREIGN KEY ([SelectedOptionId]) REFERENCES [Options] ([OptionId]);
 GO
 
+ALTER TABLE [ActivityLogs] ADD CONSTRAINT [FK_ActivityLogs_Users] FOREIGN KEY ([UserId]) REFERENCES [Users] ([UserId]) ON DELETE SET NULL;
+GO
+
 -- ═════════════════════════════════════════════════════════════
 -- 4. MASTER DATA SEEDING (ROLES & SAMPLE ANNOUNCEMENT)
 -- ═════════════════════════════════════════════════════════════
@@ -171,5 +186,3 @@ INSERT INTO [Roles] ([RoleId], [RoleName]) VALUES
 (3, 'Admin');
 SET IDENTITY_INSERT [Roles] OFF;
 GO
-
-

@@ -13,6 +13,16 @@ namespace PixelMath
             {
                 RedirectUserBasedOnRole(Session["RoleId"].ToString());
             }
+
+            if (!IsPostBack) {
+                string registrationStatus = Request.QueryString["registered"];
+                if (registrationStatus == "pending")
+                {
+                    labelStatus.Text = "Registration Successful. Please wait for the approval from the administrator.";
+                    labelStatus.ForeColor = System.Drawing.Color.DarkOrange;
+                    labelStatus.Visible = true;
+                }
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -29,7 +39,7 @@ namespace PixelMath
             }
 
             string hashedInput = ComputeSha256Hash(plainPassword);
-            string query = "SELECT [UserId], [FullName], [Email], [RoleId] FROM [Users] WHERE [Email] = @Email AND [PasswordHash] = @Password";
+            string query = "SELECT [UserId], [FullName], [Email], [RoleId], [IsApproved], [AccountStatus] FROM [Users] WHERE [Email] = @Email AND [PasswordHash] = @Password";
 
             try
             {
@@ -45,6 +55,24 @@ namespace PixelMath
                         {
                             if (reader.Read())
                             {
+                                bool isApproved = Convert.ToBoolean(reader["IsApproved"]);
+                                string accountStatus = reader["AccountStatus"].ToString();
+
+                                if (!isApproved || accountStatus != "Approved")
+                                {
+                                    if (accountStatus == "Rejected")
+                                    {
+                                        labelStatus.Text = "Your account has been rejected. Please contact the administrator.";
+                                        labelStatus.ForeColor = System.Drawing.Color.Red;
+                                    } else
+                                    {
+                                        labelStatus.Text = "Your account is on pending. Please contact the administrator.";
+                                        labelStatus.ForeColor = System.Drawing.Color.DarkOrange;
+                                    }
+                                    labelStatus.Visible = true;
+                                    return;
+                                }
+
                                 // Store raw string data from DB directly into Sessions
                                 Session["UserId"] = reader["UserId"].ToString();
                                 Session["FullName"] = reader["FullName"].ToString();

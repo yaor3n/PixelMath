@@ -68,7 +68,7 @@ namespace PixelMath
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
-                    SELECT TOP 8 U.FullName, U.Email, U.CreatedAt, R.RoleName, R.RoleId
+                    SELECT TOP 7 U.FullName, U.Email, U.AccountStatus, U.CreatedAt, R.RoleName, R.RoleId
                     FROM Users U
                     INNER JOIN Roles R ON U.RoleId = R.RoleId
                     ORDER BY U.CreatedAt DESC";
@@ -129,6 +129,30 @@ namespace PixelMath
                     }
                 }
             }
+        }
+
+        protected string GetStatusCss(object statusValue)
+        {
+            string status =
+                statusValue == null || statusValue == DBNull.Value
+                    ? ""
+                    : statusValue.ToString().Trim();
+
+            if (status.Equals(
+                "Approved",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return "status-badge status-badge-approved";
+            }
+
+            if (status.Equals(
+                "Rejected",
+                StringComparison.OrdinalIgnoreCase))
+            {
+                return "status-badge status-badge-rejected";
+            }
+
+            return "status-badge status-badge-pending";
         }
     }
 }

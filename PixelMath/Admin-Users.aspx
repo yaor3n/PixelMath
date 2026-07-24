@@ -50,7 +50,10 @@
             <div class="admin-form-field">
                 <label>Role</label>
 
-                <asp:DropDownList ID="DdlRole" runat="server"> <asp:ListItem Text="Student" Value="1" /> <asp:ListItem Text="Lecturer" Value="2" /> <asp:ListItem Text="Admin" Value="3" />
+                <asp:DropDownList ID="DdlRole" runat="server"> 
+                    <asp:ListItem Text="Student" Value="1" /> 
+                    <asp:ListItem Text="Lecturer" Value="2" /> 
+                    <asp:ListItem Text="Admin" Value="3" />
                 </asp:DropDownList>
             </div>
 
@@ -101,6 +104,7 @@
                     <asp:ListItem Text="Student" Value="1" />
                     <asp:ListItem Text="Lecturer" Value="2" />
                     <asp:ListItem Text="Admin" Value="3" />
+                    <asp:ListItem Text="Rejected Users" Value="rejected" />
                 </asp:DropDownList>
                 <asp:Button ID="BtnSearch" runat="server" Text="Search" CssClass="btn-admin-secondary" OnClick="FilterChanged" CausesValidation="false" />
                 <asp:Button ID="BtnAddUser" runat="server" Text="+ Add User" CssClass="btn-admin-primary" OnClick="BtnAddUser_Click" CausesValidation="false" />
@@ -117,6 +121,7 @@
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>Form</th>
+                                <th>Status</th>
                                 <th>Joined</th>
                                 <th>Actions</th>
                             </tr>
@@ -129,13 +134,30 @@
                         <td><%# Eval("Email") %></td>
                         <td><asp:Label ID="LblRoleBadge" runat="server" /></td>
                         <td><%# Eval("Form") == DBNull.Value ? "—" : Eval("Form") %></td>
-                        <td><%# Eval("CreatedAt", "{0:dd MMM yyyy}") %></td>
                         <td>
+                            <span class='<%# GetStatusCss(Eval("AccountStatus")) %>'>
+                                <%# Eval("AccountStatus") %>
+                            </span>
+                        </td>
+                        <td><%# FormatJoinedDate(Eval("CreatedAt")) %></td>
+                        <td>
+                            <asp:Panel ID="PanelUserActions" runat="server" Visible='<%# !Eval("AccountStatus").ToString().Equals("Rejected", StringComparison.OrdinalIgnoreCase) %>'>
+                                <div class="admin-row-actions admin-row-actions-small">
                             <asp:LinkButton ID="BtnEdit" runat="server" CssClass="btn-admin-edit"
-                                CommandName="Edit" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false">Edit</asp:LinkButton>
+                                CommandName="Edit" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false">
+                                <i class="fa-solid fa-pen"></i>
+                                <span>  Edit</span>
+                            </asp:LinkButton>
                             <asp:LinkButton ID="BtnDelete" runat="server" CssClass="btn-admin-danger"
                                 CommandName="Delete" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false"
-                                OnClientClick="return confirm('Delete this user? This cannot be undone.');">Delete</asp:LinkButton>
+                                OnClientClick="return confirm('Delete this user? This cannot be undone.');">
+                                <i class="fa-solid fa-trash"></i>
+                                <span>  Delete</span>
+                            </asp:LinkButton>
+
+                                </div>
+                            </asp:Panel>
+                            <asp:Label ID="LblNoActions" runat="server" Text="-" CssClass="admin-no-actions" Visible='<%# Eval("AccountStatus").ToString().Equals("Rejected", StringComparison.OrdinalIgnoreCase) %>' />
                         </td>
                     </tr>
                 </ItemTemplate>
@@ -146,6 +168,86 @@
             </asp:Repeater>
             <asp:Panel ID="PanelNoUsers" runat="server" CssClass="admin-empty-state" Visible="false">
                 No users found matching your search.
+            </asp:Panel>
+        </div>
+    </div>
+
+    <div class="admin-panel pending-users-panel">
+        <div class="admin-panel-header">
+            <div>
+                <div class="admin-panel-title">Pending Users</div>
+            </div>
+
+            <div class="admin-toolbar">
+                <div class="admin-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <asp:TextBox ID="TxtPendingSearch" runat="server" CssClass="admin-search-input" placeholder="Search pending users..." />
+                </div>
+                
+                <asp:DropDownList ID="DdlPendingRoleFilter" runat="server" CssClass="admin-select" AutoPostBack="true" OnSelectedIndexChanged="PendingFilterChanged">
+                    <asp:ListItem Text="All Roles" Value="0" />
+                    <asp:ListItem Text="Student" Value="1" />
+                    <asp:ListItem Text="Lecturer" Value="2" />
+                    <asp:ListItem Text="Admin" Value="3" />
+                </asp:DropDownList>
+
+                <asp:Button ID="BtnPendingSearch" runat="server" Text="Search" CssClass="btn-admin-secondary" OnClick="PendingFilterChanged" CausesValidation="false" />
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <asp:Repeater ID="RepeatPendingUsers" runat="server" OnItemCommand="RepeatPendingUsers_ItemCommand">
+
+                <HeaderTemplate>
+                    <table class="admin-table admin-users-table">
+                        <thead>
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Emails</th>
+                                <th>Role</th>
+                                <th>Form</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <tr>
+                        <td><%# Eval("FullName") %></td>
+                        <td><%# Eval("Email") %></td>
+                        <td><span class='<%# GetRoleCss(Convert.ToInt32(Eval("RoleId"))) %>'>
+                            <%# Eval("RoleName") %>
+                            </span></td>
+                        <td><%# FormatFormLevel(Eval("Form")) %></td>
+                        <td><span class="status-badge status-badge-pending">Pending</span></td>
+                        <td>-</td>
+                        <td>
+                            <div class="admin-row-actions admin-row-actions-pending">
+                                <asp:LinkButton ID="BtnApprove" runat="server" CssClass="btn-admin-approve" CommandName="Approve" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Approved" %>' OnClientClick="return confirm('Are you to approve this user account?');">
+                                <i class="fa-solid fa-check"></i>
+                                <span>Approve</span>
+                            </asp:LinkButton>
+
+                            <asp:LinkButton ID="BtnReject" runat="server" CssClass="btn-admin-reject" CommandName="Reject" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Rejected" %>' OnClientClick="return confirm('Are you to reject this user account?');">
+                                <i class="fa-solid fa-xmark"></i>
+                                <span>Reject</span>
+                            </asp:LinkButton>
+                            </div>
+                        </td>
+                    </tr>
+                </ItemTemplate>
+                <FooterTemplate>
+                    </tbody>
+                    </table>
+                </FooterTemplate>
+            </asp:Repeater>
+            
+            <asp:Panel ID="PanelNoPendingUsers" runat="server" CssClass="admin-empty-state pending-empty-state" Visible="false">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>There are no pending users awaiting approval.</span>
             </asp:Panel>
         </div>
     </div>

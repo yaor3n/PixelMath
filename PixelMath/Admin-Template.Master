@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PixelMath Admin</title>
     <link rel="icon" type="image/png" href="PixelMath_Logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
@@ -45,6 +46,9 @@
                     <div class="sidebar-category"> Management </div>
                     <a href="Admin-Users.aspx" class="sidebar-selection"><i class="fa-solid fa-users"></i>Manage Users</a>
                     <a href="Admin-Classes.aspx" class="sidebar-selection"><i class="fa-solid fa-chalkboard"></i>Manage Classes</a>
+                    <a href="Admin-Quizzes.aspx" class="sidebar-selection"><i class="fa-solid fa-file-circle-question"></i>Manage Quizzes</a>
+                    <a href="Admin-Announcements.aspx" class="sidebar-selection"><i class="fa-solid fa-bullhorn"></i>Announcements</a>
+                    <a href="Admin-ActivityLogs.aspx" class="sidebar-selection"><i class="fa-solid fa-clock-rotate-left"></i>Activity Logs</a>
 
                     <div class="sidebar-footer">
                         <button type="button" class="logout-btn" onclick="openModal()">
@@ -52,6 +56,7 @@
                         </button>
                     </div>
                 </aside>
+                <div id="adminSidebarOverlay" class="admin-sidebar-overlay" onclick="closeAdminSidebar()"></div>
 
                 <%--Logout popout--%>
                 <div id="logoutConfirmation" class="modal">
@@ -68,18 +73,21 @@
                     </div>
                 </div>
 
-                <%-- Content Area --%>
+                <%-- Main content area --%>
                 <main class="main" id="main-content">
                     <div class="topbar">
+                        <button type="button" id="adminMobileMenuButton" class="admin-mobile-menu-button" onclick="toggleAdminSidebar()" aria-label="Open navigation menu" aria-expanded="false">
+                            <i class="fa-solid fa-bars"></i>
+
+                        </button>
                         <div class="topbar-title">
-                            <asp:ContentPlaceHolder ID="TopbarTitleContent" runat="server">
-                            </asp:ContentPlaceHolder>
+                            <asp:ContentPlaceHolder ID="TopbarTitleContent" runat="server"></asp:ContentPlaceHolder>
                         </div>
                     </div>
+                    
                     <div class="topbar-block"></div>
                     <div class="content">
-                        <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                        </asp:ContentPlaceHolder>
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server"> </asp:ContentPlaceHolder>
                     </div>
                 </main>
             </div>
@@ -97,12 +105,55 @@
             document.body.style.overflow = "auto";
         }
 
+        function toggleAdminSidebar() {
+            var sidebar = document.querySelector(".sidebar");
+            var overlay = document.getElementById("adminSidebarOverlay");
+            var menuButton = document.getElementById("adminMobileMenuButton");
+
+            if (!sidebar || !overlay || !menuButton) {
+                return;
+            }
+
+            var isOpen = sidebar.classList.contains("mobile-open");
+
+            if (isOpen) {
+                closeAdminSidebar();
+            } else {
+                sidebar.classList.add("mobile-open");
+                overlay.classList.add("visible");
+                document.body.classList.add("admin-sidebar-open");
+
+                menuButton.setAttribute("aria-expanded", "true");
+            }
+        }
+
+        function closeAdminSidebar() {
+            var sidebar = document.querySelector(".sidebar");
+            var overlay = document.getElementById("adminSidebarOverlay");
+            var menuButton = document.getElementById("adminMobileMenuButton");
+
+            if (sidebar) {
+                sidebar.classList.remove("mobile-open");
+            }
+
+            if (overlay) {
+                overlay.classList.remove("visible");
+            }
+
+            if (menuButton) {
+                menuButton.setAttribute("aria-expanded", "false");
+            }
+
+            document.body.classList.remove("admin-sidebar-open");
+        }
+
         window.onclick = function (event) {
             var modal = document.getElementById("logoutConfirmation");
+
             if (event.target === modal) {
                 closeModal();
             }
-        }
+        };
 
         window.addEventListener("DOMContentLoaded", function () {
             var currentPage = window.location.pathname.split("/").pop();
@@ -111,15 +162,35 @@
                 currentPage = "Admin-Dashboard.aspx";
             }
 
-            var sidebarLinks = document.querySelectorAll(".sidebar-selection");
+            var sidebarLinks =
+                document.querySelectorAll(".sidebar-selection");
 
             sidebarLinks.forEach(function (link) {
                 var linkTarget = link.getAttribute("href");
+
                 if (linkTarget === currentPage) {
                     link.classList.add("active");
                 }
+
+                link.addEventListener("click", function () {
+                    closeAdminSidebar();
+                });
             });
         });
+
+        window.addEventListener("resize", function () {
+            if (window.innerWidth > 900) {
+                closeAdminSidebar();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape") {
+                closeAdminSidebar();
+                closeModal();
+            }
+        });
+
     </script>
 </body>
 </html>

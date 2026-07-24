@@ -23,28 +23,47 @@ namespace PixelMath
 
             if (!IsPostBack)
             {
-                LoadUsers();
+                LoadAllUserSections();
             }
         }
 
         // ===================== LIST / SEARCH =====================
 
+        private void LoadAllUserSections()
+        {
+            LoadUsers();
+            LoadPendingUsers();
+        }
+
         private void LoadUsers()
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                string selectedFilter = DdlRoleFilter.SelectedValue;
+                bool showRejectedUsers = selectedFilter == "rejected";
+                int roleFilter = 0;
+
+                if (!showRejectedUsers)
+                {
+                    int.TryParse(selectedFilter, out roleFilter);
+                }
+
                 string query = @"
-                    SELECT U.UserId, U.FullName, U.Email, U.Form, U.CreatedAt, R.RoleName, R.RoleId
+                    SELECT U.UserId, U.FullName, U.Email, U.Form, U.IsApproved, U.AccountStatus, U.CreatedAt, R.RoleName, R.RoleId
                     FROM Users U
                     INNER JOIN Roles R ON U.RoleId = R.RoleId
                     WHERE (@Search = '' OR U.FullName LIKE '%' + @Search + '%' OR U.Email LIKE '%' + @Search + '%')
-                      AND (@RoleFilter = 0 OR U.RoleId = @RoleFilter)
-                    ORDER BY U.CreatedAt DESC";
+                    AND (
+                        (@ShowRejected = 1 AND U.AccountStatus = 'Rejected')
+                    OR
+                        (@ShowRejected = 0 AND U.AccountStatus = 'Approved' AND (@RoleFilter = 0 OR U.RoleId = @RoleFilter))
+                    ) ORDER BY U.CreatedAt DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Search", TxtSearch.Text.Trim());
-                    cmd.Parameters.AddWithValue("@RoleFilter", Convert.ToInt32(DdlRoleFilter.SelectedValue));
+                    cmd.Parameters.Add("@Search", SqlDbType.VarChar, 100).Value = TxtSearch.Text.Trim();
+                    cmd.Parameters.Add("@ShowRejected", SqlDbType.Bit).Value = showRejectedUsers;
+                    cmd.Parameters.Add("@RoleFilter", SqlDbType.Int).Value = roleFilter;
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
@@ -75,36 +94,215 @@ namespace PixelMath
             }
         }
 
+        //private void LoadPendingUsers()
+        //{
+        //    using (SqlConnection conn = new SqlConnection(connStr))
+        //    {
+        //        string query = @"SELECT U.UserId, U.FullName, U.Email, U.Form, U.IsApproved, U.AccountStatus, U.CreatedAt, R.RoleName, R.RoleId
+        //                         FROM Users U INNER JOIN Roles R ON U.RoleId = R.RoleId WHERE U.AccountStatus = 'Pending' AND U.IsApproved = 0 AND 
+        //                         (@Search = '' OR U.FullName LIKE '%' + @Search + '%' OR U.Email LIKE '%' + @Search + '%')
+        //                         AND (@RoleFilter = 0 OR U.RoleId = @RoleFilter) ORDER BY U.CreatedAt DESC
+        //                        ";
+
+        //        using (SqlCommand cmd = new SqlCommand(query, conn))
+        //        {
+        //            cmd.Parameters.Add("@Search", SqlDbType.VarChar, 100).Value = TxtPendingSearch.Text.Trim();
+        //            int pendingRoleFilter = 0;
+
+        //            string pendingSelectedValue = DdlPendingRoleFilter.SelectedValue;
+
+        //            int.TryParse(DdlPendingRoleFilter.SelectedValue, out pendingRoleFilter);
+        //            cmd.Parameters.Add("@RoleFilter", SqlDbType.Int).Value = pendingRoleFilter;
+
+        //            DataTable dt = new DataTable();
+
+        //            try
+        //            {
+        //                conn.Open();
+        //                using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+        //                {
+        //                    da.Fill(dt);
+        //                }
+
+        //                RepeatPendingUsers.DataSource = dt;
+        //                RepeatPendingUsers.DataBind();
+
+        //                PanelNoPendingUsers.Visible = dt.Rows.Count == 0;
+        //            } catch (Exception e) {
+
+        //                RepeatPendingUsers.DataSource = null;
+        //                RepeatPendingUsers.DataBind();
+        //                PanelNoPendingUsers.Visible = true;
+
+        //                ShowMessage("Error loading pending users: " + e.Message, false);
+        //            }
+        //        }
+        //    }
+        //}
+
+        private void LoadPendingUsers()
+        {
+            string currentStage = "starting";
+
+            try
+            {
+                currentStage = "reading the Pending Users role filter";
+
+                int pendingRoleFilter = 0;
+
+                string selectedRoleValue =
+                    DdlPendingRoleFilter == null
+                        ? "0"
+                        : DdlPendingRoleFilter.SelectedValue;
+
+                int.TryParse(selectedRoleValue, out pendingRoleFilter);
+
+                currentStage = "preparing the SQL query";
+
+                string query = @"
+            SELECT
+                U.UserId,
+                U.FullName,
+                U.Email,
+                U.Form,
+                U.IsApproved,
+                U.AccountStatus,
+                U.CreatedAt,
+                R.RoleName,
+                R.RoleId
+            FROM Users U
+            INNER JOIN Roles R
+                ON U.RoleId = R.RoleId
+            WHERE
+                U.AccountStatus = 'Pending'
+                AND U.IsApproved = 0
+                AND
+                (
+                    @Search = ''
+                    OR U.FullName LIKE '%' + @Search + '%'
+                    OR U.Email LIKE '%' + @Search + '%'
+                )
+                AND
+                (
+                    @RoleFilter = 0
+                    OR U.RoleId = @RoleFilter
+                )
+            ORDER BY U.CreatedAt DESC";
+
+                using (SqlConnection conn = new SqlConnection(connStr))
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    currentStage = "adding SQL parameters";
+
+                    string searchText =
+                        TxtPendingSearch == null
+                            ? ""
+                            : TxtPendingSearch.Text.Trim();
+
+                    cmd.Parameters.Add(
+                        "@Search",
+                        SqlDbType.VarChar,
+                        100
+                    ).Value = searchText;
+
+                    cmd.Parameters.Add(
+                        "@RoleFilter",
+                        SqlDbType.Int
+                    ).Value = pendingRoleFilter;
+
+                    currentStage = "opening the database connection";
+
+                    conn.Open();
+
+                    DataTable dt = new DataTable();
+
+                    currentStage = "retrieving pending users from the database";
+
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        da.Fill(dt);
+                    }
+
+                    currentStage = "binding pending users to the table";
+
+                    RepeatPendingUsers.DataSource = dt;
+                    RepeatPendingUsers.DataBind();
+
+                    currentStage = "updating the empty message";
+
+                    PanelNoPendingUsers.Visible = dt.Rows.Count == 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                RepeatPendingUsers.DataSource = null;
+                RepeatPendingUsers.DataBind();
+                PanelNoPendingUsers.Visible = true;
+
+                ShowMessage(
+                    "Error while " + currentStage + ": " +
+                    ex.GetType().Name + " - " +
+                    ex.Message,
+                    false
+                );
+
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+        }
+
         protected void FilterChanged(object sender, EventArgs e)
         {
             LoadUsers();
         }
 
+        protected void PendingFilterChanged(object sender, EventArgs e)
+        {
+            LoadPendingUsers();
+        }
+
         protected void RepeatUsers_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            if (e.Item.ItemType != ListItemType.Item && e.Item.ItemType != ListItemType.AlternatingItem)
             {
-                DataRowView row = (DataRowView)e.Item.DataItem;
-                Label lblRoleBadge = (Label)e.Item.FindControl("LblRoleBadge");
+                return;
+            }
 
-                if (lblRoleBadge != null)
-                {
-                    int roleId = Convert.ToInt32(row["RoleId"]);
-                    lblRoleBadge.Text = row["RoleName"].ToString();
+            DataRowView row = e.Item.DataItem as DataRowView;
+            if (row == null)
+            {
+                return;
+            }
 
-                    switch (roleId)
-                    {
-                        case 3:
-                            lblRoleBadge.CssClass = "role-badge role-badge-admin";
-                            break;
-                        case 2:
-                            lblRoleBadge.CssClass = "role-badge role-badge-lecturer";
-                            break;
-                        default:
-                            lblRoleBadge.CssClass = "role-badge role-badge-student";
-                            break;
-                    }
-                }
+            Label lblRoleBadge = e.Item.FindControl("LblRoleBadge") as Label;
+
+            if (lblRoleBadge == null)
+            {
+                return;
+            }
+
+            string roleName = row["RoleName"] == DBNull.Value ? "Unknown" : row["RoleName"].ToString();
+            int roleId = 0;
+
+            int.TryParse(row["RoleId"] == DBNull.Value ? "0" : row["RoleId"].ToString(), out roleId);
+            lblRoleBadge.Text = roleName;
+
+            switch (roleId)
+            {
+                case 3:
+                    lblRoleBadge.CssClass = "role-badge role-badge-admin"; 
+                    break;
+
+                case 2:
+                    lblRoleBadge.CssClass = "role-badge role-badge-lecturer";
+                    break;
+
+                case 1:
+                    lblRoleBadge.CssClass = "role-badge role-badge-student";
+                    break;
+
+                default:
+                    lblRoleBadge.CssClass = "role-badge";
+                    break;
             }
         }
 
@@ -159,6 +357,97 @@ namespace PixelMath
             }
         }
 
+        protected void RepeatPendingUsers_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            string targetUserId = e.CommandArgument.ToString();
+
+            if (e.CommandName == "Approve")
+            {
+                UpdateUserStatus(targetUserId, true, "Approved");
+            }
+            else if (e.CommandName == "Reject")
+            {
+                UpdateUserStatus(targetUserId, false, "Rejected");
+            }
+        }
+
+        private void UpdateUserStatus(
+            string userId,
+            bool isApproved,
+            string accountStatus)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // Only a Pending account may be approved or rejected.
+                // An Approved user therefore cannot later be rejected.
+                string query = @"UPDATE Users SET IsApproved = @IsApproved, AccountStatus = @AccountStatus WHERE UserId = @UserId AND AccountStatus = 'pending'";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.Add("@IsApproved", SqlDbType.Bit)
+                        .Value = isApproved;
+
+                    cmd.Parameters.Add(
+                        "@AccountStatus",
+                        SqlDbType.VarChar,
+                        20
+                    ).Value = accountStatus;
+
+                    cmd.Parameters.Add(
+                        "@UserId",
+                        SqlDbType.UniqueIdentifier
+                    ).Value = Guid.Parse(userId);
+
+                    try
+                    {
+                        conn.Open();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        if (rowsAffected == 1)
+                        {
+                            string actionType =
+
+                                accountStatus.Equals(
+                                    "Approved",
+                                    StringComparison.OrdinalIgnoreCase
+                                ) ? "Approve" : "Reject";
+
+                            ActivityLogger.Log(
+                                Session["UserId"].ToString(),
+                                actionType,
+                                "Administrator " +
+                                accountStatus.ToLower() +
+                                " a pending user account.",
+                                "User",
+                                userId
+                            );
+
+                            ShowMessage(
+                                "User account has been " +
+                                accountStatus.ToLower() +
+                                ".",
+                                true
+                            );
+                        }
+                        else
+                        {
+                            ShowMessage(
+                                "This account is no longer pending and cannot be changed using this action.",
+                                false
+                            );
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowMessage(
+                            "Error updating user status: " +
+                            ex.Message,
+                            false
+                        );
+                    }
+                }
+            }
+            LoadAllUserSections();
+        }
         private void LoadUserIntoForm(string userId)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
@@ -293,14 +582,21 @@ namespace PixelMath
 
                             cmd.ExecuteNonQuery();
                         }
-
+                        ActivityLogger.Log(
+                            Session["UserId"].ToString(),
+                            "Update",
+                            "Administrator updated the user account for " +
+                            fullName + " (" + email + ").",
+                            "User",
+                            HiddenUserId.Value
+                            );
                         ShowMessage("User updated successfully.", true);
                     }
                     else
                     {
                         string query = @"
-                            INSERT INTO Users (FullName, Email, PasswordHash, RoleId, IsApproved, Form)
-                            VALUES (@FullName, @Email, @PasswordHash, @RoleId, 1, @Form)";
+                            INSERT INTO Users (FullName, Email, PasswordHash, RoleId, IsApproved, AccountStatus, Form)
+                            VALUES (@FullName, @Email, @PasswordHash, @RoleId, 1, 'Approved', @Form)";
 
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
@@ -312,13 +608,21 @@ namespace PixelMath
 
                             cmd.ExecuteNonQuery();
                         }
+                        ActivityLogger.Log(
+                            Session["UserId"].ToString(),
+                            "Create",
+                            "Administrator created the user account " +
+                            fullName + " (" + email + ").",
+                            "User",
+                            email
+                            );
 
                         ShowMessage("User added successfully.", true);
                     }
 
                     PanelUserForm.Visible = false;
                     ResetForm();
-                    LoadUsers();
+                    LoadAllUserSections();
                 }
                 catch (SqlException ex)
                 {
@@ -366,6 +670,13 @@ namespace PixelMath
                     {
                         conn.Open();
                         cmd.ExecuteNonQuery();
+                        ActivityLogger.Log(
+                            Session["UserId"].ToString(),
+                            "Delete",
+                            "Administrator deleted a user account.",
+                            "User",
+                            userId
+                            );
                         ShowMessage("User deleted successfully.", true);
                     }
                     catch (Exception ex)
@@ -377,7 +688,7 @@ namespace PixelMath
                 }
             }
 
-            LoadUsers();
+            LoadAllUserSections();
         }
 
         // ===================== HELPERS =====================
@@ -400,6 +711,65 @@ namespace PixelMath
                     builder.Append(bytes[i].ToString("x2"));
                 }
                 return builder.ToString();
+            }
+        }
+
+        protected string GetStatusCss(object statusValue)
+        {
+            string status = statusValue == null || statusValue == DBNull.Value ? "" : statusValue.ToString().Trim();
+
+            if (status.Equals("Approved", StringComparison.OrdinalIgnoreCase))
+            {
+                return "status-badge status-badge-approved";
+            }
+            if (status.Equals("Rejected", StringComparison.OrdinalIgnoreCase))
+            {
+                return "status-badge status-badge-rejected";
+            }
+
+            return "status-badge status-badge-pending";
+        }
+
+        protected string FormatJoinedDate(object createdAt)
+        {
+            if (createdAt == null || createdAt == DBNull.Value)
+            {
+                return "—";
+            }
+
+            DateTime joinedDate;
+
+            if (DateTime.TryParse(
+                createdAt.ToString(),
+                out joinedDate))
+            {
+                return joinedDate.ToString("dd MMM yyyy");
+            }
+
+            return createdAt.ToString();
+        }  
+
+        protected string FormatFormLevel(object value)
+        {
+            if (value == null || value == DBNull.Value)
+            {
+                return "-";
+            }
+            return value.ToString();
+        }
+
+        protected string GetRoleCss(int roleId)
+        {
+            switch (roleId)
+            {
+                case 3:
+                    return "role-badge role-badge-admin";
+
+                case 2:
+                    return "role-badge role-badge-lecturer";
+
+                default:
+                    return "role-badge role-badge-student";
             }
         }
     }

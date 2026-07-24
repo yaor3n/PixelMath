@@ -327,11 +327,12 @@ namespace PixelMath {
             {
                 // Students (RoleId = 1) not already enrolled in this class
                 string query = @"
-                    SELECT UserId, FullName, Email
-                    FROM Users
-                    WHERE RoleId = 1
-                      AND UserId NOT IN (SELECT StudentId FROM StudentClasses WHERE ClassId = @ClassId)
-                    ORDER BY FullName";
+                    SELECT U.UserId, U.FullName, U.Email
+                    FROM Users U
+                    WHERE U.RoleId = 1
+                    AND U.IsApproved = 1 AND U.AccountStatus = 'Approved' AND NOT EXISTS
+                    (SELECT 1 FROM StudentClasses SC WHERE SC.StudentId = U.UserId AND SC.ClassId = @ClassId)
+                    ORDER BY U.FullName ASC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
