@@ -52,7 +52,13 @@
                             <span class="q-type"><%# Eval("QuestionType") %></span>
                         </div>
                         
-                        <p class="q-text"><%# Eval("QuestionText") %></p>
+                        <!-- Question Text (Only rendered if text exists) -->
+                        <%# !string.IsNullOrEmpty(Eval("QuestionText") as string) ? "<p class='q-text'>" + Eval("QuestionText") + "</p>" : "" %>
+
+                        <!-- 🎯 QUESTION IMAGE CONTAINER (Toggled automatically from code-behind) -->
+                        <asp:Panel ID="pnlQuestionImage" runat="server" Visible="false" Style="margin: 14px 0; text-align: center;">
+                            <asp:Image ID="imgQuestion" runat="server" Style="max-width: 100%; max-height: 350px; border-radius: 12px; border: 1.5px solid #BBF7D0;" />
+                        </asp:Panel>
 
                         <!-- OBJECTIVE QUESTIONS: Show Options -->
                         <asp:Panel ID="panelObjective" runat="server" Visible='<%# Eval("QuestionType").ToString() == "Objective" %>'>

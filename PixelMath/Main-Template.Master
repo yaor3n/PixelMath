@@ -104,8 +104,20 @@
     <script>
         // --- Modal Display Rules ---
         function openModal() {
+            // 1. Show the Logout Modal
             document.getElementById("logoutConfirmation").style.display = "flex";
             document.body.style.overflow = "hidden";
+
+            // 🎯 FIX 2: Automatically close mobile sidebar & backdrop when opening logout modal
+            var sidebar = document.querySelector(".sidebar");
+            var overlay = document.getElementById("sidebarOverlayMask");
+
+            if (sidebar && sidebar.classList.contains("open")) {
+                sidebar.classList.remove("open");
+            }
+            if (overlay && overlay.classList.contains("visible")) {
+                overlay.classList.remove("visible");
+            }
         }
 
         function closeModal() {

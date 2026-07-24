@@ -34,17 +34,19 @@ namespace PixelMath
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                // Query resources available for classes the student is enrolled in
                 string sql = @"
                     SELECT 
                         R.ResourceId,
                         R.Title,
-                        R.ResourceUrl,
-                        R.CreatedAt
+                        R.Description,
+                        R.ResourceType,
+                        R.FilePath AS ResourceUrl,
+                        R.OriginalFileName,
+                        R.UploadedAt AS CreatedAt
                     FROM Resources R
                     INNER JOIN StudentClasses SC ON R.ClassId = SC.ClassId
                     WHERE SC.StudentId = @StudentId
-                    ORDER BY R.CreatedAt DESC;";
+                    ORDER BY R.UploadedAt DESC;";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.Add("@StudentId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(studentId);
@@ -53,7 +55,6 @@ namespace PixelMath
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                // If enrolled classes have resources, bind them
                 if (dt.Rows.Count > 0)
                 {
                     ResourceRepeater.DataSource = dt;
@@ -62,7 +63,6 @@ namespace PixelMath
                 }
                 else
                 {
-                    // Fallback: If no class-specific resources are found, load all resources
                     LoadAllResources();
                 }
             }
@@ -76,10 +76,13 @@ namespace PixelMath
                     SELECT 
                         ResourceId,
                         Title,
-                        ResourceUrl,
-                        CreatedAt
+                        Description,
+                        ResourceType,
+                        FilePath AS ResourceUrl,
+                        OriginalFileName,
+                        UploadedAt AS CreatedAt
                     FROM Resources
-                    ORDER BY CreatedAt DESC;";
+                    ORDER BY UploadedAt DESC;";
 
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -91,6 +94,28 @@ namespace PixelMath
 
                 pnlNoResources.Visible = dt.Rows.Count == 0;
             }
+        }
+
+        // 🎯 Helper Method: Ensures path matches ~/Uploads/resources/[filename] and resolves correctly
+        public string GetFormattedUrl(object pathObj)
+        {
+            if (pathObj == null || pathObj == DBNull.Value) return "#";
+
+            string rawPath = pathObj.ToString().Trim();
+
+            // If path doesn't start with '~/', format it properly
+            if (!rawPath.StartsWith("~/"))
+            {
+                if (rawPath.StartsWith("/"))
+                    rawPath = "~" + rawPath;
+                else
+                    rawPath = "~/" + rawPath;
+            }
+
+            // Clean double slashes if any
+            rawPath = rawPath.Replace("//", "/");
+
+            return ResolveUrl(rawPath);
         }
     }
 }
