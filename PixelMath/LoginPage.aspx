@@ -13,7 +13,7 @@
     <form id="form1" runat="server" class="flex-1 flex flex-col">
 
         <!-- navbar (same style as homepage) -->
-        <header class="bg-green-50 border-b-4 border-green-400 py-4 px-8 flex items-center justify-between">
+        <header class="bg-white border-b-4 border-green-400 py-4 px-8 flex items-center justify-between">
             <div class="flex items-center space-x-3">
                 <img src="images/pixelmath_logo_transparentbg.png" class="w-10 h-10" />
                 <span class="text-green-800 text-xl font-bold">Pixel Math</span>
@@ -39,7 +39,6 @@
                 <asp:TextBox ID="email" runat="server"
                     CssClass="w-full mt-1 mb-4 px-4 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
 
-                <!-- password -->
                 <!-- password -->
                 <label class="text-green-700 text-sm font-semibold">Password</label>
                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"

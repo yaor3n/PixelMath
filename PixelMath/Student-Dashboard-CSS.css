@@ -42,10 +42,9 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 1000px;
+    width: 100%;
 }
 
-/* Alert Cards Base */
 .alert-card {
     background: #ffffff;
     border-radius: 14px;
@@ -141,7 +140,6 @@
         transform: translateX(2px);
     }
 
-/* --- Recent Activity Card Container --- */
 .recent-activity-card {
     background: #ffffff;
     border-radius: 16px;

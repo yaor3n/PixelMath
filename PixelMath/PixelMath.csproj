@@ -73,6 +73,7 @@
       <DependentUpon>PixelMath.mdf</DependentUpon>
     </Content>
     <Content Include="ForgotPasswordPage.aspx" />
+    <Content Include="index-CSS.css" />
     <Content Include="index.aspx" />
     <Content Include="Lecturer-Announcements.aspx" />
     <Content Include="Lecturer-Create-Class.aspx" />
