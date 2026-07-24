@@ -76,6 +76,7 @@
     <Content Include="App_Data\PixelMath_log.ldf">
       <DependentUpon>PixelMath.mdf</DependentUpon>
     </Content>
+    <Content Include="FAQ.aspx" />
     <Content Include="index.aspx" />
     <Content Include="Lecturer-Announcements.aspx" />
     <Content Include="Lecturer-Create-Class.aspx" />
@@ -101,10 +102,7 @@
     <Content Include="Student-Quiz-Review-CSS.css" />
     <Content Include="Student-Quiz-Review.aspx" />
     <Content Include="Student-Quiz.aspx" />
-    <Content Include="Student-Resources-CSS.css" />
     <Content Include="Student-Resources.aspx" />
-    <Content Include="Student-Result-CSS.css" />
-    <Content Include="Student-Result.aspx" />
     <Content Include="Web.config" />
     <Content Include="LoginPage.aspx" />
   </ItemGroup>
@@ -136,6 +134,13 @@
     </Compile>
     <Compile Include="Admin-Users.aspx.designer.cs">
       <DependentUpon>Admin-Users.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FAQ.aspx.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FAQ.aspx.designer.cs">
+      <DependentUpon>FAQ.aspx</DependentUpon>
     </Compile>
     <Compile Include="index.aspx.cs">
       <DependentUpon>index.aspx</DependentUpon>
@@ -178,6 +183,13 @@
     </Compile>
     <Compile Include="Lecturer-Manage-Quizzes.aspx.designer.cs">
       <DependentUpon>Lecturer-Manage-Quizzes.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Lecturer-Template.Master.cs">
+      <DependentUpon>Lecturer-Template.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Lecturer-Template.Master.designer.cs">
+      <DependentUpon>Lecturer-Template.Master</DependentUpon>
     </Compile>
     <Compile Include="Lecturer-Upload-Resources.aspx.cs">
       <DependentUpon>Lecturer-Upload-Resources.aspx</DependentUpon>
@@ -257,18 +269,12 @@
     <Compile Include="Student-Resources.aspx.designer.cs">
       <DependentUpon>Student-Resources.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Student-Result.aspx.cs">
-      <DependentUpon>Student-Result.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Student-Result.aspx.designer.cs">
-      <DependentUpon>Student-Result.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Main-Template.Master" />
     <Content Include="Learning-Resources\Tutorial 3-NFA.pdf" />
     <Content Include="Admin-Template.Master" />
+    <Content Include="Lecturer-Template.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -17,15 +17,12 @@ namespace PixelMath
             // Authenticate Lecturer (RoleId = 2)
             if (Session["UserId"] == null || Session["RoleId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
             if (!IsPostBack)
             {
-                string name = Session["FullName"] != null ? Session["FullName"].ToString() : "Lecturer";
-                litSidebarLecturerName.Text = name;
-
                 LoadExistingClasses();
             }
         }
@@ -77,7 +74,7 @@ namespace PixelMath
             Guid lecturerId;
             if (Session["UserId"] == null || !Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
@@ -135,7 +132,7 @@ namespace PixelMath
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("~/Login.aspx");
+            Response.Redirect("~/LoginPage.aspx");
         }
     }
 }

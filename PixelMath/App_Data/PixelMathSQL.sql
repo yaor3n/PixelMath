@@ -1,3 +1,19 @@
+USE master;
+GO
+
+IF EXISTS (SELECT * FROM sys.databases WHERE name = 'PixelMath')
+BEGIN
+    ALTER DATABASE [PixelMath] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE [PixelMath];
+END
+GO
+
+CREATE DATABASE [PixelMath];
+GO
+
+USE [PixelMath];
+GO
+
 -- ═════════════════════════════════════════════════════════════
 -- 1. CREATE TABLES
 -- ═════════════════════════════════════════════════════════════
@@ -28,11 +44,15 @@ CREATE TABLE [Classes] (
 );
 GO
 
+-- 🎯 UPDATED: enrollment now requires lecturer approval
 CREATE TABLE [StudentClasses] (
   [StudentClassId] INT PRIMARY KEY IDENTITY(1, 1),
   [StudentId] UNIQUEIDENTIFIER, 
   [ClassId] INT,
-  [EnrolledAt] DATETIME DEFAULT GETDATE()
+  [EnrolledAt] DATETIME DEFAULT GETDATE(),
+  [Status] VARCHAR(20) NOT NULL DEFAULT 'Pending', -- 'Pending', 'Approved', 'Rejected'
+  [DecidedAt] DATETIME NULL,
+  [DecidedBy] UNIQUEIDENTIFIER NULL
 );
 GO
 
@@ -43,7 +63,7 @@ CREATE TABLE [Announcements] (
   [ClassId] INT,
   [CreatedBy] UNIQUEIDENTIFIER, 
   [CreatedAt] DATETIME DEFAULT GETDATE(),
-  [Status] BIT NOT NULL DEFAULT 0 -- 🎯 0 = Unread, 1 = Read
+  [Status] BIT NOT NULL DEFAULT 0 -- 0 = Unread, 1 = Read
 );
 GO
 
@@ -56,7 +76,7 @@ CREATE TABLE [Resources] (
   [FilePath] NVARCHAR(500) NOT NULL,
   [OriginalFileName] NVARCHAR(255) NOT NULL,
   [UploadedBy] UNIQUEIDENTIFIER NOT NULL,
-  [UploadedAt] DATETIME DEFAULT GETDATE() NOT NULL
+  [CreatedAt] DATETIME DEFAULT GETDATE() NOT NULL
 );
 GO
 
@@ -120,8 +140,12 @@ GO
 -- ═════════════════════════════════════════════════════════════
 ALTER TABLE [Users] ADD FOREIGN KEY ([RoleId]) REFERENCES [Roles] ([RoleId]);
 ALTER TABLE [Classes] ADD FOREIGN KEY ([CreatedBy]) REFERENCES [Users] ([UserId]);
+
 ALTER TABLE [StudentClasses] ADD FOREIGN KEY ([StudentId]) REFERENCES [Users] ([UserId]);
 ALTER TABLE [StudentClasses] ADD FOREIGN KEY ([ClassId]) REFERENCES [Classes] ([ClassId]);
+ALTER TABLE [StudentClasses] ADD FOREIGN KEY ([DecidedBy]) REFERENCES [Users] ([UserId]);
+ALTER TABLE [StudentClasses] ADD CONSTRAINT UQ_Student_Class UNIQUE ([StudentId], [ClassId]);
+
 ALTER TABLE [Announcements] ADD FOREIGN KEY ([ClassId]) REFERENCES [Classes] ([ClassId]);
 ALTER TABLE [Announcements] ADD FOREIGN KEY ([CreatedBy]) REFERENCES [Users] ([UserId]);
 ALTER TABLE [Resources] ADD FOREIGN KEY ([ClassId]) REFERENCES [Classes] ([ClassId]);
@@ -147,5 +171,3 @@ INSERT INTO [Roles] ([RoleId], [RoleName]) VALUES
 (3, 'Admin');
 SET IDENTITY_INSERT [Roles] OFF;
 GO
-
-

@@ -6,20 +6,15 @@ namespace PixelMath
 {
     public partial class LoginPage : System.Web.UI.Page
     {
+        private string connStr = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            // If already logged in, redirect them out immediately
-            if (Session["UserId"] != null && Session["RoleId"] != null)
-            {
-                RedirectUserBasedOnRole(Session["RoleId"].ToString());
-            }
+            // Removed the Page_Load session redirect entirely to prevent ERR_TOO_MANY_REDIRECTS loops.
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
-
-
             string plainEmail = email.Text.Trim();
             string plainPassword = txtPassword.Text;
 
@@ -34,7 +29,7 @@ namespace PixelMath
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -46,16 +41,27 @@ namespace PixelMath
                         {
                             if (reader.Read())
                             {
-                                // Store raw string data from DB directly into Sessions
+                                Session.Clear();
+
                                 Session["UserId"] = reader["UserId"].ToString();
                                 Session["FullName"] = reader["FullName"].ToString();
 
-                                // Store RoleId as int/string cleanly
                                 int roleId = Convert.ToInt32(reader["RoleId"]);
                                 Session["RoleId"] = roleId;
 
-                                // Route directly using the role ID
-                                RedirectUserBasedOnRole(roleId.ToString());
+                                // Determine target dashboard based on role
+                                string targetUrl = "Student-Dashboard.aspx";
+                                if (roleId == 2)
+                                {
+                                    targetUrl = "Lecturer-Dashboard.aspx";
+                                }
+                                else if (roleId == 3)
+                                {
+                                    targetUrl = "Admin-Dashboard.aspx";
+                                }
+
+                                // 100% reliable client-side navigation that skips server thread abortion blocks
+                                ClientScript.RegisterStartupScript(this.GetType(), "redir", $"window.location.href = '{targetUrl}';", true);
                             }
                             else
                             {
@@ -68,23 +74,6 @@ namespace PixelMath
             catch (Exception ex)
             {
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('Database Error: {ex.Message.Replace("'", "\\'")}');", true);
-            }
-        }
-
-        private void RedirectUserBasedOnRole(string roleId)
-        {
-            switch (roleId)
-            {
-                case "3":
-                    Response.Redirect("Admin-Dashboard.aspx");
-                    break;
-                case "2":
-                    Response.Redirect("Lecturer-Dashboard.aspx");
-                    break;
-                case "1":
-                default:
-                    Response.Redirect("Student-Dashboard.aspx");
-                    break;
             }
         }
 

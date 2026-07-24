@@ -22,11 +22,6 @@ namespace PixelMath
 
             if (!IsPostBack)
             {
-                if (Session["FullName"] != null)
-                {
-                    litSidebarLecturerName.Text = Session["FullName"].ToString();
-                }
-
                 LoadClassFilter();
                 LoadQuizzes();
             }
@@ -170,13 +165,6 @@ namespace PixelMath
             {
                 ShowAlert("Error deleting quiz: " + ex.Message, false);
             }
-        }
-
-        protected void btnLogout_Click(object sender, EventArgs e)
-        {
-            Session.Clear();
-            Session.Abandon();
-            Response.Redirect("~/LoginPage.aspx");
         }
 
         private void ShowAlert(string msg, bool isSuccess)

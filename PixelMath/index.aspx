@@ -17,12 +17,8 @@
             <span class="text-green-800 text-xl font-bold">Pixel Math</span>
         </div>
         <div class="space-x-3">
-            <button class="border border-green-700 text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100 transition duration-300 ease-in-out">
-                login
-            </button>
-            <button class="bg-green-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-green-700 transition duration-300 ease-in-out">
-                sign up
-            </button>
+            <asp:Button ID="btnLogin" runat="server" Text="login" OnClick="btnLogin_Click" CssClass="border border-green-700 text-green-700 px-4 py-2 rounded-md font-semibold hover:bg-green-100 transition duration-300 ease-in-out cursor-pointer bg-transparent" />
+            <asp:Button ID="btnSignUpNav" runat="server" Text="sign up" OnClick="btnSignUp_Click" CssClass="bg-green-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-green-700 transition duration-300 ease-in-out cursor-pointer" />
         </div>
     </header>
 
@@ -33,12 +29,8 @@
             Interactive lessons, quizzes, and instant feedback all in one place.
         </p>
         <div class="space-x-4">
-            <button class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300 ease-in-out">
-                get started
-            </button>
-            <button class="border border-green-600 text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-green-100 transition duration-300 ease-in-out">
-                learn more
-            </button>
+            <asp:Button ID="btnGetStarted" runat="server" Text="get started" OnClick="btnSignUp_Click" CssClass="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300 ease-in-out cursor-pointer" />
+            <asp:Button ID="btnLearnMore" runat="server" Text="learn more" OnClick="btnLearnMore_Click" CssClass="border border-green-600 text-green-700 px-6 py-3 rounded-lg font-semibold hover:bg-green-100 transition duration-300 ease-in-out cursor-pointer bg-transparent" />
         </div>
     </section>
 

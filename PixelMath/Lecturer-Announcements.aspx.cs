@@ -22,12 +22,6 @@ namespace PixelMath
 
             if (!IsPostBack)
             {
-                // Set sidebar lecturer name
-                if (Session["FullName"] != null)
-                {
-                    litSidebarLecturerName.Text = Session["FullName"].ToString();
-                }
-
                 LoadLecturerClasses();
                 LoadRecentAnnouncements();
             }

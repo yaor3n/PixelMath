@@ -18,15 +18,12 @@ namespace PixelMath
             // Authenticate Lecturer (RoleId = 2)
             if (Session["UserId"] == null || Session["RoleId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
             if (!IsPostBack)
             {
-                string name = Session["FullName"] != null ? Session["FullName"].ToString() : "Lecturer";
-                litSidebarLecturerName.Text = name;
-
                 Guid lecturerId;
                 if (Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
                 {
@@ -84,7 +81,7 @@ namespace PixelMath
             Guid lecturerId;
             if (Session["UserId"] == null || !Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
@@ -213,13 +210,6 @@ namespace PixelMath
                 ? "mb-6 p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200"
                 : "mb-6 p-4 rounded-2xl text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200";
             litAlertMessage.Text = msg;
-        }
-
-        protected void btnLogout_Click(object sender, EventArgs e)
-        {
-            Session.Clear();
-            Session.Abandon();
-            Response.Redirect("~/Login.aspx");
         }
     }
 }

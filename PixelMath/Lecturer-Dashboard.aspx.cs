@@ -3,39 +3,33 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace PixelMath
 {
     public partial class Lecturer_Dashboard : Page
     {
-        private readonly string connStr = ConfigurationManager.ConnectionStrings["PixelMathConnStr"]?.ConnectionString
-            ?? @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\PixelMath.mdf;Integrated Security=True;";
+        private string connStr = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // 1. Check if Session exists
-            if (Session["UserId"] == null || Session["RoleId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
+            // 1. Check if Session exists (matching student pattern)
+            if (Session["UserId"] == null)
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("LoginPage.aspx");
                 return;
             }
 
             if (!IsPostBack)
             {
-                // 2. Parse Guid safely (handles string, object, or Guid types seamlessly)
-                Guid lecturerId;
-                if (!Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
-                {
-                    // Session UserId is invalid or corrupted, redirect to login
-                    Response.Redirect("~/Login.aspx");
-                    return;
-                }
+                string userId = Session["UserId"].ToString();
 
                 SetGreeting();
-                string name = Session["FullName"] != null ? Session["FullName"].ToString() : "Lecturer";
-                litLecturerName.Text = name;
-                litSidebarLecturerName.Text = name;
 
+                // Load Name and Data using explicit UniqueIdentifier parameters
+                LoadLecturerGreeting(userId);
+
+                Guid lecturerId = Guid.Parse(userId);
                 FetchCounts(lecturerId);
                 FetchPendingSubmissions(lecturerId);
                 FetchRecentQuizzes(lecturerId);
@@ -50,13 +44,35 @@ namespace PixelMath
             else litTimeGreeting.Text = "Good evening,";
         }
 
+        private void LoadLecturerGreeting(string userId)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string sql = "SELECT FullName FROM Users WHERE UserId = @UserId;";
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.Add("@UserId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(userId);
+
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                if (result != null)
+                {
+                    string name = result.ToString();
+                    litLecturerName.Text = name;
+                }
+                else
+                {
+                    litLecturerName.Text = "Lecturer";
+                }
+            }
+        }
+
         private void FetchCounts(Guid lecturerId)
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
 
-                // 1. Pending Markings: Completed attempts for quizzes created by lecturer where IsGraded = 0
+                // 1. Pending Markings
                 string sqlPending = @"
                     SELECT COUNT(DISTINCT qa.AttemptId)
                     FROM QuizAttempts qa
@@ -67,13 +83,13 @@ namespace PixelMath
 
                 using (SqlCommand cmd = new SqlCommand(sqlPending, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
                     string count = cmd.ExecuteScalar()?.ToString() ?? "0";
                     litPendingCount.Text = count;
                     litBannerPendingCount.Text = count;
                 }
 
-                // 2. Unread Announcements: Status = 0 in classes created by lecturer
+                // 2. Unread Announcements
                 string sqlUnread = @"
                     SELECT COUNT(*) 
                     FROM Announcements a
@@ -82,15 +98,15 @@ namespace PixelMath
 
                 using (SqlCommand cmd = new SqlCommand(sqlUnread, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
                     litUnreadAnnouncements.Text = cmd.ExecuteScalar()?.ToString() ?? "0";
                 }
 
-                // 3. Classes Taught by this lecturer
+                // 3. Classes Taught
                 string sqlClasses = "SELECT COUNT(*) FROM Classes WHERE CreatedBy = @LecturerId";
                 using (SqlCommand cmd = new SqlCommand(sqlClasses, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
                     litClassCount.Text = cmd.ExecuteScalar()?.ToString() ?? "0";
                 }
             }
@@ -116,7 +132,7 @@ namespace PixelMath
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
@@ -153,7 +169,7 @@ namespace PixelMath
 
                 using (SqlCommand cmd = new SqlCommand(sql, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     DataTable dt = new DataTable();
                     da.Fill(dt);
@@ -176,7 +192,7 @@ namespace PixelMath
         {
             Session.Clear();
             Session.Abandon();
-            Response.Redirect("~/Login.aspx");
+            Response.Redirect("LoginPage.aspx");
         }
     }
 }

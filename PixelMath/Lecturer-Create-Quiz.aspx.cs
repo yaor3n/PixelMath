@@ -1,173 +1,264 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Web;
 using System.Web.Script.Serialization;
-using System.Web.UI;
 
 namespace PixelMath
 {
-    public partial class Lecturer_Create_Quiz : Page
+    public partial class Lecturer_Create_Quiz : System.Web.UI.Page
     {
-        private readonly string connStr = ConfigurationManager.ConnectionStrings["PixelMathConnStr"]?.ConnectionString
+        private readonly string ConnStr = ConfigurationManager.ConnectionStrings["PixelMathConnStr"]?.ConnectionString
             ?? ConfigurationManager.ConnectionStrings["PixelMathDB"]?.ConnectionString
+            ?? ConfigurationManager.ConnectionStrings["PixelMathDb"]?.ConnectionString
             ?? @"Data Source=(LocalDB)\MSSQLLocalDB;Initial Catalog=PixelMath;Integrated Security=True;";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Authenticate Lecturer Session (RoleId = 2)
-            if (Session["UserId"] == null || Session["RoleId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
+            // ⚠️ CRITICAL FIX: Force the Master Page's form to accept file uploads
+            // Note: If your form ID in the Master Page is not "form1", change it below!
+            System.Web.UI.HtmlControls.HtmlForm form = (System.Web.UI.HtmlControls.HtmlForm)Master.FindControl("form1");
+            if (form != null)
             {
-                Response.Redirect("~/Login.aspx");
+                form.Enctype = "multipart/form-data";
+            }
+
+            if (Session["UserId"] == null || !Guid.TryParse(Session["UserId"].ToString(), out Guid lecturerId))
+            {
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
             if (!IsPostBack)
             {
-                string name = Session["FullName"] != null ? Session["FullName"].ToString() : "Lecturer";
-                litSidebarLecturerName.Text = name;
-
-                Guid lecturerId;
-                if (Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
-                {
-                    LoadClassesDropdown(lecturerId);
-                }
+                LoadClasses(lecturerId);
             }
         }
 
-        private void LoadClassesDropdown(Guid lecturerId)
+        private void LoadClasses(Guid lecturerId)
         {
-            using (SqlConnection conn = new SqlConnection(connStr))
+            using (var conn = new SqlConnection(ConnStr))
+            using (var cmd = new SqlCommand(@"
+                SELECT ClassId, ClassName FROM Classes
+                WHERE CreatedBy = @LecturerId
+                ORDER BY ClassName", conn))
             {
-                string query = "SELECT ClassId, ClassName FROM Classes WHERE CreatedBy = @LecturerId";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
-                    conn.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
+                cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                conn.Open();
 
-                    ddlClass.DataSource = reader;
-                    ddlClass.DataTextField = "ClassName";
-                    ddlClass.DataValueField = "ClassId";
-                    ddlClass.DataBind();
+                var dt = new DataTable();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+
+                ddlClass.DataSource = dt;
+                ddlClass.DataTextField = "ClassName";
+                ddlClass.DataValueField = "ClassId";
+                ddlClass.DataBind();
+
+                if (dt.Rows.Count == 0)
+                {
+                    ddlClass.Items.Insert(0, new System.Web.UI.WebControls.ListItem("No classes found — create a class first", ""));
                 }
             }
         }
 
         protected void btnSaveQuiz_Click(object sender, EventArgs e)
         {
-            Guid lecturerId;
-            if (!Guid.TryParse(Session["UserId"].ToString(), out lecturerId))
+            if (Session["UserId"] == null || !Guid.TryParse(Session["UserId"].ToString(), out Guid lecturerId))
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/LoginPage.aspx");
                 return;
             }
 
-            string title = txtQuizTitle.Text.Trim();
-            string json = hfQuestionsJson.Value;
-
-            if (string.IsNullOrEmpty(title) || ddlClass.SelectedValue == "" || string.IsNullOrEmpty(json))
+            // ── Server-side validation ──
+            if (string.IsNullOrWhiteSpace(txtQuizTitle.Text))
             {
-                ShowAlert("Please fill in all general quiz details and questions.", false);
+                ShowAlert("Quiz title is required.", false);
                 return;
             }
 
-            int duration = int.TryParse(txtDuration.Text, out duration) ? duration : 30;
-            int passingMarks = int.TryParse(txtPassingMarks.Text, out passingMarks) ? passingMarks : 50;
-            Guid classId = Guid.Parse(ddlClass.SelectedValue);
+            if (ddlClass.SelectedValue == "" || !int.TryParse(ddlClass.SelectedValue, out int classId))
+            {
+                ShowAlert("Please select a valid class.", false);
+                return;
+            }
 
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-            List<QuestionDTO> questions = serializer.Deserialize<List<QuestionDTO>>(json);
+            if (!int.TryParse(txtDuration.Text, out int duration) || duration <= 0)
+            {
+                ShowAlert("Please enter a valid duration.", false);
+                return;
+            }
 
-            using (SqlConnection conn = new SqlConnection(connStr))
+            if (!int.TryParse(txtPassingMarks.Text, out int passingMarks) || passingMarks < 0 || passingMarks > 100)
+            {
+                ShowAlert("Passing marks must be between 0 and 100.", false);
+                return;
+            }
+
+            List<QuestionDto> questions;
+            try
+            {
+                var serializer = new JavaScriptSerializer();
+                questions = serializer.Deserialize<List<QuestionDto>>(hfQuestionsJson.Value);
+            }
+            catch
+            {
+                ShowAlert("Something went wrong reading your questions. Please try again.", false);
+                return;
+            }
+
+            if (questions == null || questions.Count == 0)
+            {
+                ShowAlert("Please add at least one question.", false);
+                return;
+            }
+
+            foreach (var q in questions)
+            {
+                if (string.IsNullOrWhiteSpace(q.text))
+                {
+                    ShowAlert("One or more questions has empty text.", false);
+                    return;
+                }
+                if (q.marks <= 0) q.marks = 1;
+
+                if (q.type == "Objective")
+                {
+                    if (q.options == null || q.options.Count != 4 || q.options.Any(o => string.IsNullOrWhiteSpace(o)))
+                    {
+                        ShowAlert("Every objective question needs 4 filled options.", false);
+                        return;
+                    }
+                    if (q.correctIndex < 0 || q.correctIndex > 3)
+                    {
+                        ShowAlert("Every objective question needs a correct answer selected.", false);
+                        return;
+                    }
+                }
+            }
+
+            // ── Insert Quiz → Questions → Options in one transaction ──
+            using (var conn = new SqlConnection(ConnStr))
             {
                 conn.Open();
-                SqlTransaction trans = conn.BeginTransaction();
-
-                try
+                using (var tran = conn.BeginTransaction())
                 {
-                    // 1. Insert Quiz Record
-                    Guid quizId = Guid.NewGuid();
-                    string insertQuizSql = @"
-                        INSERT INTO Quizzes (QuizId, ClassId, Title, DurationMinutes, PassingMarks, CreatedBy, CreatedAt)
-                        VALUES (@QuizId, @ClassId, @Title, @Duration, @PassingMarks, @CreatedBy, GETDATE())";
-
-                    using (SqlCommand cmd = new SqlCommand(insertQuizSql, conn, trans))
+                    try
                     {
-                        cmd.Parameters.AddWithValue("@QuizId", quizId);
-                        cmd.Parameters.AddWithValue("@ClassId", classId);
-                        cmd.Parameters.AddWithValue("@Title", title);
-                        cmd.Parameters.AddWithValue("@Duration", duration);
-                        cmd.Parameters.AddWithValue("@PassingMarks", passingMarks);
-                        cmd.Parameters.AddWithValue("@CreatedBy", lecturerId);
-                        cmd.ExecuteNonQuery();
-                    }
+                        int quizId;
 
-                    // 2. Loop & Insert Questions and Options
-                    foreach (var q in questions)
-                    {
-                        Guid questionId = Guid.NewGuid();
-                        string insertQSql = @"
-                            INSERT INTO Questions (QuestionId, QuizId, QuestionText)
-                            VALUES (@QuestionId, @QuizId, @QuestionText)";
-
-                        using (SqlCommand cmd = new SqlCommand(insertQSql, conn, trans))
+                        using (var cmd = new SqlCommand(@"
+                            INSERT INTO Quizzes (Title, Description, ClassId, CreatedBy, DurationMinutes, PassingMarks)
+                            OUTPUT INSERTED.QuizId
+                            VALUES (@Title, @Description, @ClassId, @CreatedBy, @Duration, @PassingMarks)", conn, tran))
                         {
-                            cmd.Parameters.AddWithValue("@QuestionId", questionId);
-                            cmd.Parameters.AddWithValue("@QuizId", quizId);
-                            cmd.Parameters.AddWithValue("@QuestionText", q.text);
-                            cmd.ExecuteNonQuery();
+                            cmd.Parameters.AddWithValue("@Title", txtQuizTitle.Text.Trim());
+                            cmd.Parameters.AddWithValue("@Description", string.IsNullOrWhiteSpace(txtDescription.Text) ? (object)DBNull.Value : txtDescription.Text.Trim());
+                            cmd.Parameters.AddWithValue("@ClassId", classId);
+                            cmd.Parameters.AddWithValue("@CreatedBy", lecturerId);
+                            cmd.Parameters.AddWithValue("@Duration", duration);
+                            cmd.Parameters.AddWithValue("@PassingMarks", passingMarks);
+
+                            quizId = (int)cmd.ExecuteScalar();
                         }
 
-                        // Insert 4 Options
-                        for (int i = 0; i < q.options.Count; i++)
+                        foreach (var q in questions)
                         {
-                            string insertOptSql = @"
-                                INSERT INTO QuestionOptions (OptionId, QuestionId, OptionText, IsCorrect)
-                                VALUES (NEWID(), @QuestionId, @OptionText, @IsCorrect)";
-
-                            using (SqlCommand cmd = new SqlCommand(insertOptSql, conn, trans))
+                            // Handle file upload per question if present
+                            string questionImageUrl = null;
+                            if (!string.IsNullOrEmpty(q.fileInputName) && Request.Files[q.fileInputName] != null)
                             {
-                                cmd.Parameters.AddWithValue("@QuestionId", questionId);
-                                cmd.Parameters.AddWithValue("@OptionText", q.options[i]);
-                                cmd.Parameters.AddWithValue("@IsCorrect", i == q.correctIndex ? 1 : 0);
-                                cmd.ExecuteNonQuery();
+                                HttpPostedFile postedFile = Request.Files[q.fileInputName];
+                                if (postedFile.ContentLength > 0)
+                                {
+                                    string extension = Path.GetExtension(postedFile.FileName).ToLower();
+                                    string[] allowedExtensions = { ".png", ".jpg", ".jpeg" };
+
+                                    if (Array.IndexOf(allowedExtensions, extension) >= 0)
+                                    {
+                                        // Ensure ~/Uploads/questionimg/ folder exists
+                                        string folderPath = Server.MapPath("~/Uploads/questionimg/");
+                                        if (!Directory.Exists(folderPath))
+                                        {
+                                            Directory.CreateDirectory(folderPath);
+                                        }
+
+                                        string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                                        string savePath = Path.Combine(folderPath, uniqueFileName);
+                                        postedFile.SaveAs(savePath);
+
+                                        questionImageUrl = "~/Uploads/questionimg/" + uniqueFileName;
+                                    }
+                                }
+                            }
+
+                            int questionId;
+
+                            using (var cmd = new SqlCommand(@"
+                                INSERT INTO Questions (QuizId, QuestionText, QuestionType, QuestionImageUrl, Marks)
+                                OUTPUT INSERTED.QuestionId
+                                VALUES (@QuizId, @QuestionText, @QuestionType, @QuestionImageUrl, @Marks)", conn, tran))
+                            {
+                                cmd.Parameters.AddWithValue("@QuizId", quizId);
+                                cmd.Parameters.AddWithValue("@QuestionText", q.text.Trim());
+                                cmd.Parameters.AddWithValue("@QuestionType", q.type);
+                                cmd.Parameters.AddWithValue("@QuestionImageUrl",
+                                    string.IsNullOrEmpty(questionImageUrl) ? (object)DBNull.Value : questionImageUrl);
+                                cmd.Parameters.AddWithValue("@Marks", q.marks);
+
+                                questionId = (int)cmd.ExecuteScalar();
+                            }
+
+                            if (q.type == "Objective")
+                            {
+                                for (int i = 0; i < q.options.Count; i++)
+                                {
+                                    using (var cmd = new SqlCommand(@"
+                                        INSERT INTO Options (QuestionId, OptionText, IsCorrect)
+                                        VALUES (@QuestionId, @OptionText, @IsCorrect)", conn, tran))
+                                    {
+                                        cmd.Parameters.AddWithValue("@QuestionId", questionId);
+                                        cmd.Parameters.AddWithValue("@OptionText", q.options[i].Trim());
+                                        cmd.Parameters.AddWithValue("@IsCorrect", i == q.correctIndex);
+                                        cmd.ExecuteNonQuery();
+                                    }
+                                }
                             }
                         }
-                    }
 
-                    trans.Commit();
-                    ShowAlert("🎉 Quiz published successfully!", true);
-                    Response.Redirect("~/Lecturer-Dashboard.aspx");
-                }
-                catch (Exception ex)
-                {
-                    trans.Rollback();
-                    ShowAlert("Database Error: " + ex.Message, false);
+                        tran.Commit();
+                        Response.Redirect("~/Lecturer-Manage-Quizzes.aspx?created=1");
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        ShowAlert("Failed to save quiz: " + ex.Message, false);
+                    }
                 }
             }
         }
 
-        private void ShowAlert(string msg, bool isSuccess)
+        private void ShowAlert(string message, bool success)
         {
             pnlAlert.Visible = true;
-            pnlAlert.CssClass = isSuccess
-                ? "mb-6 p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200"
-                : "mb-6 p-4 rounded-2xl text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200";
-            litAlertMessage.Text = msg;
+            pnlAlert.CssClass = "mb-6 p-4 rounded-2xl text-xs font-bold " +
+                (success ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                         : "bg-rose-50 text-rose-700 border border-rose-200");
+            litAlertMessage.Text = message;
         }
 
-        protected void btnLogout_Click(object sender, EventArgs e)
+        private class QuestionDto
         {
-            Session.Clear();
-            Session.Abandon();
-            Response.Redirect("~/Login.aspx");
-        }
-
-        // Helper Data Transport Class
-        public class QuestionDTO
-        {
+            public string type { get; set; }
             public string text { get; set; }
+            public int marks { get; set; }
+            public string fileInputName { get; set; }
             public List<string> options { get; set; }
             public int correctIndex { get; set; }
         }

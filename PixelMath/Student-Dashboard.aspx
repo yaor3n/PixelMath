@@ -1,4 +1,4 @@
-﻿﻿<%@ Page Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Dashboard.aspx.cs" Inherits="PixelMath.Student_Dashboard" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Dashboard.aspx.cs" Inherits="PixelMath.Student_Dashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="Student-Dashboard-CSS.css" />
