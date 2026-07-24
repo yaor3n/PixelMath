@@ -478,8 +478,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Local SQL Server Database Files
+*.mdf
+*.ldf
+
 # Vim temporary swap files
-*.swp
-* . m d f  
- * . l d f  
- 
+*.swp 
+ 

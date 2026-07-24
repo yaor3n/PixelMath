@@ -1,0 +1,127 @@
+﻿body {
+}
+
+.resource-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Card Outer Shell */
+.resource-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Top Section Inside Card */
+.resource-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.resource-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #fde8e8;
+    color: #e53e3e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.resource-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0 0 4px 0;
+}
+
+.resource-desc {
+    font-size: 13px;
+    color: #718096;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Bottom Action Row Inside Card */
+.resource-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid #edf2f7;
+}
+
+.resource-meta {
+    font-size: 12px;
+    color: #8c9ba5;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* View & Download Buttons */
+.btn-action {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-view {
+    background-color: #e8f7ee;
+    color: #108e51;
+}
+
+    .btn-view:hover {
+        background-color: #108e51;
+        color: #ffffff;
+    }
+
+.btn-download {
+    background-color: #edf2f7;
+    color: #4a5568;
+}
+
+    .btn-download:hover {
+        background-color: #cbd5e0;
+        color: #1a202c;
+    }
+
+.no-resource-msg {
+    text-align: center;
+    padding: 30px;
+    color: #8c9ba5;
+    background: #ffffff;
+    border-radius: 12px;
+}

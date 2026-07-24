@@ -105,18 +105,20 @@ namespace PixelMath
 
         private void LoadQuestionsAndAnswers(int attemptId)
         {
+            // 🎯 Added q.QuestionImageUrl to SELECT query
             string query = @"
-                SELECT 
-                    q.QuestionId,
-                    q.QuestionText,
-                    q.QuestionType,
-                    sa.SelectedOptionId,
-                    sa.AnswerText,
-                    sa.LecturerFeedback
-                FROM Questions q
-                INNER JOIN QuizAttempts qa ON q.QuizId = qa.QuizId
-                LEFT JOIN StudentAnswers sa ON q.QuestionId = sa.QuestionId AND sa.AttemptId = @AttemptId
-                WHERE qa.AttemptId = @AttemptId";
+                        SELECT 
+                            q.QuestionId,
+                            q.QuestionText,
+                            q.QuestionType,
+                            q.QuestionImageUrl,
+                            sa.SelectedOptionId,
+                            sa.AnswerText,
+                            sa.LecturerFeedback
+                        FROM Questions q
+                        INNER JOIN QuizAttempts qa ON q.QuizId = qa.QuizId
+                        LEFT JOIN StudentAnswers sa ON q.QuestionId = sa.QuestionId AND sa.AttemptId = @AttemptId
+                        WHERE qa.AttemptId = @AttemptId";
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -140,6 +142,25 @@ namespace PixelMath
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 DataRowView row = (DataRowView)e.Item.DataItem;
+
+                // 🎯 Safely Handle Question Image Rendering
+                Panel pnlQuestionImage = (Panel)e.Item.FindControl("pnlQuestionImage");
+                Image imgQuestion = (Image)e.Item.FindControl("imgQuestion");
+
+                if (pnlQuestionImage != null && imgQuestion != null)
+                {
+                    if (row["QuestionImageUrl"] != DBNull.Value && !string.IsNullOrWhiteSpace(row["QuestionImageUrl"].ToString()))
+                    {
+                        imgQuestion.ImageUrl = ResolveUrl(row["QuestionImageUrl"].ToString());
+                        pnlQuestionImage.Visible = true;
+                    }
+                    else
+                    {
+                        pnlQuestionImage.Visible = false;
+                    }
+                }
+
+                // Handle Options for Objective Questions
                 string questionType = row["QuestionType"].ToString();
 
                 if (questionType == "Objective")

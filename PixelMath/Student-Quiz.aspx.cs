@@ -32,16 +32,28 @@ namespace PixelMath
 
         private void LoadAllQuizzes()
         {
+            string studentId = Session["UserId"].ToString();
+
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks, 
-                                ISNULL(MAX(quest.QuestionType), 'Objective') as QuestionType 
-                                FROM Quizzes q 
-                                LEFT JOIN Questions quest ON q.QuizId = quest.QuizId 
-                                GROUP BY q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks";
+                // 🎯 Joins Quizzes with StudentClasses so students only see quizzes assigned to their class
+                string query = @"
+                            SELECT 
+                                q.QuizId, 
+                                q.Title, 
+                                q.DurationMinutes, 
+                                q.PassingMarks, 
+                                ISNULL(MAX(quest.QuestionType), 'Objective') AS QuestionType 
+                            FROM Quizzes q
+                            INNER JOIN StudentClasses sc ON q.ClassId = sc.ClassId
+                            LEFT JOIN Questions quest ON q.QuizId = quest.QuizId 
+                            WHERE sc.StudentId = @StudentId
+                            GROUP BY q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    cmd.Parameters.Add("@StudentId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(studentId);
+
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();
@@ -118,7 +130,8 @@ namespace PixelMath
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT QuestionId, QuestionText, QuestionType FROM Questions WHERE QuizId = @QuizId";
+                // 🎯 Added QuestionImageUrl to SELECT statement
+                string query = "SELECT QuestionId, QuestionText, QuestionType, QuestionImageUrl FROM Questions WHERE QuizId = @QuizId";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@QuizId", quizId);
@@ -138,6 +151,24 @@ namespace PixelMath
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
+                DataRowView rowView = (DataRowView)e.Item.DataItem;
+
+                // 🎯 1. Safely Handle Question Image
+                Panel pnlQuestionImage = (Panel)e.Item.FindControl("pnlQuestionImage");
+                Image imgQuestion = (Image)e.Item.FindControl("imgQuestion");
+
+                if (rowView["QuestionImageUrl"] != DBNull.Value && !string.IsNullOrWhiteSpace(rowView["QuestionImageUrl"].ToString()))
+                {
+                    string rawImgUrl = rowView["QuestionImageUrl"].ToString();
+                    imgQuestion.ImageUrl = ResolveUrl(rawImgUrl);
+                    pnlQuestionImage.Visible = true;
+                }
+                else
+                {
+                    pnlQuestionImage.Visible = false;
+                }
+
+                // 🎯 2. Question Types & Options Binding (Your Existing Logic)
                 HiddenField hfQuestionId = (HiddenField)e.Item.FindControl("QuestionIdHiddenField");
                 HiddenField hfQuestionType = (HiddenField)e.Item.FindControl("QuestionTypeHiddenField");
 
@@ -150,12 +181,10 @@ namespace PixelMath
 
                     if (qType.Equals("Subjective", StringComparison.OrdinalIgnoreCase))
                     {
-                        // 🎯 Show the text area form element layout field
                         plcSubjective.Visible = true;
                     }
                     else
                     {
-                        // 🎯 Show multiple choice form configuration elements
                         plcObjective.Visible = true;
                         RadioButtonList rblOptions = (RadioButtonList)e.Item.FindControl("OptionsButton");
 

@@ -120,11 +120,18 @@
                             <div class="question-number">
                                 Question <%# Container.ItemIndex + 1 %>
                             </div>
-                            <div class="question">
+                
+                            <!-- Question Text -->
+                            <asp:Panel ID="pnlQuestionText" runat="server" CssClass="question">
                                 <%# Eval("QuestionText") %>
-                            </div>
+                            </asp:Panel>
                         </div>
-                        
+            
+                        <!-- 🎯 QUESTION IMAGE CONTAINER -->
+                        <asp:Panel ID="pnlQuestionImage" runat="server" Visible="false" Style="margin-top: 14px; text-align: center;">
+                            <asp:Image ID="imgQuestion" runat="server" Style="max-width: 100%; max-height: 350px; border-radius: 12px; border: 1.5px solid #BBF7D0;" />
+                        </asp:Panel>
+
                         <div class="options-block">
                             <asp:PlaceHolder ID="ObjectivePlaceHolder" runat="server" Visible="false">
                                 <asp:RadioButtonList ID="OptionsButton" runat="server" CssClass="quiz-options-list" DataTextField="OptionText" DataValueField="OptionId">

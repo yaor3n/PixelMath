@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Resources.aspx.cs" Inherits="PixelMath.Student_Resources" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="Student-Resources-CSS.css" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
@@ -29,12 +30,12 @@
                     <!-- Bottom Action Row: View Button (Left) | Download Button (Right) -->
                     <div class="resource-action-row">
                         <!-- VIEW BUTTON (LEFT) -->
-                        <a href='<%# ResolveUrl(Eval("ResourceUrl").ToString().Replace("~Uploads", "~/Uploads").Replace("~~", "~")) %>' target="_blank" class="btn-action btn-view">
+                        <a href='<%# GetFormattedUrl(Eval("ResourceUrl")) %>' target="_blank" class="btn-action btn-view">
                             <i class="fa-solid fa-eye"></i> View
                         </a>
 
                         <!-- DOWNLOAD BUTTON (RIGHT) -->
-                        <a href='<%# ResolveUrl(Eval("ResourceUrl").ToString().Replace("~Uploads", "~/Uploads").Replace("~~", "~")) %>' download class="btn-action btn-download">
+                        <a href='<%# GetFormattedUrl(Eval("ResourceUrl")) %>' download='<%# Eval("OriginalFileName") %>' class="btn-action btn-download">
                             <i class="fa-solid fa-download"></i> Download
                         </a>
                     </div>
