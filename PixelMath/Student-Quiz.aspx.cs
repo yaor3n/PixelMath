@@ -32,16 +32,28 @@ namespace PixelMath
 
         private void LoadAllQuizzes()
         {
+            string studentId = Session["UserId"].ToString();
+
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"SELECT q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks, 
-                                ISNULL(MAX(quest.QuestionType), 'Objective') as QuestionType 
-                                FROM Quizzes q 
-                                LEFT JOIN Questions quest ON q.QuizId = quest.QuizId 
-                                GROUP BY q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks";
+                // 🎯 Joins Quizzes with StudentClasses so students only see quizzes assigned to their class
+                string query = @"
+                            SELECT 
+                                q.QuizId, 
+                                q.Title, 
+                                q.DurationMinutes, 
+                                q.PassingMarks, 
+                                ISNULL(MAX(quest.QuestionType), 'Objective') AS QuestionType 
+                            FROM Quizzes q
+                            INNER JOIN StudentClasses sc ON q.ClassId = sc.ClassId
+                            LEFT JOIN Questions quest ON q.QuizId = quest.QuizId 
+                            WHERE sc.StudentId = @StudentId
+                            GROUP BY q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks;";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
+                    cmd.Parameters.Add("@StudentId", SqlDbType.UniqueIdentifier).Value = Guid.Parse(studentId);
+
                     using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                     {
                         DataTable dt = new DataTable();

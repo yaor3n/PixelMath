@@ -40,9 +40,16 @@
                     CssClass="w-full mt-1 mb-4 px-4 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
 
                 <!-- password -->
+                <!-- password -->
                 <label class="text-green-700 text-sm font-semibold">Password</label>
                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"
-                    CssClass="w-full mt-1 mb-6 px-4 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
+                    CssClass="w-full mt-1 mb-2 px-4 py-2 border border-green-200 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400" />
+
+                <div class="text-right mb-6">
+                    <a href="ForgotPasswordPage.aspx" class="text-xs text-green-700 hover:underline font-semibold">
+                        Forgot Password?
+                    </a>
+                </div>
 
                 <!-- login button -->
                 <asp:Button ID="btnLogin" runat="server" Text="Login"
