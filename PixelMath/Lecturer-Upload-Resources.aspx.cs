@@ -137,9 +137,9 @@ namespace PixelMath
                 }
 
                 // -------------------------------------------------------------------
-                // 4. SAFE SAVE TO DISK
+                // 4. SAFE SAVE TO DISK (~/Uploads/resources/)
                 // -------------------------------------------------------------------
-                string folderPath = Server.MapPath("~/Uploads/");
+                string folderPath = Server.MapPath("~/Uploads/resources/");
                 if (!Directory.Exists(folderPath))
                 {
                     Directory.CreateDirectory(folderPath);
@@ -149,10 +149,10 @@ namespace PixelMath
                 string savePath = Path.Combine(folderPath, uniqueFileName);
                 fileUpload.SaveAs(savePath);
 
-                string relativeFilePath = "~/Uploads/" + uniqueFileName;
+                string relativeFilePath = "~/Uploads/resources/" + uniqueFileName;
 
                 // -------------------------------------------------------------------
-                // 5. DATABASE INSERTION (Supports both Int and Guid ClassId)
+                // 5. DATABASE INSERTION (Using UploadedAt)
                 // -------------------------------------------------------------------
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
