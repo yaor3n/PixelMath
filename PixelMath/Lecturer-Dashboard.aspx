@@ -141,7 +141,7 @@
                                     Duration: <%# Eval("DurationMinutes") %> mins | Passing: <%# Eval("PassingMarks") %> pts
                                 </p>
                             </div>
-                            <a href='<%# "Quizzes/Attempts.aspx?quizId=" + Eval("QuizId") %>' 
+                            <a href='<%# "Lecturer-View-Attempts.aspx?quizId=" + Eval("QuizId") %>' 
                                class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-xs shrink-0 self-end sm:self-center">
                                 View Attempts
                             </a>

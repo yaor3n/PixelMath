@@ -2,43 +2,39 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace PixelMath
 {
-    public partial class Lecturer_Manage_Quizzes : Page
+    public partial class Lecturer_Manage_Quizzes : System.Web.UI.Page
     {
-        private string connStr => ConfigurationManager.ConnectionStrings["PixelMathConnStr"].ConnectionString;
+        private string connStr = ConfigurationManager.ConnectionStrings["PixelMathSQL"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Session guard: Ensure only logged-in lecturers can access this page
-            if (Session["UserId"] == null || Session["RoleId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
+            if (Session["UserId"] == null || Convert.ToInt32(Session["RoleId"]) != 2)
             {
-                Response.Redirect("~/LoginPage.aspx");
+                Response.Redirect("LoginPage.aspx");
                 return;
             }
 
             if (!IsPostBack)
             {
-                LoadClassFilter();
+                LoadLecturerClasses();
                 LoadQuizzes();
             }
         }
 
-        private void LoadClassFilter()
+        private void LoadLecturerClasses()
         {
-            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
-
+            string lecturerId = Session["UserId"].ToString();
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT ClassId, ClassName FROM Classes WHERE CreatedBy = @LecturerId ORDER BY ClassName ASC";
+                string query = "SELECT ClassId, ClassName FROM Classes WHERE CreatedBy = @CreatedBy ORDER BY ClassName";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    cmd.Parameters.AddWithValue("@CreatedBy", lecturerId);
                     conn.Open();
-
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         ddlFilterClass.DataSource = reader;
@@ -48,65 +44,61 @@ namespace PixelMath
                     }
                 }
             }
-
-            ddlFilterClass.Items.Insert(0, new ListItem("All Classes", "0"));
+            ddlFilterClass.Items.Insert(0, new ListItem("All Classes", ""));
         }
 
-        private void LoadQuizzes()
+        private void LoadQuizzes(string searchKeyword = "", string classIdFilter = "")
         {
-            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
-            string searchTerm = txtSearch.Text.Trim();
-            int selectedClassId = Convert.ToInt32(ddlFilterClass.SelectedValue);
-
+            string lecturerId = Session["UserId"].ToString();
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = @"
-                    SELECT Q.QuizId, Q.Title, Q.DurationMinutes, Q.PassingMarks, Q.CreatedAt, C.ClassName 
-                    FROM Quizzes Q
-                    INNER JOIN Classes C ON Q.ClassId = C.ClassId
-                    WHERE Q.CreatedBy = @LecturerId";
+                string query = @"SELECT q.QuizId, q.Title, q.DurationMinutes, q.PassingMarks, q.CreatedAt, c.ClassName 
+                                 FROM Quizzes q
+                                 JOIN Classes c ON q.ClassId = c.ClassId
+                                 WHERE q.CreatedBy = @CreatedBy";
 
-                if (selectedClassId > 0)
+                if (!string.IsNullOrEmpty(searchKeyword))
                 {
-                    query += " AND Q.ClassId = @ClassId";
+                    query += " AND q.Title LIKE @Search";
+                }
+                if (!string.IsNullOrEmpty(classIdFilter))
+                {
+                    query += " AND q.ClassId = @ClassId";
                 }
 
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    query += " AND Q.Title LIKE @SearchTerm";
-                }
-
-                query += " ORDER BY Q.CreatedAt DESC";
+                query += " ORDER BY q.CreatedAt DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
-
-                    if (selectedClassId > 0)
+                    cmd.Parameters.AddWithValue("@CreatedBy", lecturerId);
+                    if (!string.IsNullOrEmpty(searchKeyword))
                     {
-                        cmd.Parameters.AddWithValue("@ClassId", selectedClassId);
+                        cmd.Parameters.AddWithValue("@Search", "%" + searchKeyword + "%");
+                    }
+                    if (!string.IsNullOrEmpty(classIdFilter))
+                    {
+                        cmd.Parameters.AddWithValue("@ClassId", Convert.ToInt32(classIdFilter));
                     }
 
-                    if (!string.IsNullOrEmpty(searchTerm))
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
                     {
-                        cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
-                    }
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-
-                    if (dt.Rows.Count > 0)
-                    {
-                        rptQuizzes.DataSource = dt;
-                        rptQuizzes.DataBind();
-                        rptQuizzes.Visible = true;
-                        pnlNoQuizzes.Visible = false;
-                    }
-                    else
-                    {
-                        rptQuizzes.Visible = false;
-                        pnlNoQuizzes.Visible = true;
+                        if (dt.Rows.Count > 0)
+                        {
+                            rptQuizzes.DataSource = dt;
+                            rptQuizzes.DataBind();
+                            rptQuizzes.Visible = true;
+                            pnlNoQuizzes.Visible = false;
+                        }
+                        else
+                        {
+                            rptQuizzes.DataSource = null;
+                            rptQuizzes.DataBind();
+                            rptQuizzes.Visible = false;
+                            pnlNoQuizzes.Visible = true;
+                        }
                     }
                 }
             }
@@ -114,72 +106,237 @@ namespace PixelMath
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            LoadQuizzes();
+            LoadQuizzes(txtSearch.Text.Trim(), ddlFilterClass.SelectedValue);
         }
 
         protected void ddlFilterClass_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadQuizzes();
+            LoadQuizzes(txtSearch.Text.Trim(), ddlFilterClass.SelectedValue);
         }
 
         protected void rptQuizzes_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            if (e.CommandName == "DeleteQuiz")
+            int quizId = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "EditQuiz")
             {
-                int quizId = Convert.ToInt32(e.CommandArgument);
-                DeleteQuiz(quizId);
+                hfEditingQuizId.Value = quizId.ToString();
+                LoadQuizDetails(quizId);
+                LoadQuestions(quizId);
+
+                // Switch panels
+                pnlList.Visible = false;
+                pnlEdit.Visible = true;
+                pnlEditSingleQuestion.Visible = false;
+            }
+            else if (e.CommandName == "DeleteQuiz")
+            {
+                DeleteQuizAndRelatedData(quizId);
+                LoadQuizzes(txtSearch.Text.Trim(), ddlFilterClass.SelectedValue);
+                ShowAlert("Quiz deleted successfully.", "bg-emerald-50 text-emerald-700");
             }
         }
 
-        private void DeleteQuiz(int quizId)
+        private void DeleteQuizAndRelatedData(int quizId)
         {
-            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
-
-            try
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                using (SqlConnection conn = new SqlConnection(connStr))
+                conn.Open();
+                // Clean delete in correct FK order
+                string[] queries = {
+                    "DELETE FROM StudentAnswers WHERE QuestionId IN (SELECT QuestionId FROM Questions WHERE QuizId = @QuizId)",
+                    "DELETE FROM Options WHERE QuestionId IN (SELECT QuestionId FROM Questions WHERE QuizId = @QuizId)",
+                    "DELETE FROM Questions WHERE QuizId = @QuizId",
+                    "DELETE FROM QuizAttempts WHERE QuizId = @QuizId",
+                    "DELETE FROM Quizzes WHERE QuizId = @QuizId"
+                };
+
+                foreach (string q in queries)
                 {
-                    string query = "DELETE FROM Quizzes WHERE QuizId = @QuizId AND CreatedBy = @LecturerId";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlCommand cmd = new SqlCommand(q, conn))
                     {
                         cmd.Parameters.AddWithValue("@QuizId", quizId);
-                        cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
 
-                        conn.Open();
-                        int rowsAffected = cmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
+        private void LoadQuizDetails(int quizId)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = "SELECT Title, Description, DurationMinutes, PassingMarks FROM Quizzes WHERE QuizId = @QuizId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
                         {
-                            ShowAlert("Quiz deleted successfully.", true);
+                            txtQuizTitle.Text = reader["Title"].ToString();
+                            txtQuizDesc.Text = reader["Description"].ToString();
+                            txtDuration.Text = reader["DurationMinutes"].ToString();
+                            txtPassingMarks.Text = reader["PassingMarks"].ToString();
                         }
-                        else
+                    }
+                }
+            }
+        }
+
+        private void LoadQuestions(int quizId)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = "SELECT QuestionId, QuestionText, QuestionType, Marks FROM Questions WHERE QuizId = @QuizId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        rptQuestions.DataSource = reader;
+                        rptQuestions.DataBind();
+                    }
+                }
+            }
+        }
+
+        protected void btnUpdateQuiz_Click(object sender, EventArgs e)
+        {
+            int quizId = Convert.ToInt32(hfEditingQuizId.Value);
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = "UPDATE Quizzes SET Title = @Title, Description = @Description, DurationMinutes = @Duration, PassingMarks = @PassingMarks WHERE QuizId = @QuizId";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Title", txtQuizTitle.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Description", txtQuizDesc.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Duration", Convert.ToInt32(txtDuration.Text));
+                    cmd.Parameters.AddWithValue("@PassingMarks", Convert.ToInt32(txtPassingMarks.Text));
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            ShowAlert("Quiz details updated successfully!", "bg-emerald-50 text-emerald-700");
+        }
+
+        protected void rptQuestions_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "EditQ")
+            {
+                int questionId = Convert.ToInt32(e.CommandArgument);
+                hfSelectedQuestionId.Value = questionId.ToString();
+                LoadSingleQuestionData(questionId);
+                pnlEditSingleQuestion.Visible = true;
+            }
+        }
+
+        private void LoadSingleQuestionData(int questionId)
+        {
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string qQuery = "SELECT QuestionText, Marks FROM Questions WHERE QuestionId = @QuestionId";
+                using (SqlCommand cmd = new SqlCommand(qQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuestionId", questionId);
+                    conn.Open();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
                         {
-                            ShowAlert("Unable to delete quiz or quiz not found.", false);
+                            txtEditQText.Text = reader["QuestionText"].ToString();
+                            txtEditMarks.Text = reader["Marks"].ToString();
                         }
                     }
                 }
 
-                LoadQuizzes();
-            }
-            catch (Exception ex)
-            {
-                ShowAlert("Error deleting quiz: " + ex.Message, false);
+                string optQuery = "SELECT OptionId, OptionText, IsCorrect FROM Options WHERE QuestionId = @QuestionId";
+                using (SqlCommand cmd = new SqlCommand(optQuery, conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuestionId", questionId);
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+                        rptOptions.DataSource = dt;
+                        rptOptions.DataBind();
+                    }
+                }
             }
         }
 
-        private void ShowAlert(string msg, bool isSuccess)
+        protected void btnSaveQuestion_Click(object sender, EventArgs e)
         {
-            pnlAlert.Visible = true;
-            litAlertMessage.Text = msg;
+            int questionId = Convert.ToInt32(hfSelectedQuestionId.Value);
+            int quizId = Convert.ToInt32(hfEditingQuizId.Value);
 
-            if (isSuccess)
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                pnlAlert.CssClass = "mb-6 p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200";
+                conn.Open();
+                string updateQ = "UPDATE Questions SET QuestionText = @QText, Marks = @Marks WHERE QuestionId = @QId";
+                using (SqlCommand cmd = new SqlCommand(updateQ, conn))
+                {
+                    cmd.Parameters.AddWithValue("@QText", txtEditQText.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Marks", Convert.ToInt32(txtEditMarks.Text));
+                    cmd.Parameters.AddWithValue("@QId", questionId);
+                    cmd.ExecuteNonQuery();
+                }
+
+                foreach (RepeaterItem item in rptOptions.Items)
+                {
+                    if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
+                    {
+                        HiddenField hfOptionId = (HiddenField)item.FindControl("hfOptionId");
+                        TextBox txtOptionText = (TextBox)item.FindControl("txtOptionText");
+                        CheckBox chkIsCorrect = (CheckBox)item.FindControl("chkIsCorrect");
+
+                        if (hfOptionId != null && txtOptionText != null && chkIsCorrect != null)
+                        {
+                            int optionId = Convert.ToInt32(hfOptionId.Value);
+                            string optText = txtOptionText.Text.Trim();
+                            bool isCorrect = chkIsCorrect.Checked;
+
+                            string updateOpt = "UPDATE Options SET OptionText = @OptText, IsCorrect = @IsCorrect WHERE OptionId = @OptId";
+                            using (SqlCommand cmdOpt = new SqlCommand(updateOpt, conn))
+                            {
+                                cmdOpt.Parameters.AddWithValue("@OptText", optText);
+                                cmdOpt.Parameters.AddWithValue("@IsCorrect", isCorrect);
+                                cmdOpt.Parameters.AddWithValue("@OptId", optionId);
+                                cmdOpt.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
             }
-            else
-            {
-                pnlAlert.CssClass = "mb-6 p-4 rounded-2xl text-xs font-bold bg-rose-50 text-rose-800 border border-rose-200";
-            }
+
+            LoadQuestions(quizId);
+            pnlEditSingleQuestion.Visible = false;
+            ShowAlert("Question and options updated successfully!", "bg-emerald-50 text-emerald-700");
+        }
+
+        protected void btnCancelEditQuestion_Click(object sender, EventArgs e)
+        {
+            pnlEditSingleQuestion.Visible = false;
+        }
+
+        protected void btnBackToList_Click(object sender, EventArgs e)
+        {
+            pnlEdit.Visible = false;
+            pnlList.Visible = true;
+            LoadQuizzes(txtSearch.Text.Trim(), ddlFilterClass.SelectedValue);
+        }
+
+        private void ShowAlert(string message, string cssClass)
+        {
+            litAlertMessage.Text = message;
+            pnlAlert.CssClass = "mb-6 p-4 rounded-2xl text-xs font-bold shadow-xs " + cssClass;
+            pnlAlert.Visible = true;
         }
     }
 }

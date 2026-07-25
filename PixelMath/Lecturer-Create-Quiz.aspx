@@ -1,13 +1,15 @@
 ﻿<%@ Page Title="Create Quiz - PixelMath" Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-Create-Quiz.aspx.cs" Inherits="PixelMath.Lecturer_Create_Quiz" %>
 
+<asp:Content ID="ContentTopbar" ContentPlaceHolderID="TopbarTitleContent" runat="server">
+    <span class="font-fredoka text-xl text-slate-800 flex items-center gap-2">
+        Create New Quiz ✍️
+    </span>
+</asp:Content>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <asp:HiddenField ID="hfQuestionsJson" runat="server" />
 
     <main class="p-8 flex-1 max-w-5xl">
-
-        <div class="mb-6">
-            <h1 class="font-fredoka text-xl text-slate-800">Create New Quiz ✍️</h1>
-        </div>
 
         <asp:Panel ID="pnlAlert" runat="server" Visible="false" CssClass="mb-6 p-4 rounded-2xl text-xs font-bold">
             <asp:Literal ID="litAlertMessage" runat="server"></asp:Literal>

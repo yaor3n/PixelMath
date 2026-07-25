@@ -113,6 +113,7 @@
                     <a href="Lecturer-Create-Quiz.aspx" class="sidebar-selection"><i class="fa-solid fa-circle-plus"></i>Create Quiz</a>
                     <a href="Lecturer-Manage-Quizzes.aspx" class="sidebar-selection"><i class="fa-solid fa-file-lines"></i>Manage Quizzes</a>
                     <a href="Lecturer-Marking.aspx" class="sidebar-selection"><i class="fa-solid fa-pen-to-square"></i>Grade Submissions</a>
+                    <a href="Lecturer-View-Attempts.aspx" class="sidebar-selection"><i class="fa-solid fa-clipboard-list"></i>View Attempts</a>
                     <a href="Lecturer-Upload-Resources.aspx" class="sidebar-selection"><i class="fa-solid fa-cloud-arrow-up"></i>Upload Resources</a>
 
                     <div class="sidebar-category"> System </div>

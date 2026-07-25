@@ -11,7 +11,7 @@ namespace PixelMath
 {
 
 
-    public partial class Lecturer_Marking
+    public partial class Lecturer_View_Attempts
     {
 
         /// <summary>
@@ -33,22 +33,40 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Literal litAlertMessage;
 
         /// <summary>
-        /// ddlQuizzes control.
+        /// pnlList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlQuizzes;
+        protected global::System.Web.UI.WebControls.Panel pnlList;
 
         /// <summary>
-        /// pnlAttempts control.
+        /// txtSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlAttempts;
+        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+
+        /// <summary>
+        /// ddlFilterQuiz control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFilterQuiz;
+
+        /// <summary>
+        /// btnSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
         /// rptAttempts control.
@@ -60,48 +78,12 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Repeater rptAttempts;
 
         /// <summary>
-        /// lblNoAttempts control.
+        /// pnlNoAttempts control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNoAttempts;
-
-        /// <summary>
-        /// pnlGradingArea control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlGradingArea;
-
-        /// <summary>
-        /// litStudentName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litStudentName;
-
-        /// <summary>
-        /// rptAnswers control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptAnswers;
-
-        /// <summary>
-        /// btnSubmitGrades control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSubmitGrades;
+        protected global::System.Web.UI.WebControls.Panel pnlNoAttempts;
     }
 }

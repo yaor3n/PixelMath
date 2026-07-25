@@ -11,7 +11,7 @@ namespace PixelMath
 {
 
 
-    public partial class Lecturer_Manage_Quizzes
+    public partial class Lecturer_Profile
     {
 
         /// <summary>
@@ -33,201 +33,174 @@ namespace PixelMath
         protected global::System.Web.UI.WebControls.Literal litAlertMessage;
 
         /// <summary>
-        /// pnlList control.
+        /// ProfileBadge control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlList;
+        protected global::System.Web.UI.WebControls.Label ProfileBadge;
 
         /// <summary>
-        /// txtSearch control.
+        /// TextFullName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSearch;
+        protected global::System.Web.UI.WebControls.TextBox TextFullName;
 
         /// <summary>
-        /// ddlFilterClass control.
+        /// TextEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlFilterClass;
+        protected global::System.Web.UI.WebControls.TextBox TextEmail;
 
         /// <summary>
-        /// btnSearch control.
+        /// TextDepartment control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
+        protected global::System.Web.UI.WebControls.TextBox TextDepartment;
 
         /// <summary>
-        /// rptQuizzes control.
+        /// TextJoinedDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptQuizzes;
+        protected global::System.Web.UI.WebControls.TextBox TextJoinedDate;
 
         /// <summary>
-        /// pnlNoQuizzes control.
+        /// lblTotalClasses control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoQuizzes;
+        protected global::System.Web.UI.WebControls.Label lblTotalClasses;
 
         /// <summary>
-        /// pnlEdit control.
+        /// lblActiveQuizzes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEdit;
+        protected global::System.Web.UI.WebControls.Label lblActiveQuizzes;
 
         /// <summary>
-        /// hfEditingQuizId control.
+        /// lblPendingMarking control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfEditingQuizId;
+        protected global::System.Web.UI.WebControls.Label lblPendingMarking;
 
         /// <summary>
-        /// btnBackToList control.
+        /// lblTotalStudents control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnBackToList;
+        protected global::System.Web.UI.WebControls.Label lblTotalStudents;
 
         /// <summary>
-        /// txtQuizTitle control.
+        /// lblAvgPassRate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtQuizTitle;
+        protected global::System.Web.UI.WebControls.Label lblAvgPassRate;
 
         /// <summary>
-        /// txtQuizDesc control.
+        /// pnlPassProgressBar control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtQuizDesc;
+        protected global::System.Web.UI.WebControls.Panel pnlPassProgressBar;
 
         /// <summary>
-        /// txtDuration control.
+        /// PanelPasswordInput control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDuration;
+        protected global::System.Web.UI.WebControls.Panel PanelPasswordInput;
 
         /// <summary>
-        /// txtPassingMarks control.
+        /// TextVerifyEmail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPassingMarks;
+        protected global::System.Web.UI.WebControls.TextBox TextVerifyEmail;
 
         /// <summary>
-        /// btnUpdateQuiz control.
+        /// TextNewPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUpdateQuiz;
+        protected global::System.Web.UI.WebControls.TextBox TextNewPassword;
 
         /// <summary>
-        /// rptQuestions control.
+        /// TextConfirmPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptQuestions;
+        protected global::System.Web.UI.WebControls.TextBox TextConfirmPassword;
 
         /// <summary>
-        /// pnlEditSingleQuestion control.
+        /// BtnEditPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlEditSingleQuestion;
+        protected global::System.Web.UI.WebControls.Button BtnEditPassword;
 
         /// <summary>
-        /// hfSelectedQuestionId control.
+        /// BtnCancelPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfSelectedQuestionId;
+        protected global::System.Web.UI.WebControls.Button BtnCancelPassword;
 
         /// <summary>
-        /// txtEditQText control.
+        /// BtnSavePassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEditQText;
+        protected global::System.Web.UI.WebControls.Button BtnSavePassword;
 
         /// <summary>
-        /// txtEditMarks control.
+        /// LblMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEditMarks;
-
-        /// <summary>
-        /// rptOptions control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptOptions;
-
-        /// <summary>
-        /// btnSaveQuestion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSaveQuestion;
-
-        /// <summary>
-        /// btnCancelEditQuestion control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelEditQuestion;
+        protected global::System.Web.UI.WebControls.Label LblMessage;
     }
 }
