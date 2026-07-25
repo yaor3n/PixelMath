@@ -270,6 +270,7 @@ ServiceFabricBackup/
 *.rptproj.bak
 
 # SQL Server files
+#*.mdf
 *.ldf
 *.ndf
 
@@ -478,7 +479,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # Local SQL Server Database Files
-*.mdf
+#*.mdf
 *.ldf
 
 # Vim temporary swap files
