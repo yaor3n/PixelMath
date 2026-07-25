@@ -7,6 +7,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .index-header {
@@ -87,25 +88,12 @@
     padding: 80px 24px;
     text-align: center;
     overflow: hidden;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
 .hero-container {
     max-width: 896px;
     margin: 0 auto;
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #d1fae5;
-    color: #065f46;
-    font-size: 12px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 9999px;
-    margin-bottom: 24px;
 }
 
 .hero-title {
@@ -169,17 +157,28 @@
 
 .title-span {
     position: relative;
-    display: inline-block; 
+    display: inline-block;
 }
 
 .moving-lottie {
     position: absolute;
-    top: -140px; /* Adjust height position above the text */
-    left: 30%;
-    width: 150px;
-    height: 150px;
-    pointer-events: none; 
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 130px;
+    pointer-events: none;
     animation: moveAcrossTitle 4s ease-in-out infinite alternate;
+}
+
+@keyframes moveAcrossTitle {
+    0% {
+        transform: translateX(-80px);
+    }
+
+    100% {
+        transform: translateX(80px);
+    }
 }
 
 /* ==========================================================================
@@ -190,7 +189,7 @@
     margin: 0 auto;
     width: 100%;
     box-sizing: border-box;
-    background-color:white;
+    background-color: white;
 }
 
 .section-header {
@@ -213,6 +212,8 @@
 }
 
 .advantages-grid {
+    max-width: 1152px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 32px;
@@ -225,6 +226,7 @@
     border: 1px solid #f1f5f9;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
 }
 
     .advantage-card:hover {
@@ -294,6 +296,8 @@
    💬 TESTIMONIAL SECTION
    ========================================================================== */
 .testimonial-grid {
+    max-width: 1152px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
@@ -305,6 +309,7 @@
     border-radius: 16px;
     border: 1px solid #f1f5f9;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
 }
 
 .rating-stars {
@@ -333,7 +338,7 @@
     height: 40px;
     border-radius: 50%;
     background-color: #d1fae5;
-    overflow: hidden; 
+    overflow: hidden;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -343,7 +348,7 @@
     .avatar-circle img {
         width: 100%;
         height: 100%;
-        object-fit: cover; 
+        object-fit: cover;
     }
 
 .author-name {
@@ -363,6 +368,8 @@
    ⚡ DUAL CTA CARDS SECTION
    ========================================================================== */
 .cta-grid {
+    max-width: 1152px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
@@ -376,17 +383,7 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
-}
-
-.cta-left {
     background: white;
-    color: #ffffff;
-    border: 2px solid #D1FAE5;
-}
-
-.cta-right {
-    background-color: white;
-    color: #ffffff;
     border: 2px solid #D1FAE5;
 }
 
@@ -396,46 +393,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 24px auto; 
+    margin: 0 auto 24px auto;
 }
 
 .cta-card h3 {
-    color:black;
+    color: black;
     font-size: 24px;
     font-weight: 800;
     margin: 0 0 12px 0;
 }
 
-.cta-left p {
+.cta-card p {
     color: black;
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 32px;
 }
 
-.cta-right p {
-    color: black;
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 32px;
-}
-
-.btn-cta-left {
-    background-color: #10b981;
-    color: #ffffff;
-    text-align: center;
-    padding: 14px 24px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.2s;
-}
-
-    .btn-cta-left:hover {
-        background-color: #059669;
-    }
-
+.btn-cta-left,
 .btn-cta-right {
     background-color: #10b981;
     color: #ffffff;
@@ -446,8 +421,10 @@
     font-size: 14px;
     text-decoration: none;
     transition: background 0.2s;
+    display: inline-block;
 }
 
+    .btn-cta-left:hover,
     .btn-cta-right:hover {
         background-color: #059669;
     }
@@ -488,6 +465,12 @@
 /* ==========================================================================
    📱 RESPONSIVE MEDIA QUERIES
    ========================================================================== */
+@media (max-width: 1024px) {
+    .advantages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 992px) {
     .advantages-grid {
         grid-template-columns: 1fr;
@@ -515,8 +498,48 @@
         padding: 16px 20px;
     }
 
+    .hero-section {
+        padding: 50px 16px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+    }
+
+    .section-wrapper {
+        padding: 50px 16px;
+    }
+
+    .section-title {
+        font-size: 26px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .stat-number {
+        font-size: 36px;
+    }
+
+    .cta-card {
+        padding: 24px;
+    }
+
     .footer-container {
         flex-direction: column;
         gap: 16px;
+        text-align: center;
+    }
+
+    .moving-lottie {
+        width: 100px;
+        height: 100px;
+        top: -95px;
     }
 }

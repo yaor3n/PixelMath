@@ -1,9 +1,10 @@
-﻿﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="PixelMath.index" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="PixelMath.index" %>
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Pixel Math - Master Math with Confidence</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="icon" type="image/png" href="images/pixelmath_logo.png" />
@@ -47,9 +48,7 @@
         <section id="advantages" class="section-wrapper">
             <div class="section-header">
                 <h2 class="section-title">
-                    <!-- 🎯 Wrap the target title range in a span container -->
                     <span class="title-span">
-                        <!-- 🎯 The animation sits inside the span -->
                         <dotlottie-wc
                             src="https://lottie.host/a63e7b7c-0c2b-4362-81a1-678c67d3f9a9/o4xPx95Xvv.lottie"
                             class="moving-lottie"
@@ -87,7 +86,6 @@
         <section class="stats-banner">
             <div class="stats-grid">
                 <div>
-                    <!-- 🎯 data-target holds the target number, data-suffix holds the unit (+, %, etc) -->
                     <div class="stat-number" data-target="1000" data-suffix="+">0</div>
                     <div class="stat-label">Active Students</div>
                 </div>
@@ -137,7 +135,7 @@
                     <p class="quote-text">"Assigning learning materials and managing student quizzes has never been smoother. Highly recommended!"</p>
                     <div class="author-info">
                         <div class="avatar-circle">
-                            <img src="images/Landing-page-teacher.png" alt="Student Avatar" />
+                            <img src="images/Landing-page-teacher.png" alt="Teacher Avatar" />
                         </div>
                         <div>
                             <h4 class="author-name">Ms. Karina</h4>
@@ -158,7 +156,7 @@
                         <div class="cta-icon">
                             <dotlottie-wc
                               src="https://lottie.host/f56b9408-f311-4d7a-8ae1-f11f5fc788c1/2a2uJWEEQ8.lottie"
-                              style="width: 300px;height: 300px"
+                              style="width: 100%; max-width: 300px; height: auto;"
                               autoplay
                               loop
                             ></dotlottie-wc>
@@ -177,7 +175,7 @@
                         <div class="cta-icon">
                             <dotlottie-wc
                               src="https://lottie.host/4f1e6646-5642-49db-af74-4996c1b2d8b8/imHK7qWp42.lottie"
-                              style="width: 300px;height: 300px"
+                              style="width: 100%; max-width: 300px; height: auto;"
                               autoplay
                               loop
                             ></dotlottie-wc>
@@ -207,7 +205,7 @@
         <script>
             document.addEventListener("DOMContentLoaded", function () {
                 const counters = document.querySelectorAll('.stat-number');
-                const speed = 200; // Animation duration control (higher = slower)
+                const speed = 200;
 
                 const startCounting = (counter) => {
                     const target = +counter.getAttribute('data-target');
@@ -218,7 +216,6 @@
                     const updateCount = () => {
                         count += increment;
                         if (count < target) {
-                            // Format number with commas if large (e.g., 10,000)
                             counter.innerText = Math.ceil(count).toLocaleString() + suffix;
                             setTimeout(updateCount, 15);
                         } else {
@@ -229,9 +226,8 @@
                     updateCount();
                 };
 
-                // Trigger animation when stats banner enters viewport
                 const observerOptions = {
-                    threshold: 0.5 // Triggers when 50% of section is visible
+                    threshold: 0.5
                 };
 
                 const observer = new IntersectionObserver((entries, observer) => {
@@ -239,7 +235,7 @@
                         if (entry.isIntersecting) {
                             const counter = entry.target;
                             startCounting(counter);
-                            observer.unobserve(counter); // Run animation once
+                            observer.unobserve(counter);
                         }
                     });
                 }, observerOptions);
