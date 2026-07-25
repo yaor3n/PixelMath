@@ -1,5 +1,4 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Main-Template.Master" AutoEventWireup="true" CodeBehind="Student-Previous-Quiz.aspx.cs" Inherits="PixelMath.Student_Previous_Quiz" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <link rel="stylesheet" href="Student-Previous-Quiz-CSS.css" />
 </asp:Content>
@@ -14,17 +13,19 @@
         <div class="table-card">
             <asp:Repeater ID="repeatPreviousQuizzes" runat="server">
                 <HeaderTemplate>
-                    <table class="quiz-history-table">
-                        <thead>
-                            <tr>
-                                <th>Quiz Title</th>
-                                <th>Submitted Date</th>
-                                <th>Score</th>
-                                <th>Passing Grade</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <%-- 🎯 Added wrapper for smooth mobile horizontal scrolling --%>
+                    <div class="table-responsive-wrapper">
+                        <table class="quiz-history-table">
+                            <thead>
+                                <tr>
+                                    <th>Quiz Title</th>
+                                    <th>Submitted Date</th>
+                                    <th>Score</th>
+                                    <th>Passing Grade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 </HeaderTemplate>
 
                 <ItemTemplate>
@@ -45,13 +46,9 @@
                         </td>
                     </tr>
 
-                    <%-- 🎯 Expandable Review Row (Hidden by default, spans across 5 columns) --%>
+                    <%-- 🎯 Expandable Review Row --%>
                     <tr class="review-row" style="display: none;">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td style="padding: 0;">
+                        <td colspan="5" style="padding: 0;">
                             <div class="review-row-content">
                                 <a href='Student-Quiz-Review.aspx?attemptId=<%# Eval("AttemptId") %>' class="btn-review-inline">
                                     View Quiz
@@ -62,8 +59,9 @@
                 </ItemTemplate>
 
                 <FooterTemplate>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </FooterTemplate>
             </asp:Repeater>
 
@@ -74,7 +72,7 @@
 
     </div>
 
-    <%-- 🎯 JavaScript to toggle review row directly below the clicked row --%>
+    <%-- 🎯 JavaScript to toggle review row --%>
     <script type="text/javascript">
         function toggleReviewRow(mainRow) {
             var reviewRow = mainRow.nextElementSibling;
@@ -86,7 +84,7 @@
                 return;
             }
 
-            // Hide all other open review rows first (Accordion behavior)
+            // Hide all other open review rows first
             var allReviewRows = document.querySelectorAll('.review-row');
             allReviewRows.forEach(function (r) {
                 r.style.display = 'none';

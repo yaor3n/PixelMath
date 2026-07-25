@@ -6,6 +6,12 @@
     font-family: 'Nunito', sans-serif;
 }
 
+@media (max-width: 640px) {
+    .previous-quiz-container {
+        padding: 12px;
+    }
+}
+
 .table-card {
     background: #ffffff;
     border-radius: 12px;
@@ -14,8 +20,16 @@
     overflow: hidden;
 }
 
+/* 🎯 Added Horizontal Scroll Wrapper for Mobile Screens */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
 .quiz-history-table {
     width: 100%;
+    min-width: 650px; /* 🔑 Ensures table columns don't break on small screens */
     border-collapse: collapse;
     text-align: left;
     font-size: 14px;
@@ -27,19 +41,20 @@
         font-weight: 700;
         padding: 14px 20px;
         border-bottom: 1px solid #E5E7EB;
+        white-space: nowrap;
     }
 
     .quiz-history-table td {
         padding: 16px 20px;
         border-bottom: 1px solid #F3F4F6;
         color: #1F2937;
+        white-space: nowrap;
     }
 
     .quiz-history-table tr:hover {
         background-color: #f7fbff;
+        cursor: pointer;
     }
-
-    
 
     /* 🎯 Expandable Review Row Container */
     .quiz-history-table tr.review-row td {
@@ -53,7 +68,7 @@
     justify-content: flex-start;
     align-items: center;
     padding: 12px 20px;
-    background-color: white;
+    background-color: #F8FAFC;
     animation: fadeIn 0.2s ease-in-out;
 }
 
