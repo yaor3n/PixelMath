@@ -14,7 +14,7 @@
     <%--Slot for individual pages to inject page-specific header tags if needed--%>
     <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
 </head>
-<body>
+<body class="admin-page">
     <form id="form1" runat="server">
         <div class="dashboard" id="dashboard-app">
             <div class="dashboard-layout">

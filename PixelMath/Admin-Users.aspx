@@ -114,7 +114,7 @@
         <div class="admin-table-wrap">
             <asp:Repeater ID="RepeatUsers" runat="server" OnItemDataBound="RepeatUsers_ItemDataBound" OnItemCommand="RepeatUsers_ItemCommand">
                 <HeaderTemplate>
-                    <table class="admin-table">
+                    <table class="admin-table admin-users-table">
                         <thead>
                             <tr>
                                 <th>Full Name</th>
