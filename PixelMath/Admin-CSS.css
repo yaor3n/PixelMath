@@ -501,6 +501,11 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
+.admin-page .modal {
+    z-index: 5000;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
 
 /* =========================================================
    MODAL
