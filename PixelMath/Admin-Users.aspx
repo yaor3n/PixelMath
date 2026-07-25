@@ -226,12 +226,12 @@
                         <td>-</td>
                         <td>
                             <div class="admin-row-actions admin-row-actions-pending">
-                                <asp:LinkButton ID="BtnApprove" runat="server" CssClass="btn-admin-approve" CommandName="Approve" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Approved" %>' OnClientClick="return confirm('Are you to approve this user account?');">
+                                <asp:LinkButton ID="BtnApprove" runat="server" CssClass="btn-admin-action btn-admin-approve" CommandName="Approve" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Approved" %>' OnClientClick="return confirm('Are you to approve this user account?');">
                                 <i class="fa-solid fa-check"></i>
                                 <span>Approve</span>
                             </asp:LinkButton>
 
-                            <asp:LinkButton ID="BtnReject" runat="server" CssClass="btn-admin-reject" CommandName="Reject" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Rejected" %>' OnClientClick="return confirm('Are you to reject this user account?');">
+                            <asp:LinkButton ID="BtnReject" runat="server" CssClass="btn-admin-action btn-admin-reject" CommandName="Reject" CommandArgument='<%# Eval("UserId") %>' CausesValidation="false" Visible='<%# Eval("AccountStatus").ToString() != "Rejected" %>' OnClientClick="return confirm('Are you to reject this user account?');">
                                 <i class="fa-solid fa-xmark"></i>
                                 <span>Reject</span>
                             </asp:LinkButton>
