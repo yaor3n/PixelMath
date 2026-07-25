@@ -64,7 +64,7 @@ namespace PixelMath
 
         protected void btnLoginRedirect_Click(object sender, EventArgs e)
         {
-            Response.Redirect("LoginPage.aspx?registered=pending");
+            Response.Redirect("LoginPage.aspx");
         }
 
         private string ComputeSha256Hash(string rawData)
