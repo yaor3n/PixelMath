@@ -11,16 +11,25 @@ namespace PixelMath
 {
 
 
-    public partial class index
+    public partial class Student_Resources
     {
 
         /// <summary>
-        /// form1 control.
+        /// ResourceRepeater control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.Repeater ResourceRepeater;
+
+        /// <summary>
+        /// pnlNoResources control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoResources;
     }
 }

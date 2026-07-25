@@ -1,0 +1,545 @@
+﻿body {
+    font-family: 'Nunito', sans-serif;
+    background-color: white;
+    color: #1e293b;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.index-header {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #d1fae5;
+    padding: 16px 48px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.brand-title {
+    color: #064e3b;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-login {
+    color: #047857;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .btn-login:hover {
+        color: #064e3b;
+        background-color: #f0fdf4;
+    }
+
+.btn-signup {
+    background-color: #059669;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+    transition: all 0.2s;
+}
+
+    .btn-signup:hover {
+        background-color: #047857;
+    }
+
+/* ==========================================================================
+   🚀 HERO / INTRODUCTION SECTION
+   ========================================================================== */
+.hero-section {
+    position: relative;
+    background: linear-gradient(180deg, rgba(236, 253, 245, 0.8) 0%, rgba(236, 253, 245, 0.3) 60%, #ffffff 100%);
+    padding: 80px 24px;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.hero-container {
+    max-width: 896px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin: 0 0 24px 0;
+}
+
+.text-highlight {
+    color: #059669;
+}
+
+.hero-subtitle {
+    color: #475569;
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 0 auto 40px auto;
+    max-width: 600px;
+}
+
+.hero-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-hero-primary {
+    background-color: #059669;
+    color: #ffffff;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .btn-hero-primary:hover {
+        background-color: #047857;
+    }
+
+.btn-hero-secondary {
+    border: 1px solid #cbd5e1;
+    color: #334155;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .btn-hero-secondary:hover {
+        background-color: #f1f5f9;
+    }
+
+.title-span {
+    position: relative;
+    display: inline-block;
+}
+
+.moving-lottie {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: 130px;
+    pointer-events: none;
+    animation: moveAcrossTitle 4s ease-in-out infinite alternate;
+}
+
+@keyframes moveAcrossTitle {
+    0% {
+        transform: translateX(-80px);
+    }
+
+    100% {
+        transform: translateX(80px);
+    }
+}
+
+/* ==========================================================================
+   ⭐ ADVANTAGES SECTION
+   ========================================================================== */
+.section-wrapper {
+    padding: 80px 24px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 64px;
+}
+
+.section-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+}
+
+.section-subtitle {
+    color: #64748b;
+    margin: 0 auto;
+    max-width: 500px;
+    font-size: 15px;
+}
+
+.advantages-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+}
+
+.advantage-card {
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+    .advantage-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+
+.icon-box {
+    width: 48px;
+    height: 48px;
+    background-color: #d1fae5;
+    color: #059669;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 24px;
+}
+
+.advantage-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+}
+
+.advantage-card p {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ==========================================================================
+   📊 STATS JOURNEY SECTION
+   ========================================================================== */
+.stats-banner {
+    background-color: #064e3b;
+    color: #ffffff;
+    padding: 64px 24px;
+}
+
+.stats-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 44px;
+    font-weight: 800;
+    color: #6ee7b7;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    color: rgba(209, 250, 229, 0.8);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   💬 TESTIMONIAL SECTION
+   ========================================================================== */
+.testimonial-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+}
+
+.testimonial-card {
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-sizing: border-box;
+}
+
+.rating-stars {
+    color: #fbbf24;
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+}
+
+.quote-text {
+    color: #475569;
+    font-style: italic;
+    margin: 0 0 24px 0;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #d1fae5;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .avatar-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.author-name {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 14px;
+    margin: 0;
+}
+
+.author-role {
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 2px 0 0 0;
+}
+
+/* ==========================================================================
+   ⚡ DUAL CTA CARDS SECTION
+   ========================================================================== */
+.cta-grid {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+}
+
+.cta-card {
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    background: white;
+    border: 2px solid #D1FAE5;
+}
+
+.cta-icon {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+}
+
+.cta-card h3 {
+    color: black;
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+}
+
+.cta-card p {
+    color: black;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.btn-cta-left,
+.btn-cta-right {
+    background-color: #10b981;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.2s;
+    display: inline-block;
+}
+
+    .btn-cta-left:hover,
+    .btn-cta-right:hover {
+        background-color: #059669;
+    }
+
+/* ==========================================================================
+   🔻 FOOTER
+   ========================================================================== */
+.index-footer {
+    margin-top: auto;
+    background-color: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    padding: 24px;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.footer-container {
+    max-width: 1152px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.footer-logo {
+    width: 20px;
+    height: 20px;
+}
+
+/* ==========================================================================
+   📱 RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .advantages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .advantages-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-title {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 640px) {
+    .index-header {
+        padding: 16px 20px;
+    }
+
+    .hero-section {
+        padding: 50px 16px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+    }
+
+    .hero-subtitle {
+        font-size: 15px;
+    }
+
+    .section-wrapper {
+        padding: 50px 16px;
+    }
+
+    .section-title {
+        font-size: 26px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .stat-number {
+        font-size: 36px;
+    }
+
+    .cta-card {
+        padding: 24px;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+
+    .moving-lottie {
+        width: 100px;
+        height: 100px;
+        top: -95px;
+    }
+}
