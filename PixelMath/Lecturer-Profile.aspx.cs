@@ -3,14 +3,16 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PixelMath
 {
     public partial class Lecturer_Profile : System.Web.UI.Page
     {
         private readonly string connString = ConfigurationManager.ConnectionStrings["PixelMathSQL"]?.ConnectionString
-                                             ?? ConfigurationManager.ConnectionStrings["PixelMath"]?.ConnectionString
-                                             ?? ConfigurationManager.ConnectionStrings["PixelMathConnStr"]?.ConnectionString;
+                                               ?? ConfigurationManager.ConnectionStrings["PixelMath"]?.ConnectionString
+                                               ?? ConfigurationManager.ConnectionStrings["PixelMathConnStr"]?.ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -32,7 +34,6 @@ namespace PixelMath
             try
             {
                 Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
-                // Only select columns guaranteed to exist in the Users table
                 string query = "SELECT FullName, Email, CreatedAt FROM Users WHERE UserId = @LecturerId";
 
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -148,7 +149,7 @@ namespace PixelMath
             }
             catch (Exception)
             {
-                // Silently handle stats exceptions to prevent breaking the whole page view
+                // Suppress metrics exception to avoid crashing profile load
             }
         }
 
@@ -159,6 +160,65 @@ namespace PixelMath
             BtnCancelPassword.Visible = true;
             BtnSavePassword.Visible = true;
             LblMessage.Text = "";
+            pnlAlert.Visible = false;
+        }
+
+        protected void BtnSavePassword_Click(object sender, EventArgs e)
+        {
+            string email = TextVerifyEmail.Text.Trim();
+            string newPass = TextNewPassword.Text;
+            string confirmPass = TextConfirmPassword.Text;
+            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPass) || string.IsNullOrEmpty(confirmPass))
+            {
+                SetPasswordMessage("Please fill in all password fields.", true);
+                return;
+            }
+
+            if (newPass != confirmPass)
+            {
+                SetPasswordMessage("Passwords do not match.", true);
+                return;
+            }
+
+            string hashedPassword = ComputeSha256Hash(newPass);
+
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+
+                    string checkQuery = "SELECT Email FROM Users WHERE UserId = @UserId";
+                    using (SqlCommand cmdCheck = new SqlCommand(checkQuery, conn))
+                    {
+                        cmdCheck.Parameters.AddWithValue("@UserId", lecturerId);
+                        string dbEmail = cmdCheck.ExecuteScalar()?.ToString();
+
+                        if (!string.Equals(dbEmail, email, StringComparison.OrdinalIgnoreCase))
+                        {
+                            SetPasswordMessage("Verified email does not match your account email.", true);
+                            return;
+                        }
+                    }
+
+                    string updateQuery = "UPDATE Users SET PasswordHash = @PasswordHash WHERE UserId = @UserId";
+                    using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
+                    {
+                        cmdUpdate.Parameters.AddWithValue("@PasswordHash", hashedPassword);
+                        cmdUpdate.Parameters.AddWithValue("@UserId", lecturerId);
+                        cmdUpdate.ExecuteNonQuery();
+                    }
+                }
+
+                BtnCancelPassword_Click(sender, e);
+                ClientScript.RegisterStartupScript(this.GetType(), "ShowModal", "showSuccessModal();", true);
+            }
+            catch (Exception ex)
+            {
+                SetPasswordMessage("Error updating password: " + ex.Message, true);
+            }
         }
 
         protected void BtnCancelPassword_Click(object sender, EventArgs e)
@@ -171,54 +231,7 @@ namespace PixelMath
             TextNewPassword.Text = "";
             TextConfirmPassword.Text = "";
             LblMessage.Text = "";
-        }
-
-        protected void BtnSavePassword_Click(object sender, EventArgs e)
-        {
-            string email = TextVerifyEmail.Text.Trim();
-            string newPass = TextNewPassword.Text;
-            string confirmPass = TextConfirmPassword.Text;
-            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
-
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPass) || string.IsNullOrEmpty(confirmPass))
-            {
-                ShowAlert("Please fill in all password fields.", true);
-                return;
-            }
-
-            if (newPass != confirmPass)
-            {
-                ShowAlert("New password and confirmation password do not match.", true);
-                return;
-            }
-
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                string checkQuery = "SELECT Email FROM Users WHERE UserId = @UserId";
-                using (SqlCommand cmdCheck = new SqlCommand(checkQuery, conn))
-                {
-                    cmdCheck.Parameters.AddWithValue("@UserId", lecturerId);
-                    conn.Open();
-                    string dbEmail = cmdCheck.ExecuteScalar()?.ToString();
-
-                    if (!string.Equals(dbEmail, email, StringComparison.OrdinalIgnoreCase))
-                    {
-                        ShowAlert("The verified email does not match your account email.", true);
-                        return;
-                    }
-                }
-
-                string updateQuery = "UPDATE Users SET PasswordHash = @PasswordHash WHERE UserId = @UserId";
-                using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
-                {
-                    cmdUpdate.Parameters.AddWithValue("@PasswordHash", newPass);
-                    cmdUpdate.Parameters.AddWithValue("@UserId", lecturerId);
-                    cmdUpdate.ExecuteNonQuery();
-                }
-            }
-
-            BtnCancelPassword_Click(sender, e);
-            ClientScript.RegisterStartupScript(this.GetType(), "ShowModal", "showSuccessModal();", true);
+            pnlAlert.Visible = false;
         }
 
         private void ShowAlert(string message, bool isError)
@@ -228,6 +241,30 @@ namespace PixelMath
             pnlAlert.CssClass = isError
                 ? "mb-6 p-4 rounded-2xl text-xs font-bold bg-rose-50 text-rose-700 border border-rose-100"
                 : "mb-6 p-4 rounded-2xl text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100";
+        }
+
+        private void SetPasswordMessage(string message, bool isError)
+        {
+            LblMessage.Text = message;
+            LblMessage.CssClass = isError
+                ? "text-xs font-bold text-rose-600"
+                : "text-xs font-bold text-emerald-600";
+        }
+
+        private string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                StringBuilder builder = new StringBuilder();
+                foreach (byte t in bytes)
+                {
+                    builder.Append(t.ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
         }
     }
 }

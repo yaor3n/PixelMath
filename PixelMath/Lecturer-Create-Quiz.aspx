@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Create Quiz - PixelMath" Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-Create-Quiz.aspx.cs" Inherits="PixelMath.Lecturer_Create_Quiz" %>
 
 <asp:Content ID="ContentTopbar" ContentPlaceHolderID="TopbarTitleContent" runat="server">
-    <span class="font-fredoka text-xl text-slate-800 flex items-center gap-2">
+    <span class="font-fredoka text-xl text-emerald-800 flex items-center gap-2">
         Create New Quiz ✍️
     </span>
 </asp:Content>

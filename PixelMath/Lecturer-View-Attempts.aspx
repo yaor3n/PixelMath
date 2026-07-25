@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Student Attempts - PixelMath" Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-View-Attempts.aspx.cs" Inherits="PixelMath.Lecturer_View_Attempts" %>
 
 <asp:Content ID="ContentTopbar" ContentPlaceHolderID="TopbarTitleContent" runat="server">
-    <span class="font-fredoka text-xl text-slate-800 flex items-center gap-2">
+    <span class="font-fredoka text-xl text-emerald-800 flex items-center gap-2">
         Student Attempts 📊
     </span>
 </asp:Content>
