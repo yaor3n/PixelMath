@@ -24,6 +24,7 @@ namespace PixelMath
             {
                 LoadLecturerClasses();
                 LoadRecentAnnouncements();
+                LoadAdminAnnouncements();
             }
         }
 
@@ -60,11 +61,12 @@ namespace PixelMath
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 string query = @"
-                    SELECT A.AnnouncementId, A.Title, A.Message, A.CreatedAt, C.ClassName 
-                    FROM Announcements A
-                    INNER JOIN Classes C ON A.ClassId = C.ClassId
-                    WHERE A.CreatedBy = @LecturerId
-                    ORDER BY A.CreatedAt DESC";
+            SELECT A.AnnouncementId, A.Title, A.Message, A.CreatedAt, 
+                   ISNULL(C.ClassName, 'General / All Users') AS ClassName 
+            FROM Announcements A
+            LEFT JOIN Classes C ON A.ClassId = C.ClassId
+            WHERE A.CreatedBy = @LecturerId
+            ORDER BY A.CreatedAt DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -86,6 +88,49 @@ namespace PixelMath
                         rptAnnouncements.DataBind();
                         litAnnouncementCount.Text = "0";
                         pnlNoAnnouncements.Visible = true;
+                    }
+                }
+            }
+        }
+
+        private void LoadAdminAnnouncements()
+        {
+            Guid lecturerId = Guid.Parse(Session["UserId"].ToString());
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                // Filters admin announcements to:
+                // 1. Announcements for All Users (ClassId IS NULL)
+                // 2. Announcements targeting classes created/taught by this specific lecturer
+                string query = @"
+            SELECT A.AnnouncementId, A.Title, A.Message, A.CreatedAt, 
+                   ISNULL(C.ClassName, 'General / All Users') AS AudienceName,
+                   U.FullName AS PostedBy
+            FROM Announcements A
+            INNER JOIN Users U ON A.CreatedBy = U.UserId
+            LEFT JOIN Classes C ON A.ClassId = C.ClassId
+            WHERE U.RoleId = 3 AND A.Status = 1
+              AND (A.ClassId IS NULL OR A.ClassId IN (SELECT ClassId FROM Classes WHERE CreatedBy = @LecturerId))
+            ORDER BY A.CreatedAt DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@LecturerId", lecturerId);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        rptAdminAnnouncements.DataSource = dt;
+                        rptAdminAnnouncements.DataBind();
+                        pnlNoAdminAnnouncements.Visible = false;
+                    }
+                    else
+                    {
+                        rptAdminAnnouncements.DataSource = null;
+                        rptAdminAnnouncements.DataBind();
+                        pnlNoAdminAnnouncements.Visible = true;
                     }
                 }
             }
@@ -115,10 +160,9 @@ namespace PixelMath
             {
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
-                    // Status 0 indicates Unread by students
                     string query = @"
                         INSERT INTO Announcements (Title, Message, ClassId, CreatedBy, Status, CreatedAt)
-                        VALUES (@Title, @Message, @ClassId, @CreatedBy, 0, GETDATE())";
+                        VALUES (@Title, @Message, @ClassId, @CreatedBy, 1, GETDATE())";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
