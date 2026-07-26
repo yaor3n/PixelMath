@@ -103,7 +103,7 @@
                             <td class="py-3 px-2 text-slate-600"><%# Eval("QuizTitle") %></td>
                             <td class="py-3 px-2 text-slate-400"><%# Eval("EndTime", "{0:MMM dd, HH:mm}") %></td>
                             <td class="py-3 px-2 text-right">
-                                <a href='<%# "Quizzes/MarkAttempt.aspx?attemptId=" + Eval("AttemptId") %>' 
+                                <a href="Lecturer-Marking.aspx"
                                    class="bg-amber-100 text-amber-800 hover:bg-amber-200 px-3 py-1.5 rounded-full font-bold text-[11px] transition inline-block">
                                     Mark
                                 </a>
@@ -141,7 +141,7 @@
                                     Duration: <%# Eval("DurationMinutes") %> mins | Passing: <%# Eval("PassingMarks") %> pts
                                 </p>
                             </div>
-                            <a href='<%# "Lecturer-View-Attempts.aspx?quizId=" + Eval("QuizId") %>' 
+                            <a href="Lecturer-View-Attempts.aspx"
                                class="text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-xs shrink-0 self-end sm:self-center">
                                 View Attempts
                             </a>

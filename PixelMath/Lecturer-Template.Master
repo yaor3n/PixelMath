@@ -1,10 +1,6 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Lecturer-Template.Master.cs" Inherits="PixelMath.Lecturer_Template" %>
-
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Lecturer-Template.Master.cs" Inherits="PixelMath.Lecturer_Template" %><!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head runat="server">
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!--THIS THINGY -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PixelMath Lecturer</title>
     <link rel="icon" type="image/png" href="PixelMath_Logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet"/>
@@ -17,6 +13,38 @@
     <link rel="stylesheet" href="Admin-CSS.css" />
 
     <style>
+        /* --- FIXED TOPBAR & CLEAN PADDING FIX --- */
+        .topbar {
+            position: fixed !important;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 64px !important;
+            background: #ffffff !important;
+            z-index: 50;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .topbar {
+                left: 260px; /* Leaves space for the desktop sidebar */
+            }
+        }
+
+        /* Push the main content down by exactly 64px via CSS padding 
+           so it starts right below the fixed topbar without needing a spacer div */
+        .main {
+            padding-top: 64px !important;
+            background-color: #f8fafc !important; /* Modern light grey background */
+        }
+
+        .content {
+            background-color: transparent !important;
+        }
+        /* ----------------------------------------- */
+
         /* Mobile Hamburger & Sidebar Drawer Styles */
         @media (max-width: 1023px) {
             .sidebar {
@@ -71,9 +99,7 @@
         }
     </style>
 
-    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
-</head>
-<body>
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder></head><body>
     <form id="form1" runat="server">
         <div class="dashboard" id="dashboard-app">
             <div class="dashboard-layout">
@@ -155,7 +181,6 @@
                             </asp:ContentPlaceHolder>
                         </div>
                     </div>
-                    <div class="topbar-block"></div>
                     <div class="content">
                         <asp:ContentPlaceHolder ID="MainContent" runat="server">
                         </asp:ContentPlaceHolder>
@@ -223,6 +248,4 @@
                 });
             });
         });
-    </script>
-</body>
-</html>
+    </script></body></html>

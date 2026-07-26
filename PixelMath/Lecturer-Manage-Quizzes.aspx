@@ -80,7 +80,7 @@
                                         </td>
                                         <td class="py-4 px-3 text-right">
                                             <div class="flex items-center justify-end gap-2">
-                                                <a href='<%# "Quizzes/Attempts.aspx?quizId=" + Eval("QuizId") %>' 
+                                                <a href="Lecturer-View-Attempts.aspx"
                                                    class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-3 py-1.5 rounded-xl font-bold text-[11px] transition">
                                                     Attempts 📊
                                                 </a>
