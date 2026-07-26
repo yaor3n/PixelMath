@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Web;
 
 namespace PixelMath
 {
@@ -59,7 +64,7 @@ namespace PixelMath
                                     if (accountStatus == "Rejected")
                                     {
                                         labelStatus.Text = "Your account has been rejected. Please contact the administrator.";
-                                        labelStatus.ForeColor = System.Drawing.Color.Red;
+                                        labelStatus.ForeColor = System.Drawing.Color.DarkOrange;
                                     }
                                     else
                                     {
@@ -71,11 +76,52 @@ namespace PixelMath
                                 }
 
                                 // Store raw string data from DB directly into Sessions
-                                Session["UserId"] = reader["UserId"].ToString();
-                                Session["FullName"] = reader["FullName"].ToString();
-
+                                string userId = reader["UserId"].ToString();
+                                string fullName = reader["FullName"].ToString();
                                 int roleId = Convert.ToInt32(reader["RoleId"]);
+
+                                Session["UserId"] = userId;
+                                Session["FullName"] = fullName;
                                 Session["RoleId"] = roleId;
+
+                                // --- JWT HttpOnly Cookie Implementation ---
+                                try
+                                {
+                                    // Secret key must be at least 256 bits (32 characters) long
+                                    string secretKey = "PixelMathSuperSecretKeyForExtraMarks2026!";
+                                    var key = Encoding.UTF8.GetBytes(secretKey);
+
+                                    var tokenDescriptor = new SecurityTokenDescriptor
+                                    {
+                                        Subject = new ClaimsIdentity(new[]
+                                        {
+                                            new Claim(ClaimTypes.NameIdentifier, userId),
+                                            new Claim(ClaimTypes.Email, plainEmail),
+                                            new Claim(ClaimTypes.Role, roleId.ToString())
+                                        }),
+                                        Expires = DateTime.UtcNow.AddHours(2),
+                                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                                    };
+
+                                    var tokenHandler = new JwtSecurityTokenHandler();
+                                    var token = tokenHandler.CreateToken(tokenDescriptor);
+                                    string jwtToken = tokenHandler.WriteToken(token);
+
+                                    // Create the HttpOnly cookie for extra security marks
+                                    HttpCookie jwtCookie = new HttpCookie("jwt", jwtToken)
+                                    {
+                                        HttpOnly = true,
+                                        Secure = Request.IsSecureConnection, // Automatically true if running HTTPS, safe for local HTTP
+                                        Expires = DateTime.Now.AddHours(2)
+                                    };
+
+                                    Response.Cookies.Add(jwtCookie);
+                                }
+                                catch
+                                {
+                                    // Fallback gracefully so standard login flow isn't broken if JWT throws unexpected environment issues
+                                }
+                                // ------------------------------------------
 
                                 // Determine target dashboard based on role
                                 string targetUrl = "Student-Dashboard.aspx";
