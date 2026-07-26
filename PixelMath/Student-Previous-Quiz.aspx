@@ -20,26 +20,25 @@
                                 <tr>
                                     <th>Quiz Title</th>
                                     <th>Submitted Date</th>
-                                    <th>Score</th>
-                                    <th>Passing Grade</th>
-                                    <th>Status</th>
+                                    <th class="text-center">Score</th>
+                                    <th class="text-center">Passing Grade</th>
+                                    <th class="text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                 </HeaderTemplate>
 
                 <ItemTemplate>
-                    <%-- 🎯 Main Clickable Row --%>
                     <tr class="selectable-row" onclick="toggleReviewRow(this)">
                         <td class="quiz-title-cell">
                             <strong><%# Eval("QuizTitle") %></strong>
                         </td>
                         <td><%# Eval("EndTime", "{0:dd MMM yyyy, h:mm tt}") %></td>
-                        <td>
-                            <span class="score-text"><%# Eval("Score") %></span>
+                        <td class="text-center">
+                            <span class="score-text"><%# Eval("Score") %> %</span>
                         </td>
-                        <td><%# Eval("PassingMarks") %> %</td>
-                        <td>
+                        <td class="text-center"><%# Eval("PassingMarks") %> %</td>
+                        <td class="text-center">
                             <span class='<%# GetStatusBadgeClass(Eval("IsGraded"), Eval("Score"), Eval("PassingMarks")) %>'>
                                 <%# GetStatusText(Eval("IsGraded"), Eval("Score"), Eval("PassingMarks")) %>
                             </span>

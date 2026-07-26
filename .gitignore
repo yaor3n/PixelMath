@@ -480,7 +480,7 @@ $RECYCLE.BIN/
 
 # Local SQL Server Database Files
 #*.mdf
-*.ldf
+#*.ldf
 
 # Vim temporary swap files
 *.swp 
