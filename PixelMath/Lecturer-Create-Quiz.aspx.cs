@@ -95,9 +95,9 @@ namespace PixelMath
                 return;
             }
 
-            if (!int.TryParse(txtPassingMarks.Text, out int passingMarks) || passingMarks < 0 || passingMarks > 100)
+            if (!int.TryParse(txtPassingMarks.Text, out int passingPercentage) || passingPercentage < 0 || passingPercentage > 100)
             {
-                ShowAlert("Passing marks must be between 0 and 100.", false);
+                ShowAlert("Passing marks percentage must be between 0 and 100.", false);
                 return;
             }
 
@@ -119,6 +119,8 @@ namespace PixelMath
                 return;
             }
 
+            // Validate questions and calculate total quiz marks dynamically
+            int totalQuizMarks = 0;
             foreach (var q in questions)
             {
                 if (string.IsNullOrWhiteSpace(q.text))
@@ -127,6 +129,8 @@ namespace PixelMath
                     return;
                 }
                 if (q.marks <= 0) q.marks = 1;
+
+                totalQuizMarks += q.marks;
 
                 if (q.type == "Objective")
                 {
@@ -143,6 +147,16 @@ namespace PixelMath
                 }
             }
 
+            // ── MATH FIX: Convert Passing Percentage into actual Passing Point Threshold ──
+            int finalPassingMarks = (int)Math.Round((double)totalQuizMarks * passingPercentage / 100.0, MidpointRounding.AwayFromZero);
+
+            // ── GUARD RAIL: Ensure total question marks are strictly greater than the passing mark ──
+            if (finalPassingMarks >= totalQuizMarks && passingPercentage > 0)
+            {
+                ShowAlert($"⚠️ Total question marks ({totalQuizMarks}) must be greater than the passing mark threshold ({finalPassingMarks}). Please lower your passing percentage or add more questions/marks.", false);
+                return;
+            }
+
             // ── Insert Quiz → Questions → Options in one transaction ──
             using (var conn = new SqlConnection(ConnStr))
             {
@@ -154,16 +168,16 @@ namespace PixelMath
                         int quizId;
 
                         using (var cmd = new SqlCommand(@"
-                            INSERT INTO Quizzes (Title, Description, ClassId, CreatedBy, DurationMinutes, PassingMarks)
-                            OUTPUT INSERTED.QuizId
-                            VALUES (@Title, @Description, @ClassId, @CreatedBy, @Duration, @PassingMarks)", conn, tran))
+                    INSERT INTO Quizzes (Title, Description, ClassId, CreatedBy, DurationMinutes, PassingMarks)
+                    OUTPUT INSERTED.QuizId
+                    VALUES (@Title, @Description, @ClassId, @CreatedBy, @Duration, @PassingMarks)", conn, tran))
                         {
                             cmd.Parameters.AddWithValue("@Title", txtQuizTitle.Text.Trim());
                             cmd.Parameters.AddWithValue("@Description", string.IsNullOrWhiteSpace(txtDescription.Text) ? (object)DBNull.Value : txtDescription.Text.Trim());
                             cmd.Parameters.AddWithValue("@ClassId", classId);
                             cmd.Parameters.AddWithValue("@CreatedBy", lecturerId);
                             cmd.Parameters.AddWithValue("@Duration", duration);
-                            cmd.Parameters.AddWithValue("@PassingMarks", passingMarks);
+                            cmd.Parameters.AddWithValue("@PassingMarks", finalPassingMarks);
 
                             quizId = (int)cmd.ExecuteScalar();
                         }
@@ -182,7 +196,6 @@ namespace PixelMath
 
                                     if (Array.IndexOf(allowedExtensions, extension) >= 0)
                                     {
-                                        // Ensure ~/Uploads/questionimg/ folder exists
                                         string folderPath = Server.MapPath("~/Uploads/questionimg/");
                                         if (!Directory.Exists(folderPath))
                                         {
@@ -201,9 +214,9 @@ namespace PixelMath
                             int questionId;
 
                             using (var cmd = new SqlCommand(@"
-                                INSERT INTO Questions (QuizId, QuestionText, QuestionType, QuestionImageUrl, Marks)
-                                OUTPUT INSERTED.QuestionId
-                                VALUES (@QuizId, @QuestionText, @QuestionType, @QuestionImageUrl, @Marks)", conn, tran))
+                        INSERT INTO Questions (QuizId, QuestionText, QuestionType, QuestionImageUrl, Marks)
+                        OUTPUT INSERTED.QuestionId
+                        VALUES (@QuizId, @QuestionText, @QuestionType, @QuestionImageUrl, @Marks)", conn, tran))
                             {
                                 cmd.Parameters.AddWithValue("@QuizId", quizId);
                                 cmd.Parameters.AddWithValue("@QuestionText", q.text.Trim());
@@ -220,8 +233,8 @@ namespace PixelMath
                                 for (int i = 0; i < q.options.Count; i++)
                                 {
                                     using (var cmd = new SqlCommand(@"
-                                        INSERT INTO Options (QuestionId, OptionText, IsCorrect)
-                                        VALUES (@QuestionId, @OptionText, @IsCorrect)", conn, tran))
+                                INSERT INTO Options (QuestionId, OptionText, IsCorrect)
+                                VALUES (@QuestionId, @OptionText, @IsCorrect)", conn, tran))
                                     {
                                         cmd.Parameters.AddWithValue("@QuestionId", questionId);
                                         cmd.Parameters.AddWithValue("@OptionText", q.options[i].Trim());

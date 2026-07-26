@@ -1,13 +1,10 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-Create-Class.aspx.cs" Inherits="PixelMath.Lecturer_Create_Class" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- Page Specific Styles if needed -->
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
     Create & Manage Classes 🏫
 </asp:Content>
-
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6 pb-12">
         
@@ -33,8 +30,13 @@
 
                     <!-- Class Description -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Description / Subject Focus</label>
-                        <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="3" CssClass="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-[#22C55E]" placeholder="Briefly describe the course objectives..."></asp:TextBox>
+                        <label class="block text-xs font-bold text-slate-600 uppercase mb-2">
+                            Description / Subject Focus 
+                            <span class="text-[10px] text-slate-400 font-normal ml-1">(Max 255 characters)</span>
+                        </label>
+                        <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="3" MaxLength="255" 
+                            CssClass="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-[#22C55E]" 
+                            placeholder="Briefly describe the course objectives..."></asp:TextBox>
                     </div>
                 </div>
 
@@ -56,21 +58,24 @@
                     </span>
                 </h2>
 
-                <asp:Repeater ID="rptClasses" runat="server">
-                    <ItemTemplate>
-                        <div class="p-3 mb-3 rounded-2xl bg-slate-50 border border-slate-100">
-                            <div class="font-bold text-xs text-slate-800"><%# Eval("ClassName") %></div>
-                            <div class="text-[11px] text-slate-500 mt-1"><%# Eval("Description") %></div>
-                            <div class="mt-2 text-[10px] text-slate-400">
-                                Created: <%# Eval("CreatedAt", "{0:MMM dd, yyyy}") %>
+                <!-- Scrollable Container for Classes Sidebar -->
+                <div class="max-h-[500px] overflow-y-auto pr-1 space-y-3">
+                    <asp:Repeater ID="rptClasses" runat="server">
+                        <ItemTemplate>
+                            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                                <div class="font-bold text-xs text-slate-800"><%# Eval("ClassName") %></div>
+                                <div class="text-[11px] text-slate-500 mt-1"><%# Eval("Description") %></div>
+                                <div class="mt-2 text-[10px] text-slate-400">
+                                    Created: <%# Eval("CreatedAt", "{0:MMM dd, yyyy}") %>
+                                </div>
                             </div>
-                        </div>
-                    </ItemTemplate>
-                </asp:Repeater>
+                        </ItemTemplate>
+                    </asp:Repeater>
 
-                <asp:Panel ID="pnlNoClasses" runat="server" Visible="false" CssClass="text-center py-6 text-slate-400 text-xs">
-                    🏫 You haven't created any classes yet.
-                </asp:Panel>
+                    <asp:Panel ID="pnlNoClasses" runat="server" Visible="false" CssClass="text-center py-6 text-slate-400 text-xs">
+                        🏫 You haven't created any classes yet.
+                    </asp:Panel>
+                </div>
             </div>
 
         </div>

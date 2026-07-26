@@ -1,13 +1,10 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-Dashboard.aspx.cs" Inherits="PixelMath.Lecturer_Dashboard" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- Page Specific Styles if needed -->
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
     Lecturer Dashboard 🏠
 </asp:Content>
-
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="w-full px-4 sm:px-6 lg:px-8 space-y-6 pb-12">
 
@@ -30,7 +27,7 @@
         </div>
 
         <!-- Quick Metric Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
             
             <!-- Card 1: Pending Markings -->
             <div class="w-full bg-white p-5 rounded-[22px] border border-slate-100 shadow-xs flex justify-between items-center relative overflow-hidden">
@@ -45,21 +42,8 @@
                 <div class="text-2xl sm:text-3xl bg-amber-50 p-3 rounded-2xl shrink-0">📝</div>
             </div>
 
-            <!-- Card 2: Unread Class Announcements -->
+            <!-- Card 2: Classes Taught -->
             <div class="w-full bg-white p-5 rounded-[22px] border border-slate-100 shadow-xs flex justify-between items-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-2 h-full bg-rose-400"></div>
-                <div class="pr-2">
-                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Unread Announcements</span>
-                    <div class="font-fredoka text-2xl sm:text-3xl text-slate-800 mt-1">
-                        <asp:Literal ID="litUnreadAnnouncements" runat="server">0</asp:Literal>
-                    </div>
-                    <a href="Lecturer-Announcements.aspx" class="inline-block mt-2 text-xs font-bold text-indigo-600 hover:underline">View Feed &rarr;</a>
-                </div>
-                <div class="text-2xl sm:text-3xl bg-rose-50 p-3 rounded-2xl shrink-0">🔔</div>
-            </div>
-
-            <!-- Card 3: Classes Taught -->
-            <div class="w-full bg-white p-5 rounded-[22px] border border-slate-100 shadow-xs flex justify-between items-center relative overflow-hidden sm:col-span-2 lg:col-span-1">
                 <div class="absolute top-0 left-0 w-2 h-full bg-[#22C55E]"></div>
                 <div class="pr-2">
                     <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Classes Taught</span>

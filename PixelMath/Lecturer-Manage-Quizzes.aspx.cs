@@ -142,7 +142,6 @@ namespace PixelMath
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
-                // Clean delete in correct FK order
                 string[] queries = {
                     "DELETE FROM StudentAnswers WHERE QuestionId IN (SELECT QuestionId FROM Questions WHERE QuizId = @QuizId)",
                     "DELETE FROM Options WHERE QuestionId IN (SELECT QuestionId FROM Questions WHERE QuizId = @QuizId)",
@@ -166,6 +165,8 @@ namespace PixelMath
         {
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                // Note: If PassingMarks is stored as points, you can calculate the stored percentage relative to total marks, 
+                // or display it directly. Here we fetch the raw column value.
                 string query = "SELECT Title, Description, DurationMinutes, PassingMarks FROM Quizzes WHERE QuizId = @QuizId";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -205,7 +206,58 @@ namespace PixelMath
 
         protected void btnUpdateQuiz_Click(object sender, EventArgs e)
         {
-            int quizId = Convert.ToInt32(hfEditingQuizId.Value);
+            if (!int.TryParse(hfEditingQuizId.Value, out int quizId))
+            {
+                ShowAlert("Invalid quiz reference.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtQuizTitle.Text))
+            {
+                ShowAlert("Quiz title cannot be empty.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            if (!int.TryParse(txtDuration.Text, out int duration) || duration <= 0)
+            {
+                ShowAlert("Duration must be a valid number greater than 0 minutes.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            // ── Guard Rail: Prevent negative passing percentages ──
+            if (!int.TryParse(txtPassingMarks.Text, out int passingPercentage) || passingPercentage < 0 || passingPercentage > 100)
+            {
+                ShowAlert("Passing percentage must be between 0 and 100 (negative values are not allowed).", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            // Calculate total marks available from existing questions in this quiz
+            int totalQuizMarks = 0;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Marks), 0) FROM Questions WHERE QuizId = @QuizId", conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+                    totalQuizMarks = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+
+            if (totalQuizMarks <= 0)
+            {
+                ShowAlert("This quiz has no questions or total marks equal to zero. Please add questions with positive marks first.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            // Convert passing percentage into actual passing score points
+            int finalPassingMarks = (int)Math.Round((double)totalQuizMarks * passingPercentage / 100.0, MidpointRounding.AwayFromZero);
+
+            // ── Guard Rail: Ensure passing threshold does not exceed total marks ──
+            if (finalPassingMarks > totalQuizMarks)
+            {
+                ShowAlert("Passing mark threshold cannot exceed the total available question marks.", "bg-rose-50 text-rose-700");
+                return;
+            }
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -214,8 +266,8 @@ namespace PixelMath
                 {
                     cmd.Parameters.AddWithValue("@Title", txtQuizTitle.Text.Trim());
                     cmd.Parameters.AddWithValue("@Description", txtQuizDesc.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Duration", Convert.ToInt32(txtDuration.Text));
-                    cmd.Parameters.AddWithValue("@PassingMarks", Convert.ToInt32(txtPassingMarks.Text));
+                    cmd.Parameters.AddWithValue("@Duration", duration);
+                    cmd.Parameters.AddWithValue("@PassingMarks", finalPassingMarks);
                     cmd.Parameters.AddWithValue("@QuizId", quizId);
 
                     conn.Open();
@@ -224,6 +276,7 @@ namespace PixelMath
             }
 
             ShowAlert("Quiz details updated successfully!", "bg-emerald-50 text-emerald-700");
+            LoadQuizzes(txtSearch.Text.Trim(), ddlFilterClass.SelectedValue);
         }
 
         protected void rptQuestions_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -273,8 +326,57 @@ namespace PixelMath
 
         protected void btnSaveQuestion_Click(object sender, EventArgs e)
         {
-            int questionId = Convert.ToInt32(hfSelectedQuestionId.Value);
-            int quizId = Convert.ToInt32(hfEditingQuizId.Value);
+            if (!int.TryParse(hfSelectedQuestionId.Value, out int questionId) || !int.TryParse(hfEditingQuizId.Value, out int quizId))
+            {
+                ShowAlert("Invalid reference IDs.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtEditQText.Text))
+            {
+                ShowAlert("Question text cannot be empty.", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            // ── Guard Rail: Prevent negative or zero question marks ──
+            if (!int.TryParse(txtEditMarks.Text.Trim(), out int newMarks) || newMarks <= 0)
+            {
+                ShowAlert("Question marks must be a positive integer greater than 0 (negative values are not allowed).", "bg-rose-50 text-rose-700");
+                return;
+            }
+
+            int currentQuizPassingMarks = 0;
+            int otherQuestionsMarksSum = 0;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                // Fetch current passing mark threshold for this quiz
+                using (SqlCommand cmd = new SqlCommand("SELECT PassingMarks FROM Quizzes WHERE QuizId = @QuizId", conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+                    var res = cmd.ExecuteScalar();
+                    if (res != null) currentQuizPassingMarks = Convert.ToInt32(res);
+                }
+
+                // Sum marks of all OTHER questions in this quiz
+                using (SqlCommand cmd = new SqlCommand("SELECT ISNULL(SUM(Marks), 0) FROM Questions WHERE QuizId = @QuizId AND QuestionId != @QuestionId", conn))
+                {
+                    cmd.Parameters.AddWithValue("@QuizId", quizId);
+                    cmd.Parameters.AddWithValue("@QuestionId", questionId);
+                    otherQuestionsMarksSum = Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+
+            int prospectiveTotalMarks = otherQuestionsMarksSum + newMarks;
+
+            // ── Guard Rail: Ensure prospective total question marks don't drop below passing threshold ──
+            if (currentQuizPassingMarks > prospectiveTotalMarks)
+            {
+                ShowAlert($"⚠️ Cannot update marks. The new total question marks ({prospectiveTotalMarks}) would drop below the quiz passing threshold ({currentQuizPassingMarks}). Please lower the passing requirement or increase question points.", "bg-rose-50 text-rose-700");
+                return;
+            }
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
@@ -283,7 +385,7 @@ namespace PixelMath
                 using (SqlCommand cmd = new SqlCommand(updateQ, conn))
                 {
                     cmd.Parameters.AddWithValue("@QText", txtEditQText.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Marks", Convert.ToInt32(txtEditMarks.Text));
+                    cmd.Parameters.AddWithValue("@Marks", newMarks);
                     cmd.Parameters.AddWithValue("@QId", questionId);
                     cmd.ExecuteNonQuery();
                 }

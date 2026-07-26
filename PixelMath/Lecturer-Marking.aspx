@@ -63,6 +63,7 @@
                     <ItemTemplate>
                         <div class="p-6 bg-slate-50 border border-slate-100 rounded-[20px] space-y-4">
                             <asp:HiddenField ID="hfAnswerId" runat="server" Value='<%# Eval("AnswerId") %>' />
+                            <asp:HiddenField ID="hfMaxMarks" runat="server" Value='<%# Eval("MaxMarks") %>' />
                             
                             <div class="flex justify-between items-start">
                                 <h3 class="font-bold text-slate-800 text-xs">Question: <%# Eval("QuestionText") %></h3>

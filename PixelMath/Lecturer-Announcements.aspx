@@ -1,13 +1,10 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/Lecturer-Template.Master" AutoEventWireup="true" CodeBehind="Lecturer-Announcements.aspx.cs" Inherits="PixelMath.Lecturer_Announcements" %>
-
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <!-- Page Specific Styles if needed -->
 </asp:Content>
-
 <asp:Content ID="Content2" ContentPlaceHolderID="TopbarTitleContent" runat="server">
     <span class="text-base sm:text-xl font-bold text-slate-800">Class Announcements 📢</span>
 </asp:Content>
-
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
     <div class="w-full px-3 sm:px-6 lg:max-w-7xl lg:mx-auto lg:px-8 space-y-6 pb-12">
         
@@ -66,7 +63,8 @@
                     </span>
                 </h2>
 
-                <div class="space-y-3">
+                <!-- Scrollable Container for Recent Posts -->
+                <div class="max-h-[500px] overflow-y-auto pr-1 space-y-3">
                     <asp:Repeater ID="rptAnnouncements" runat="server">
                         <ItemTemplate>
                             <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
@@ -85,11 +83,11 @@
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
-                </div>
 
-                <asp:Panel ID="pnlNoAnnouncements" runat="server" Visible="false" CssClass="text-center py-8 text-slate-400 text-xs">
-                    📢 No announcements posted yet.
-                </asp:Panel>
+                    <asp:Panel ID="pnlNoAnnouncements" runat="server" Visible="false" CssClass="text-center py-8 text-slate-400 text-xs">
+                        📢 No announcements posted yet.
+                    </asp:Panel>
+                </div>
             </div>
 
         </div>

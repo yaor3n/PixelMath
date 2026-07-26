@@ -89,20 +89,7 @@ namespace PixelMath
                     litBannerPendingCount.Text = count;
                 }
 
-                // 2. Unread Announcements
-                string sqlUnread = @"
-                    SELECT COUNT(*) 
-                    FROM Announcements a
-                    INNER JOIN Classes c ON a.ClassId = c.ClassId
-                    WHERE c.CreatedBy = @LecturerId AND a.Status = 0";
-
-                using (SqlCommand cmd = new SqlCommand(sqlUnread, conn))
-                {
-                    cmd.Parameters.Add("@LecturerId", SqlDbType.UniqueIdentifier).Value = lecturerId;
-                    litUnreadAnnouncements.Text = cmd.ExecuteScalar()?.ToString() ?? "0";
-                }
-
-                // 3. Classes Taught
+                // 2. Classes Taught
                 string sqlClasses = "SELECT COUNT(*) FROM Classes WHERE CreatedBy = @LecturerId";
                 using (SqlCommand cmd = new SqlCommand(sqlClasses, conn))
                 {

@@ -87,6 +87,13 @@ namespace PixelMath
                 return;
             }
 
+            // --- GUARD RAIL: Check description length to prevent database truncation error ---
+            if (description.Length > 255)
+            {
+                ShowAlert($"⚠️ Class description is too long! ({description.Length}/255 characters). Please shorten it before creating the class.", false);
+                return;
+            }
+
             try
             {
                 using (SqlConnection conn = new SqlConnection(connStr))

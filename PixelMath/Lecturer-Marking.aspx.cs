@@ -153,6 +153,33 @@ namespace PixelMath
 
             try
             {
+                // --- GUARD RAIL: Validate all marks before touching the database ---
+                foreach (RepeaterItem item in rptAnswers.Items)
+                {
+                    if (item.ItemType == ListItemType.Item || item.ItemType == ListItemType.AlternatingItem)
+                    {
+                        TextBox txtMarksAwarded = (TextBox)item.FindControl("txtMarksAwarded");
+                        HiddenField hfMaxMarks = (HiddenField)item.FindControl("hfMaxMarks");
+
+                        int maxMarks = hfMaxMarks != null ? Convert.ToInt32(hfMaxMarks.Value) : 100;
+
+                        // Check if input is a valid number
+                        if (!int.TryParse(txtMarksAwarded.Text.Trim(), out int marksAwarded))
+                        {
+                            ShowAlert("⚠️ Please enter a valid whole number for all marks awarded.", false);
+                            return; // Stop execution, show guard rail warning
+                        }
+
+                        // Check for negative numbers or exceeding max marks
+                        if (marksAwarded < 0 || marksAwarded > maxMarks)
+                        {
+                            ShowAlert($"⚠️ Invalid marks awarded ({marksAwarded}). Marks cannot be negative or exceed the maximum allowed points ({maxMarks}) for a question.", false);
+                            return; // Stop execution, show guard rail warning
+                        }
+                    }
+                }
+
+                // --- DATABASE UPDATE: If validation passes, proceed safely ---
                 using (SqlConnection conn = new SqlConnection(connStr))
                 {
                     conn.Open();
@@ -166,16 +193,15 @@ namespace PixelMath
                             TextBox txtFeedback = (TextBox)item.FindControl("txtFeedback");
 
                             int answerId = Convert.ToInt32(hfAnswerId.Value);
-                            int marksAwarded = string.IsNullOrEmpty(txtMarksAwarded.Text) ? 0 : Convert.ToInt32(txtMarksAwarded.Text);
+                            int marksAwarded = Convert.ToInt32(txtMarksAwarded.Text.Trim());
                             string feedback = txtFeedback.Text.Trim();
 
-                            // Update individual answer score and feedback
                             string updateAnsSql = @"
-                                UPDATE StudentAnswers 
-                                SET MarksAwarded = @MarksAwarded, 
-                                    LecturerFeedback = @Feedback, 
-                                    IsMarked = 1 
-                                WHERE AnswerId = @AnswerId";
+                        UPDATE StudentAnswers 
+                        SET MarksAwarded = @MarksAwarded, 
+                            LecturerFeedback = @Feedback, 
+                            IsMarked = 1 
+                        WHERE AnswerId = @AnswerId";
 
                             using (SqlCommand cmd = new SqlCommand(updateAnsSql, conn))
                             {
@@ -189,10 +215,10 @@ namespace PixelMath
 
                     // Recalculate total score for the attempt (Objective + Subjective marks)
                     string recalcSql = @"
-                        UPDATE QuizAttempts 
-                        SET Score = (SELECT ISNULL(SUM(MarksAwarded), 0) FROM StudentAnswers WHERE AttemptId = @AttemptId),
-                            IsGraded = 1
-                        WHERE AttemptId = @AttemptId";
+                UPDATE QuizAttempts 
+                SET Score = (SELECT ISNULL(SUM(MarksAwarded), 0) FROM StudentAnswers WHERE AttemptId = @AttemptId),
+                    IsGraded = 1
+                WHERE AttemptId = @AttemptId";
 
                     using (SqlCommand recalcCmd = new SqlCommand(recalcSql, conn))
                     {
