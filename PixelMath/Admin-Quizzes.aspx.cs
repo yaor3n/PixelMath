@@ -233,69 +233,72 @@ namespace PixelMath
             using (SqlConnection conn =
                 new SqlConnection(connStr))
             {
-                string query = @"
-                    DELETE FROM Quizzes
-                    WHERE QuizId = @QuizId";
+                conn.Open();
 
-                using (SqlCommand cmd =
-                    new SqlCommand(query, conn))
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
                 {
-                    cmd.Parameters.Add(
-                        "@QuizId",
-                        SqlDbType.Int
-                    ).Value = quizId;
+                    string query = @"
+                DELETE FROM StudentAnswers
+                WHERE QuestionId IN
+                (
+                    SELECT QuestionId
+                    FROM Questions
+                    WHERE QuizId = @QuizId
+                )
+                OR AttemptId IN
+                (
+                    SELECT AttemptId
+                    FROM QuizAttempts
+                    WHERE QuizId = @QuizId
+                );
+                DELETE FROM Options
+                WHERE QuestionId IN
+                (
+                    SELECT QuestionId
+                    FROM Questions
+                    WHERE QuizId = @QuizId
+                );
+                DELETE FROM Questions
+                WHERE QuizId = @QuizId;
+                DELETE FROM QuizAttempts
+                WHERE QuizId = @QuizId;
+                DELETE FROM Quizzes
+                WHERE QuizId = @QuizId;
+                ";
 
-                    try
+                    using (SqlCommand cmd =
+                        new SqlCommand(query, conn, transaction))
                     {
-                        conn.Open();
+                        cmd.Parameters.Add(
+                            "@QuizId",
+                            SqlDbType.Int
+                        ).Value = quizId;
 
-                        int rowsAffected =
-                            cmd.ExecuteNonQuery();
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        transaction.Commit();
 
-                        if (rowsAffected > 0)
-                        {
-                            ShowMessage(
-                                "Quiz deleted successfully.",
-                                true
-                            );
-                        }
-                        else
-                        {
-                            ShowMessage(
-                                "Quiz was not found.",
-                                false
-                            );
-                        }
-                    }
-                    catch (SqlException ex)
-                    {
-                        if (ex.Number == 547)
-                        {
-                            ShowMessage(
-                                "This quiz cannot be deleted because it has related questions, attempts or results.",
-                                false
-                            );
-                        }
-                        else
-                        {
-                            ShowMessage(
-                                "Error deleting quiz: " +
-                                ex.Message,
-                                false
-                            );
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowMessage(
-                            "Error deleting quiz: " +
-                            ex.Message,
-                            false
-                        );
+                        ShowMessage("Quiz were deleted successfully.", true);
                     }
                 }
-            }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        transaction.Rollback();
+                    } catch
+                    {
+                        // Ignore Rollback
+                    }
 
+                    ShowMessage(
+                        "Error deleting quiz: " +
+                        ex.Message,
+                        false
+                    );
+                }
+            }
             LoadQuizzes();
         }
 
