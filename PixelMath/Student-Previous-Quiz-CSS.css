@@ -51,6 +51,11 @@
         white-space: nowrap;
     }
 
+        .quiz-history-table th.text-center,
+        .quiz-history-table td.text-center {
+            text-align: center;
+        }
+
     .quiz-history-table tr:hover {
         background-color: #f7fbff;
         cursor: pointer;
